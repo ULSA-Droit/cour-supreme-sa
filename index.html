@@ -436,7 +436,8 @@ async function init(){
   sbKey = PUBLISHED_SB_KEY || localStorage.getItem(LS_SBKEY)||"";
   if(sbUrl) localStorage.setItem(LS_SBURL, sbUrl);
   if(sbKey) localStorage.setItem(LS_SBKEY, sbKey);
-  webhookURL = localStorage.getItem(LS_WH)||"";
+  webhookURL = localStorage.getItem(LS_WH)||DEFAULT_WEBHOOK;
+if(!localStorage.getItem(LS_WH)&&DEFAULT_WEBHOOK) localStorage.setItem(LS_WH,DEFAULT_WEBHOOK);
   if(sbUrl && sbKey){
     let ok = await sbPullSilent();
     if(!ok){ await new Promise(r=>setTimeout(r,2000)); ok=await sbPullSilent(); }
@@ -810,6 +811,7 @@ function switchTab(tab,btn){
 }
 
 // ── WEBHOOK ──
+  const DEFAULT_WEBHOOK="https://discord.com/api/webhooks/1484520055697047714/gIYXpIyaAG9Vu9nlm7Me4q9gPaKGR2AaA53Vuhrk-tIa7vp0jBc09JdIkqCGIQeMCDFU";
 function saveWebhook(){
   webhookURL=document.getElementById('inp-webhook').value.trim();
   localStorage.setItem(LS_WH,webhookURL);
