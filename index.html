@@ -4,152 +4,165 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cour Suprême de San Andreas — Examen Juridique</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --gold:#B8960C;--gold-light:#D4AF37;--ink:#1A1A2E;--cream:#FAF7F0;
-  --white:#FFFFFF;--muted:#6B6B7B;--border:rgba(184,150,12,0.2);
-  --success-bg:#F0FAF5;--success:#1B5E3B;--error-bg:#FDF0F0;--error:#7B1818;
-  --admin-bg:#0F1117;--admin-accent:#D4AF37;--admin-surface:#1C1F2B;
-  --admin-border:rgba(212,175,55,0.2);--admin-text:#E8E4D9;--admin-muted:#8A8699;
+  --gold:#B8960C;--ink:#1A1A2E;--cream:#FAF7F0;--white:#FFF;
+  --muted:#6B6B7B;--border:rgba(184,150,12,0.22);
+  --ok:#1B5E3B;--ok-bg:#F0FAF5;--err:#7B1818;--err-bg:#FDF0F0;--reveal:#1B5E3B;--reveal-bg:#F0FAF5;
+  --a-bg:#0F1117;--a-surf:#1C1F2B;--a-border:rgba(212,175,55,0.2);
+  --a-text:#E8E4D9;--a-muted:#8A8699;--a-gold:#D4AF37;
 }
 html{scroll-behavior:smooth}
 body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink);min-height:100vh}
 
-/* ── SHARED NAV ── */
-#top-nav{position:fixed;top:0;right:0;z-index:100;padding:10px 16px}
-#admin-toggle-btn{font-family:'Source Serif 4',serif;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);background:transparent;border:0.5px solid rgba(0,0,0,0.12);border-radius:4px;padding:6px 12px;cursor:pointer;transition:all 0.2s}
+/* NAV */
+#top-nav{position:fixed;top:0;right:0;z-index:200;padding:10px 16px}
+#admin-toggle-btn{font-family:'Source Serif 4',serif;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);background:transparent;border:0.5px solid rgba(0,0,0,0.12);border-radius:4px;padding:6px 12px;cursor:pointer;transition:all .2s}
 #admin-toggle-btn:hover{color:var(--gold);border-color:var(--gold)}
 
-/* ══ EXAM SIDE ══ */
-#exam-app{max-width:780px;margin:0 auto;padding:3rem 1.5rem 5rem;display:block}
+/* EXAM WRAPPER */
+#exam-app{max-width:760px;margin:0 auto;padding:3rem 1.5rem 5rem}
 .header{text-align:center;padding:2rem 0 2.5rem;border-bottom:1px solid var(--border);margin-bottom:2.5rem}
 .seal{width:68px;height:68px;border:1.5px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;font-size:28px;color:var(--gold)}
-.header h1{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--ink);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:5px}
-.header p{font-size:12px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase}
-.section-title{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;font-family:'Source Serif 4',serif}
+.header h1{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px}
+.header p{font-size:12px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.section-lbl{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.9rem}
 
 .card{background:var(--white);border:0.5px solid var(--border);border-radius:8px;padding:1.75rem;margin-bottom:1.5rem}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:0.75rem}
-.field{display:flex;flex-direction:column;gap:6px}
-.field label{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)}
-.field input,.field select{font-family:'Source Serif 4',serif;font-size:15px;border:0.5px solid rgba(0,0,0,0.15);border-radius:5px;padding:10px 12px;background:#FAFAF8;color:var(--ink);outline:none;transition:border-color 0.2s;width:100%}
-.field input:focus,.field select:focus{border-color:var(--gold)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:.75rem}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.field input{font-family:'Source Serif 4',serif;font-size:15px;border:0.5px solid rgba(0,0,0,0.14);border-radius:5px;padding:10px 12px;background:#FAFAF8;color:var(--ink);outline:none;transition:border-color .2s;width:100%}
+.field input:focus{border-color:var(--gold)}
+.key-field{margin-top:.5rem}
+.key-field input{font-family:'Playfair Display',serif;font-size:18px;letter-spacing:.25em;text-transform:uppercase;text-align:center}
+.key-error{font-size:12px;color:var(--err);margin-top:6px;min-height:18px}
+.key-badge{display:inline-block;margin-top:10px;padding:6px 14px;border-radius:20px;font-size:12px;background:#FFF9E6;border:0.5px solid var(--gold);color:var(--gold);letter-spacing:.06em}
 .note{font-size:12px;color:var(--muted);font-style:italic;margin-top:8px}
 
-.btn-primary{width:100%;padding:13px;font-family:'Playfair Display',serif;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;background:var(--ink);color:#F5E6C8;border:none;border-radius:6px;cursor:pointer;transition:background 0.2s;margin-top:1rem}
+.btn-primary{width:100%;padding:13px;font-family:'Playfair Display',serif;font-size:13px;letter-spacing:.08em;text-transform:uppercase;background:var(--ink);color:#F5E6C8;border:none;border-radius:6px;cursor:pointer;transition:background .2s;margin-top:1rem}
 .btn-primary:hover{background:#2e2e4e}
-.btn-secondary{padding:10px 20px;font-family:'Playfair Display',serif;font-size:12px;letter-spacing:0.07em;text-transform:uppercase;background:transparent;color:var(--muted);border:0.5px solid rgba(0,0,0,0.15);border-radius:5px;cursor:pointer;transition:all 0.15s}
+.btn-secondary{padding:10px 20px;font-family:'Playfair Display',serif;font-size:12px;letter-spacing:.07em;text-transform:uppercase;background:transparent;color:var(--muted);border:0.5px solid rgba(0,0,0,0.14);border-radius:5px;cursor:pointer;transition:all .15s}
 .btn-secondary:hover{border-color:var(--ink);color:var(--ink)}
 
-.progress-wrap{margin-bottom:1.75rem}
-.progress-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:5px}
-.progress-bar{background:rgba(184,150,12,0.12);border-radius:3px;height:3px;overflow:hidden}
-.progress-fill{height:100%;background:var(--gold);transition:width 0.4s ease;border-radius:3px}
+/* PROGRESS */
+.prog-wrap{margin-bottom:1.75rem}
+.prog-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:5px}
+.prog-bar{background:rgba(184,150,12,.12);border-radius:3px;height:3px;overflow:hidden}
+.prog-fill{height:100%;background:var(--gold);transition:width .4s;border-radius:3px}
+.exam-badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;background:#FFF9E6;border:0.5px solid var(--gold);color:var(--gold);letter-spacing:.06em;margin-bottom:1rem}
 
-.q-number{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:0.6rem}
-.q-text{font-family:'Playfair Display',serif;font-size:17px;line-height:1.65;color:var(--ink);margin-bottom:1.25rem}
-.q-ref{font-size:11px;color:var(--muted);font-style:italic;margin-bottom:1rem;padding:6px 10px;border-left:2px solid var(--border)}
-
+/* QUESTION */
+.q-num{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem}
+.q-text{font-family:'Playfair Display',serif;font-size:17px;line-height:1.65;margin-bottom:1.1rem}
+.q-ref{font-size:11px;color:var(--muted);font-style:italic;margin-bottom:.9rem;padding:5px 10px;border-left:2px solid var(--border)}
 .options{display:flex;flex-direction:column;gap:8px}
-.option{display:flex;align-items:flex-start;gap:12px;padding:11px 14px;border:0.5px solid rgba(0,0,0,0.1);border-radius:6px;cursor:pointer;transition:all 0.15s;background:#FAFAF8}
-.option:hover{border-color:var(--gold);background:#FFFDF5}
-.option.selected{border-color:var(--gold);background:#FFFBEA}
-.option.correct{border-color:var(--success);background:var(--success-bg)}
-.option.wrong{border-color:var(--error);background:var(--error-bg)}
-.option.reveal-correct{border-color:var(--success);background:var(--success-bg)}
-.option-letter{width:22px;height:22px;border-radius:50%;border:0.5px solid rgba(0,0,0,0.15);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0;margin-top:1px;color:var(--muted);transition:all 0.15s}
-.option.selected .option-letter{background:var(--gold);border-color:var(--gold);color:#fff}
-.option.correct .option-letter,.option.reveal-correct .option-letter{background:var(--success);border-color:var(--success);color:#fff}
-.option.wrong .option-letter{background:var(--error);border-color:var(--error);color:#fff}
-.option-text{font-size:14px;line-height:1.5;color:var(--ink)}
-.explanation-box{margin-top:1rem;padding:10px 14px;background:#F9F6EE;border-left:2px solid var(--gold);border-radius:0 5px 5px 0;font-size:13px;color:var(--muted);font-style:italic}
-
+.opt{display:flex;align-items:flex-start;gap:12px;padding:11px 14px;border:0.5px solid rgba(0,0,0,.1);border-radius:6px;cursor:pointer;transition:all .14s;background:#FAFAF8}
+.opt:hover{border-color:var(--gold);background:#FFFDF5}
+.opt.selected{border-color:var(--gold);background:#FFFBEA}
+.opt.correct{border-color:var(--ok);background:var(--ok-bg)}
+.opt.wrong{border-color:var(--err);background:var(--err-bg)}
+.opt.reveal{border-color:var(--reveal);background:var(--reveal-bg)}
+.opt-letter{width:22px;height:22px;border-radius:50%;border:0.5px solid rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0;margin-top:1px;color:var(--muted);transition:all .14s}
+.opt.selected .opt-letter{background:var(--gold);border-color:var(--gold);color:#fff}
+.opt.correct .opt-letter,.opt.reveal .opt-letter{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.wrong .opt-letter{background:var(--err);border-color:var(--err);color:#fff}
+.opt-text{font-size:14px;line-height:1.5}
+.expl-box{margin-top:.9rem;padding:9px 13px;background:#F9F6EE;border-left:2px solid var(--gold);border-radius:0 5px 5px 0;font-size:13px;color:var(--muted);font-style:italic}
 .nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;gap:1rem}
-.score-display{font-family:'Playfair Display',serif;font-size:56px;font-weight:700;color:var(--ink);line-height:1}
-.score-sub{font-size:14px;color:var(--muted);margin-top:6px}
+
+/* RESULTS */
+.score-big{font-family:'Playfair Display',serif;font-size:56px;font-weight:700;line-height:1}
+.score-sub{font-size:14px;color:var(--muted);margin-top:5px}
 .score-mention{font-family:'Playfair Display',serif;font-size:17px;margin-top:1.25rem;padding-top:1.25rem;border-top:0.5px solid var(--border)}
-.webhook-status{font-size:12px;text-align:center;margin:8px 0 16px;min-height:18px;color:var(--muted)}
-.webhook-status.sending{color:var(--gold)}
-.webhook-status.sent{color:var(--success)}
-.webhook-status.error{color:var(--error)}
+.wh-status{font-size:12px;text-align:center;margin:8px 0 16px;min-height:18px;color:var(--muted)}
+.wh-status.sending{color:var(--gold)}.wh-status.sent{color:var(--ok)}.wh-status.error{color:var(--err)}
 
-.empty-bank{text-align:center;padding:3rem 1rem;color:var(--muted)}
-.empty-bank p{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:8px;color:var(--ink)}
-
-/* ══ ADMIN PANEL ══ */
-#admin-panel{display:none;min-height:100vh;background:var(--admin-bg);color:var(--admin-text);font-family:'Source Serif 4',serif}
+/* ═══ ADMIN ═══ */
+#admin-panel{display:none;min-height:100vh;background:var(--a-bg);color:var(--a-text);font-family:'Source Serif 4',serif}
 #admin-panel.active{display:block}
 #exam-app.hidden{display:none}
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center}
+.login-box{background:var(--a-surf);border:0.5px solid var(--a-border);border-radius:10px;padding:2.5rem;width:340px;text-align:center}
+.login-box h2{font-family:'Playfair Display',serif;color:var(--a-gold);font-size:20px;margin-bottom:6px}
+.login-box p{font-size:13px;color:var(--a-muted);margin-bottom:1.5rem}
+.a-input{width:100%;font-family:'Source Serif 4',serif;font-size:15px;background:#0A0C12;border:0.5px solid var(--a-border);border-radius:5px;padding:10px 14px;color:var(--a-text);outline:none;margin-bottom:10px;transition:border-color .2s}
+.a-input:focus{border-color:var(--a-gold)}
+.login-btn{width:100%;padding:12px;font-family:'Playfair Display',serif;font-size:13px;letter-spacing:.08em;text-transform:uppercase;background:var(--a-gold);color:var(--a-bg);border:none;border-radius:5px;cursor:pointer}
+.login-btn:hover{background:#c9a22e}
+.login-err{font-size:12px;color:#C47070;margin-top:8px;min-height:18px}
 
-.admin-topbar{background:var(--admin-surface);border-bottom:0.5px solid var(--admin-border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:50}
-.admin-topbar-title{font-family:'Playfair Display',serif;font-size:15px;color:var(--admin-accent);letter-spacing:0.04em}
-.admin-topbar-right{display:flex;gap:10px;align-items:center}
-.admin-btn{font-family:'Source Serif 4',serif;font-size:12px;letter-spacing:0.07em;text-transform:uppercase;padding:7px 14px;border-radius:4px;cursor:pointer;transition:all 0.15s;border:0.5px solid var(--admin-border);background:transparent;color:var(--admin-muted)}
-.admin-btn:hover{border-color:var(--admin-accent);color:var(--admin-accent)}
-.admin-btn.danger{border-color:rgba(180,50,50,0.4);color:#C47070}
-.admin-btn.danger:hover{border-color:#C47070;background:rgba(180,50,50,0.1)}
-.admin-btn.accent{background:var(--admin-accent);color:var(--admin-bg);border-color:var(--admin-accent)}
-.admin-btn.accent:hover{background:#c9a22e}
+.a-topbar{background:var(--a-surf);border-bottom:0.5px solid var(--a-border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:54px;position:sticky;top:0;z-index:50}
+.a-topbar-title{font-family:'Playfair Display',serif;font-size:15px;color:var(--a-gold);letter-spacing:.03em}
+.a-topbar-right{display:flex;gap:8px;align-items:center}
+.a-btn{font-family:'Source Serif 4',serif;font-size:11px;letter-spacing:.07em;text-transform:uppercase;padding:6px 12px;border-radius:4px;cursor:pointer;transition:all .15s;border:0.5px solid var(--a-border);background:transparent;color:var(--a-muted)}
+.a-btn:hover{border-color:var(--a-gold);color:var(--a-gold)}
+.a-btn.accent{background:var(--a-gold);color:var(--a-bg);border-color:var(--a-gold)}
+.a-btn.accent:hover{background:#c9a22e}
+.a-btn.danger:hover{border-color:#C47070;color:#C47070}
 
-.admin-body{max-width:900px;margin:0 auto;padding:2rem 1.5rem 5rem}
-.admin-section{margin-bottom:2.5rem}
-.admin-section-title{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--admin-accent);margin-bottom:1rem;padding-bottom:8px;border-bottom:0.5px solid var(--admin-border)}
+.a-body{max-width:960px;margin:0 auto;padding:1.75rem 1.5rem 5rem}
 
-.admin-card{background:var(--admin-surface);border:0.5px solid var(--admin-border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}
-.admin-field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
-.admin-field label{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--admin-muted)}
-.admin-field input,.admin-field textarea,.admin-field select{font-family:'Source Serif 4',serif;font-size:14px;background:#0A0C12;border:0.5px solid var(--admin-border);border-radius:5px;padding:9px 12px;color:var(--admin-text);outline:none;transition:border-color 0.2s;width:100%}
-.admin-field input:focus,.admin-field textarea:focus,.admin-field select:focus{border-color:var(--admin-accent)}
-.admin-field textarea{resize:vertical;min-height:72px}
-.admin-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.admin-row-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}
-.correct-radio{display:flex;flex-direction:column;gap:4px}
-.correct-radio label{font-size:11px;letter-spacing:0.07em;text-transform:uppercase;color:var(--admin-muted);margin-bottom:2px}
-.radio-group{display:flex;gap:8px;flex-wrap:wrap}
-.radio-opt{display:flex;align-items:center;gap:6px;padding:6px 10px;border:0.5px solid var(--admin-border);border-radius:4px;cursor:pointer;transition:all 0.15s;font-size:13px;color:var(--admin-muted)}
-.radio-opt:hover{border-color:var(--admin-accent);color:var(--admin-accent)}
-.radio-opt input{display:none}
-.radio-opt.active{border-color:var(--admin-accent);color:var(--admin-accent);background:rgba(212,175,55,0.08)}
+/* TABS */
+.a-tabs{display:flex;gap:2px;border-bottom:0.5px solid var(--a-border);margin-bottom:1.75rem}
+.a-tab{padding:10px 18px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--a-muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Source Serif 4',serif}
+.a-tab:hover{color:var(--a-gold)}
+.a-tab.active{color:var(--a-gold);border-bottom-color:var(--a-gold)}
 
-.q-list-item{background:var(--admin-surface);border:0.5px solid var(--admin-border);border-radius:6px;padding:12px 16px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px;transition:border-color 0.15s}
-.q-list-item:hover{border-color:rgba(212,175,55,0.4)}
-.q-list-num{font-size:12px;color:var(--admin-accent);min-width:28px;padding-top:2px}
-.q-list-content{flex:1;min-width:0}
-.q-list-text{font-size:14px;color:var(--admin-text);line-height:1.5;margin-bottom:4px}
-.q-list-meta{font-size:11px;color:var(--admin-muted)}
-.q-list-actions{display:flex;gap:6px;flex-shrink:0}
-.q-list-btn{font-size:11px;padding:4px 10px;border-radius:3px;border:0.5px solid var(--admin-border);background:transparent;color:var(--admin-muted);cursor:pointer;transition:all 0.15s;font-family:'Source Serif 4',serif}
-.q-list-btn:hover{border-color:var(--admin-accent);color:var(--admin-accent)}
-.q-list-btn.del:hover{border-color:#C47070;color:#C47070}
+.a-section-title{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--a-gold);margin-bottom:1rem;padding-bottom:7px;border-bottom:0.5px solid var(--a-border)}
+.a-card{background:var(--a-surf);border:0.5px solid var(--a-border);border-radius:8px;padding:1.25rem 1.5rem;margin-bottom:1rem}
+.a-field{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+.a-field label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--a-muted)}
+.a-field input,.a-field textarea,.a-field select{font-family:'Source Serif 4',serif;font-size:14px;background:#0A0C12;border:0.5px solid var(--a-border);border-radius:5px;padding:8px 11px;color:var(--a-text);outline:none;transition:border-color .2s;width:100%}
+.a-field input:focus,.a-field textarea:focus,.a-field select:focus{border-color:var(--a-gold)}
+.a-field textarea{resize:vertical;min-height:66px}
+.a-row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.a-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.a-row4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}
 
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem}
-.stat-box{background:var(--admin-surface);border:0.5px solid var(--admin-border);border-radius:6px;padding:12px 14px;text-align:center}
-.stat-num{font-family:'Playfair Display',serif;font-size:26px;color:var(--admin-accent)}
-.stat-lbl{font-size:11px;color:var(--admin-muted);text-transform:uppercase;letter-spacing:0.08em;margin-top:2px}
+.stat-box{background:var(--a-surf);border:0.5px solid var(--a-border);border-radius:6px;padding:12px;text-align:center}
+.stat-num{font-family:'Playfair Display',serif;font-size:26px;color:var(--a-gold)}
+.stat-lbl{font-size:11px;color:var(--a-muted);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
 
-.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--admin-bg)}
-.login-box{background:var(--admin-surface);border:0.5px solid var(--admin-border);border-radius:10px;padding:2.5rem;width:340px;text-align:center}
-.login-box h2{font-family:'Playfair Display',serif;color:var(--admin-accent);font-size:20px;margin-bottom:6px}
-.login-box p{font-size:13px;color:var(--admin-muted);margin-bottom:1.5rem}
-.login-input{width:100%;font-family:'Source Serif 4',serif;font-size:15px;background:#0A0C12;border:0.5px solid var(--admin-border);border-radius:5px;padding:11px 14px;color:var(--admin-text);outline:none;margin-bottom:12px;transition:border-color 0.2s}
-.login-input:focus{border-color:var(--admin-accent)}
-.login-btn{width:100%;padding:12px;font-family:'Playfair Display',serif;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;background:var(--admin-accent);color:var(--admin-bg);border:none;border-radius:5px;cursor:pointer;transition:background 0.2s}
-.login-btn:hover{background:#c9a22e}
-.login-error{font-size:12px;color:#C47070;margin-top:8px;min-height:18px}
+/* KEY LIST */
+.key-item{background:var(--a-surf);border:0.5px solid var(--a-border);border-radius:6px;padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;gap:14px;transition:border-color .15s}
+.key-item:hover{border-color:rgba(212,175,55,.4)}
+.key-code{font-family:'Playfair Display',serif;font-size:17px;letter-spacing:.18em;color:var(--a-gold);min-width:110px}
+.key-info{flex:1}
+.key-name{font-size:14px;color:var(--a-text);margin-bottom:3px}
+.key-meta{font-size:12px;color:var(--a-muted)}
+.key-uses{min-width:120px;text-align:center}
+.key-uses-num{font-family:'Playfair Display',serif;font-size:20px;color:var(--a-text)}
+.key-uses-lbl{font-size:11px;color:var(--a-muted)}
+.key-bar{height:3px;background:rgba(255,255,255,.08);border-radius:2px;margin-top:5px;overflow:hidden}
+.key-bar-fill{height:100%;border-radius:2px;transition:width .3s}
+.key-actions{display:flex;gap:6px}
+.k-btn{font-size:11px;padding:4px 10px;border-radius:3px;border:0.5px solid var(--a-border);background:transparent;color:var(--a-muted);cursor:pointer;transition:all .15s;font-family:'Source Serif 4',serif}
+.k-btn:hover{border-color:var(--a-gold);color:var(--a-gold)}
+.k-btn.del:hover{border-color:#C47070;color:#C47070}
 
-.import-zone{border:1px dashed var(--admin-border);border-radius:6px;padding:1.5rem;text-align:center;color:var(--admin-muted);font-size:13px;cursor:pointer;transition:all 0.2s}
-.import-zone:hover{border-color:var(--admin-accent);color:var(--admin-accent)}
+/* Q LIST */
+.q-item{background:var(--a-surf);border:0.5px solid var(--a-border);border-radius:6px;padding:11px 15px;margin-bottom:7px;display:flex;align-items:flex-start;gap:12px}
+.q-item:hover{border-color:rgba(212,175,55,.35)}
+.q-num-badge{font-size:11px;color:var(--a-gold);min-width:26px;padding-top:2px}
+.q-content{flex:1;min-width:0}
+.q-text-preview{font-size:14px;color:var(--a-text);line-height:1.5;margin-bottom:3px}
+.q-meta{font-size:11px;color:var(--a-muted)}
+.q-actions{display:flex;gap:5px;flex-shrink:0}
 
-.toast{position:fixed;bottom:24px;right:24px;background:var(--admin-surface);border:0.5px solid var(--admin-accent);color:var(--admin-accent);padding:10px 18px;border-radius:6px;font-size:13px;z-index:999;opacity:0;transform:translateY(8px);transition:all 0.3s;pointer-events:none}
+.radio-group{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.radio-opt{display:flex;align-items:center;gap:5px;padding:5px 10px;border:0.5px solid var(--a-border);border-radius:4px;cursor:pointer;font-size:13px;color:var(--a-muted);transition:all .14s}
+.radio-opt:hover{border-color:var(--a-gold);color:var(--a-gold)}
+.radio-opt.active{border-color:var(--a-gold);color:var(--a-gold);background:rgba(212,175,55,.08)}
+.radio-opt input{display:none}
+
+.toast{position:fixed;bottom:22px;right:22px;background:var(--a-surf);border:0.5px solid var(--a-gold);color:var(--a-gold);padding:10px 18px;border-radius:6px;font-size:13px;z-index:999;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none}
 .toast.show{opacity:1;transform:translateY(0)}
-
 .hidden{display:none!important}
-@media(max-width:600px){
-  .field-row,.admin-row,.admin-row-4,.stats-grid{grid-template-columns:1fr}
-}
+@media(max-width:580px){.field-row,.a-row2,.a-row3,.a-row4,.stats-grid{grid-template-columns:1fr}.key-item{flex-wrap:wrap}}
 </style>
 </head>
 <body>
@@ -157,7 +170,7 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
 <button id="admin-toggle-btn" onclick="goAdmin()">⚙ Greffe</button>
 <div id="toast" class="toast"></div>
 
-<!-- ══ EXAM APP ══ -->
+<!-- ══════════ EXAM ══════════ -->
 <div id="exam-app">
   <div class="header">
     <div class="seal">⚖</div>
@@ -165,29 +178,32 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
     <p>Examen de qualification juridique</p>
   </div>
 
-  <!-- Screen: Identity -->
+  <!-- Screen: Identity + Key -->
   <div id="screen-identity">
     <div class="card">
-      <div class="section-title">Identification du candidat</div>
+      <div class="section-lbl">Identification du candidat</div>
       <div class="field-row">
-        <div class="field"><label>Prénom</label><input type="text" id="inp-prenom" placeholder="ex : Jean"></div>
-        <div class="field"><label>Nom</label><input type="text" id="inp-nom" placeholder="ex : Dupont"></div>
+        <div class="field"><label>Prénom</label><input type="text" id="inp-prenom" placeholder="ex : Jean" autocomplete="off"></div>
+        <div class="field"><label>Nom</label><input type="text" id="inp-nom" placeholder="ex : Dupont" autocomplete="off"></div>
       </div>
-      <p class="note">Aucune donnée personnelle n'est collectée ni stockée. Vos réponses sont transmises uniquement au greffe.</p>
-      <button class="btn-primary" onclick="startExam()">Commencer l'examen</button>
-    </div>
-    <div id="empty-bank-msg" class="empty-bank hidden">
-      <p>Banque de questions vide</p>
-      <p style="font-size:14px;margin-top:6px">Accédez au panneau Greffe pour ajouter des questions.</p>
+      <div class="field key-field">
+        <label>Clé d'accès</label>
+        <input type="text" id="inp-key" placeholder="XXXXXX" maxlength="12" autocomplete="off" oninput="this.value=this.value.toUpperCase();previewKey()" onkeydown="if(event.key==='Enter')startExam()">
+        <div id="key-preview"></div>
+        <div id="key-error" class="key-error"></div>
+      </div>
+      <p class="note">Aucune donnée personnelle n'est collectée. La clé vous est fournie par le greffe.</p>
+      <button class="btn-primary" onclick="startExam()">Accéder à l'examen</button>
     </div>
   </div>
 
   <!-- Screen: Exam -->
   <div id="screen-exam" class="hidden">
-    <div class="progress-wrap">
-      <div class="progress-labels"><span id="prog-label">Question 1 / 15</span><span id="prog-pct">0 %</span></div>
-      <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    <div class="prog-wrap">
+      <div class="prog-labels"><span id="prog-label">Question 1 / 15</span><span id="prog-pct">0 %</span></div>
+      <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
     </div>
+    <div id="exam-badge-wrap"></div>
     <div id="question-container"></div>
     <div class="nav-row">
       <button class="btn-secondary" id="btn-prev" onclick="navigate(-1)">← Précédent</button>
@@ -197,124 +213,166 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
 
   <!-- Screen: Results -->
   <div id="screen-results" class="hidden">
-    <div class="card" style="text-align:center">
-      <div class="section-title" style="margin-bottom:1rem">Résultat de l'examen</div>
-      <div class="score-display" id="score-num">—</div>
-      <div class="score-sub" id="score-sub"></div>
-      <div class="score-mention" id="score-mention"></div>
+    <div class="card" style="text-align:center;padding:2.5rem 2rem">
+      <div style="font-size:42px;margin-bottom:1.25rem">⚖</div>
+      <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:500;color:var(--ink);margin-bottom:.75rem">Copie remise au greffe</div>
+      <div style="font-size:15px;color:var(--muted);line-height:1.8;max-width:440px;margin:0 auto">
+        Nous avons bien reçu votre copie,<br>
+        <span style="font-style:italic">Maître ${''}</span> Le greffe reviendra vers vous dans les meilleurs délais avec votre résultat.
+      </div>
+      <div id="candidat-confirm" style="margin-top:1.25rem;font-family:'Playfair Display',serif;font-size:16px;color:var(--gold)"></div>
     </div>
-    <div class="webhook-status" id="webhook-status"></div>
-    <div id="review-container"></div>
+    <div class="wh-status" id="wh-status"></div>
     <div style="text-align:center;margin-top:1.5rem">
-      <button class="btn-secondary" onclick="restartExam()">Recommencer l'examen</button>
+      <button class="btn-secondary" onclick="restartExam()">Nouvel examen</button>
     </div>
   </div>
 </div>
 
-<!-- ══ ADMIN PANEL ══ -->
+<!-- ══════════ ADMIN ══════════ -->
 <div id="admin-panel">
-  <!-- Login -->
   <div id="admin-login" class="login-wrap">
     <div class="login-box">
       <div style="font-size:32px;margin-bottom:12px">⚖</div>
       <h2>Greffe — Accès restreint</h2>
       <p>Cour Suprême de San Andreas</p>
-      <input type="password" id="pwd-input" class="login-input" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')checkPwd()">
+      <input type="password" id="pwd-input" class="a-input" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')checkPwd()">
       <button class="login-btn" onclick="checkPwd()">Accéder au greffe</button>
-      <div id="login-error" class="login-error"></div>
-      <button onclick="goExam()" style="background:none;border:none;font-size:12px;color:var(--admin-muted);cursor:pointer;margin-top:16px;text-decoration:underline">Retour à l'examen</button>
+      <div id="login-err" class="login-err"></div>
+      <button onclick="goExam()" style="background:none;border:none;font-size:12px;color:var(--a-muted);cursor:pointer;margin-top:14px;text-decoration:underline">Retour à l'examen</button>
     </div>
   </div>
 
-  <!-- Dashboard -->
   <div id="admin-dash" class="hidden">
-    <div class="admin-topbar">
-      <div class="admin-topbar-title">⚖ Greffe — Banque de questions</div>
-      <div class="admin-topbar-right">
-        <button class="admin-btn" onclick="exportJSON()">Exporter JSON</button>
-        <button class="admin-btn" onclick="document.getElementById('import-file').click()">Importer JSON</button>
+    <div class="a-topbar">
+      <div class="a-topbar-title">⚖ Greffe — Administration</div>
+      <div class="a-topbar-right">
+        <button class="a-btn" onclick="exportJSON()">Exporter JSON</button>
+        <button class="a-btn" onclick="document.getElementById('import-file').click()">Importer JSON</button>
         <input type="file" id="import-file" accept=".json" class="hidden" onchange="importJSON(event)">
-        <button class="admin-btn" onclick="goExam()">Voir l'examen</button>
-        <button class="admin-btn" onclick="adminLogout()">Déconnexion</button>
+        <button class="a-btn" onclick="goExam()">Voir l'examen</button>
+        <button class="a-btn" onclick="adminLogout()">Déconnexion</button>
       </div>
     </div>
 
-    <div class="admin-body">
+    <div class="a-body">
       <!-- Stats -->
-      <div class="admin-section">
-        <div class="admin-section-title">Vue d'ensemble</div>
-        <div class="stats-grid">
-          <div class="stat-box"><div class="stat-num" id="stat-total">0</div><div class="stat-lbl">Questions</div></div>
-          <div class="stat-box"><div class="stat-num" id="stat-cats">0</div><div class="stat-lbl">Catégories</div></div>
-          <div class="stat-box"><div class="stat-num" id="stat-draw">15</div><div class="stat-lbl">Tirées / examen</div></div>
-          <div class="stat-box"><div class="stat-num" id="stat-webhook">—</div><div class="stat-lbl">Webhook</div></div>
+      <div class="stats-grid">
+        <div class="stat-box"><div class="stat-num" id="stat-keys">0</div><div class="stat-lbl">Clés actives</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-exams">0</div><div class="stat-lbl">Types d'examen</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-qs">0</div><div class="stat-lbl">Questions</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-wh">—</div><div class="stat-lbl">Webhook</div></div>
+      </div>
+
+      <!-- Webhook -->
+      <div class="a-card" style="margin-bottom:1.5rem">
+        <div class="a-section-title">Configuration</div>
+        <div class="a-field" style="margin:0">
+          <label>URL Webhook Discord</label>
+          <input type="text" id="inp-webhook" placeholder="https://discord.com/api/webhooks/..." oninput="saveWebhook()">
         </div>
-        <div class="admin-card" style="padding:1rem 1.25rem">
-          <div class="admin-field" style="margin:0">
-            <label>URL Webhook Discord</label>
-            <input type="text" id="inp-webhook" placeholder="https://discord.com/api/webhooks/..." oninput="saveWebhook()">
+      </div>
+
+      <!-- Tabs -->
+      <div class="a-tabs">
+        <button class="a-tab active" onclick="switchTab('keys',this)">Clés d'accès</button>
+        <button class="a-tab" onclick="switchTab('questions',this)">Banque de questions</button>
+      </div>
+
+      <!-- TAB: KEYS -->
+      <div id="tab-keys">
+        <div class="a-section-title">Créer une clé d'accès</div>
+        <div class="a-card">
+          <div class="a-row3">
+            <div class="a-field" style="margin:0">
+              <label>Code de la clé</label>
+              <div style="display:flex;gap:8px;align-items:center">
+                <input type="text" id="k-code" placeholder="ex : BARREAU" maxlength="12" oninput="this.value=this.value.toUpperCase()" style="flex:1">
+                <button onclick="genCode()" style="background:#0A0C12;border:0.5px solid var(--a-border);border-radius:5px;padding:8px 10px;color:var(--a-gold);cursor:pointer;font-size:13px;white-space:nowrap">⟳ Générer</button>
+              </div>
+            </div>
+            <div class="a-field" style="margin:0">
+              <label>Nom de l'examen</label>
+              <input type="text" id="k-name" placeholder="ex : Examen du Barreau">
+            </div>
+            <div class="a-field" style="margin:0">
+              <label>Utilisations max (0 = illimité)</label>
+              <input type="number" id="k-uses" value="10" min="0">
+            </div>
           </div>
-          <div style="margin-top:8px">
-            <label style="font-size:11px;color:var(--admin-muted);text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:5px">Questions tirées par examen</label>
-            <input type="number" id="inp-draw" min="1" max="50" value="15" style="font-family:'Source Serif 4',serif;font-size:14px;background:#0A0C12;border:0.5px solid var(--admin-border);border-radius:5px;padding:7px 10px;color:var(--admin-text);outline:none;width:80px" oninput="saveDraw()">
+          <div class="a-field" style="margin-top:10px">
+            <label>Associer à un type d'examen (filtre les questions par catégorie)</label>
+            <select id="k-exam-type">
+              <option value="">— Toutes les questions —</option>
+            </select>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px">
+            <button class="a-btn accent" onclick="saveKey()" id="save-key-btn">Créer la clé</button>
+            <button class="a-btn hidden" id="cancel-key-btn" onclick="resetKeyForm()">Annuler</button>
+          </div>
+        </div>
+
+        <div class="a-section-title" style="margin-top:1.5rem">Clés d'accès (<span id="key-count">0</span>)</div>
+        <div id="key-list"></div>
+
+        <div style="margin-top:1.5rem">
+          <div class="a-section-title">Types d'examens</div>
+          <div class="a-card">
+            <p style="font-size:13px;color:var(--a-muted);margin-bottom:10px">Les types d'examens sont créés automatiquement depuis les catégories de vos questions. Chaque clé peut être restreinte à un type d'examen.</p>
+            <div id="exam-types-list" style="display:flex;gap:8px;flex-wrap:wrap"></div>
           </div>
         </div>
       </div>
 
-      <!-- Add Question -->
-      <div class="admin-section">
-        <div class="admin-section-title" id="form-section-title">Ajouter une question</div>
-        <div class="admin-card">
-          <input type="hidden" id="edit-id" value="">
-          <div class="admin-field">
+      <!-- TAB: QUESTIONS -->
+      <div id="tab-questions" class="hidden">
+        <div class="a-section-title" id="q-form-title">Ajouter une question</div>
+        <div class="a-card">
+          <input type="hidden" id="q-edit-id">
+          <div class="a-field">
             <label>Question</label>
-            <textarea id="f-question" placeholder="Rédigez la question..."></textarea>
+            <textarea id="f-q" placeholder="Rédigez la question..."></textarea>
           </div>
-          <div class="admin-row" style="margin-bottom:12px">
-            <div class="admin-field" style="margin:0">
-              <label>Catégorie</label>
-              <input type="text" id="f-cat" placeholder="ex : Droit Pénal, Procédure, Constitution...">
+          <div class="a-row2" style="margin-bottom:10px">
+            <div class="a-field" style="margin:0">
+              <label>Catégorie / Type d'examen</label>
+              <input type="text" id="f-cat" placeholder="ex : Droit Pénal, Barreau, Concours Juge...">
             </div>
-            <div class="admin-field" style="margin:0">
+            <div class="a-field" style="margin:0">
               <label>Référence juridique (optionnel)</label>
               <input type="text" id="f-ref" placeholder="ex : Art. 42 du Code Pénal de SA">
             </div>
           </div>
-          <div class="admin-field">
-            <label>Proposition A</label><input type="text" id="f-a" placeholder="Réponse A">
-          </div>
-          <div class="admin-field">
-            <label>Proposition B</label><input type="text" id="f-b" placeholder="Réponse B">
-          </div>
-          <div class="admin-field">
-            <label>Proposition C</label><input type="text" id="f-c" placeholder="Réponse C">
-          </div>
-          <div class="admin-field">
-            <label>Proposition D</label><input type="text" id="f-d" placeholder="Réponse D (optionnel)">
-          </div>
-          <div class="correct-radio">
-            <label>Bonne réponse</label>
-            <div class="radio-group" id="correct-radio-group">
-              <div class="radio-opt active" data-val="0" onclick="selectCorrect(this)"><input type="radio" name="correct" checked> A</div>
-              <div class="radio-opt" data-val="1" onclick="selectCorrect(this)"><input type="radio" name="correct"> B</div>
-              <div class="radio-opt" data-val="2" onclick="selectCorrect(this)"><input type="radio" name="correct"> C</div>
-              <div class="radio-opt" data-val="3" onclick="selectCorrect(this)"><input type="radio" name="correct"> D</div>
+          <div class="a-field"><label>Proposition A</label><input type="text" id="f-a" placeholder="Réponse A"></div>
+          <div class="a-field"><label>Proposition B</label><input type="text" id="f-b" placeholder="Réponse B"></div>
+          <div class="a-field"><label>Proposition C</label><input type="text" id="f-c" placeholder="Réponse C"></div>
+          <div class="a-field"><label>Proposition D (optionnel)</label><input type="text" id="f-d" placeholder="Réponse D"></div>
+          <div style="margin-bottom:10px">
+            <label style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--a-muted);display:block;margin-bottom:6px">Bonne réponse</label>
+            <div class="radio-group" id="correct-rg">
+              <div class="radio-opt active" data-val="0" onclick="selCorrect(this)"><input type="radio" name="cr" checked> A</div>
+              <div class="radio-opt" data-val="1" onclick="selCorrect(this)"> B</div>
+              <div class="radio-opt" data-val="2" onclick="selCorrect(this)"> C</div>
+              <div class="radio-opt" data-val="3" onclick="selCorrect(this)"> D</div>
             </div>
           </div>
-          <div class="admin-field" style="margin-top:12px">
-            <label>Explication / Commentaire (optionnel)</label>
-            <textarea id="f-expl" placeholder="Explication après correction..."></textarea>
+          <div class="a-field">
+            <label>Explication (optionnel)</label>
+            <textarea id="f-expl" placeholder="Commentaire affiché après correction..."></textarea>
           </div>
-          <div style="display:flex;gap:10px;margin-top:1rem">
-            <button class="admin-btn accent" onclick="saveQuestion()" id="save-q-btn">Ajouter la question</button>
-            <button class="admin-btn" onclick="resetForm()" id="cancel-edit-btn" style="display:none">Annuler</button>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <button class="a-btn accent" onclick="saveQuestion()" id="save-q-btn">Ajouter</button>
+            <button class="a-btn hidden" id="cancel-q-btn" onclick="resetQForm()">Annuler</button>
           </div>
         </div>
-      </div>
 
-      <!-- Question List -->
-      <div class="admin-section">
-        <div class="admin-section-title">Banque de questions (<span id="q-count">0</span>)</div>
+        <!-- Filter + list -->
+        <div style="display:flex;align-items:center;gap:10px;margin:1.5rem 0 .75rem;flex-wrap:wrap">
+          <div class="a-section-title" style="margin:0;border:none;padding:0;flex:1">Questions (<span id="q-count">0</span>)</div>
+          <select id="q-filter" onchange="renderQList()" style="font-family:'Source Serif 4',serif;font-size:12px;background:#0A0C12;border:0.5px solid var(--a-border);border-radius:4px;padding:6px 10px;color:var(--a-text);outline:none">
+            <option value="">Toutes catégories</option>
+          </select>
+        </div>
         <div id="q-list"></div>
       </div>
     </div>
@@ -322,411 +380,481 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
 </div>
 
 <script>
-// ── CONFIG ──
-const ADMIN_PASSWORD = "greffe2024"; // Changez ce mot de passe !
-const LS_QUESTIONS = "cssandreas_questions";
-const LS_WEBHOOK   = "cssandreas_webhook";
-const LS_DRAW      = "cssandreas_draw";
-const LS_AUTHED    = "cssandreas_authed";
+// ── CONSTANTS ──
+const ADMIN_PWD = "greffe2024"; // Changez ce mot de passe !
+const LS_Q   = "cssa_questions";
+const LS_K   = "cssa_keys";
+const LS_WH  = "cssa_webhook";
+const LS_AUTH= "cssa_authed";
 
 // ── STATE ──
-let questions = [], webhookURL = "", drawCount = 15;
-let shuffled = [], answers = [], currentQ = 0, candidat = {};
-let correctSelected = 0, editingId = null;
+let questions=[], keys=[], webhookURL="";
+let shuffled=[], answers=[], currentQ=0, candidat={}, activeKey=null;
+let correctSel=0, editKeyId=null, editQId=null;
 
 // ── INIT ──
-function init() {
-  questions = JSON.parse(localStorage.getItem(LS_QUESTIONS) || "[]");
-  if (!questions.length) loadDefaultQuestions();
-  webhookURL = localStorage.getItem(LS_WEBHOOK) || "";
-  drawCount  = parseInt(localStorage.getItem(LS_DRAW) || "15");
-  checkEmptyBank();
+function init(){
+  questions = JSON.parse(localStorage.getItem(LS_Q)||"[]");
+  keys       = JSON.parse(localStorage.getItem(LS_K)||"[]");
+  webhookURL = localStorage.getItem(LS_WH)||"";
+  if(!questions.length) loadDefaults();
 }
+function uid(){ return Math.random().toString(36).slice(2,9) }
+function save(){ localStorage.setItem(LS_Q,JSON.stringify(questions)); localStorage.setItem(LS_K,JSON.stringify(keys)); }
 
-function loadDefaultQuestions() {
-  const defaults = [
-    {id:uid(),q:"En droit pénal de San Andreas, quel article définit la notion de meurtre au premier degré ?",opts:["Art. 12 du Code Pénal","Art. 187 du Code Pénal","Art. 3 du Code Pénal","Art. 55 du Code Pénal"],correct:1,cat:"Droit Pénal",ref:"Code Pénal de San Andreas, Art. 187",expl:"L'article 187 définit le meurtre prémédité comme un acte volontaire commis avec préméditation."},
-    {id:uid(),q:"Quel est le rôle du Procureur Général de l'État de San Andreas ?",opts:["Il défend les accusés","Il représente l'État dans les affaires pénales","Il préside les audiences","Il nomme les juges"],correct:1,cat:"Procédure",ref:"Constitution de San Andreas, Art. 8",expl:"Le Procureur Général est le chef du ministère public et représente l'État."},
-    {id:uid(),q:"La présomption d'innocence implique que :",opts:["L'accusé doit prouver son innocence","La culpabilité doit être prouvée au-delà du doute raisonnable","Le juge peut présumer la culpabilité","La police peut détenir sans charge pendant 72h"],correct:1,cat:"Droits Fondamentaux",ref:"Déclaration des Droits de San Andreas, Art. 1",expl:"Ce principe fondamental protège tout citoyen jusqu'à condamnation définitive."},
-    {id:uid(),q:"Qu'est-ce qu'une 'mise en examen' à San Andreas ?",opts:["Un acquittement provisoire","Un acte formel indiquant qu'une personne est suspectée d'une infraction","Une peine de prison ferme","Un jugement en appel"],correct:1,cat:"Procédure",ref:"Code de Procédure Pénale, Art. 23",expl:"La mise en examen est l'acte par lequel le juge d'instruction inculpe formellement un suspect."},
-    {id:uid(),q:"La légitime défense est reconnue si :",opts:["La riposte est disproportionnée","La riposte est proportionnée à la menace et immédiate","La victime a provoqué l'agresseur","Le témoin confirme les faits"],correct:1,cat:"Droit Pénal",ref:"Code Pénal de San Andreas, Art. 22",expl:"La proportionnalité et l'immédiateté de la riposte sont les deux critères essentiels."},
-    {id:uid(),q:"Devant quelle juridiction se tiennent les affaires criminelles graves à San Andreas ?",opts:["Le tribunal correctionnel","La Cour d'assises de San Andreas","Le tribunal de police","La chambre civile"],correct:1,cat:"Organisation Judiciaire",ref:"Loi Organique sur la Justice, Art. 5",expl:"Les crimes punis de plus de 10 ans relèvent de la Cour d'assises."},
-    {id:uid(),q:"Qu'est-ce qu'un 'mandat d'arrêt' à San Andreas ?",opts:["Un ordre de libération","Un acte ordonnant l'arrestation d'une personne identifiée","Un document de convocation simple","Un titre foncier"],correct:1,cat:"Procédure",ref:"Code de Procédure Pénale, Art. 41",expl:"Le mandat d'arrêt est décerné par un juge et autorise les forces de l'ordre à interpeller et détenir la personne visée."},
-    {id:uid(),q:"En droit civil de San Andreas, la prescription de droit commun est de :",opts:["1 an","3 ans","5 ans","10 ans"],correct:2,cat:"Droit Civil",ref:"Code Civil de San Andreas, Art. 112",expl:"Passé ce délai, l'action en justice est irrecevable sauf exceptions légales."},
-    {id:uid(),q:"Le principe 'non bis in idem' signifie :",opts:["Nul n'est censé ignorer la loi","On ne peut être jugé deux fois pour les mêmes faits","La loi est rétroactive","Le juge peut rouvrir un dossier classé"],correct:1,cat:"Droits Fondamentaux",ref:"Constitution de San Andreas, Art. 14",expl:"Ce principe interdit le double jugement pour une même infraction."},
-    {id:uid(),q:"La récidive en droit pénal de San Andreas a pour effet :",opts:["De réduire la peine","D'effacer le casier judiciaire","D'aggraver la peine applicable","D'entraîner l'acquittement"],correct:2,cat:"Droit Pénal",ref:"Code Pénal de San Andreas, Art. 62",expl:"Le juge peut porter la peine au double du maximum légal en cas de récidive légale."}
+// ── DEFAULT DATA ──
+function loadDefaults(){
+  const cats=["Droit Pénal","Procédure","Droits Fondamentaux","Droit Civil","Organisation Judiciaire"];
+  questions=[
+    {id:uid(),q:"En droit pénal de San Andreas, quel article définit le meurtre au premier degré ?",opts:["Art. 12 du Code Pénal","Art. 187 du Code Pénal","Art. 3 du Code Pénal","Art. 55 du Code Pénal"],correct:1,cat:"Droit Pénal",ref:"Code Pénal SA, Art. 187",expl:"L'article 187 définit le meurtre prémédité comme un acte volontaire commis avec préméditation."},
+    {id:uid(),q:"Quel est le rôle du Procureur Général de l'État de San Andreas ?",opts:["Il défend les accusés","Il représente l'État dans les affaires pénales","Il préside les audiences","Il nomme les juges"],correct:1,cat:"Organisation Judiciaire",ref:"Constitution SA, Art. 8",expl:"Le Procureur Général est le chef du ministère public."},
+    {id:uid(),q:"La présomption d'innocence implique que :",opts:["L'accusé doit prouver son innocence","La culpabilité doit être prouvée au-delà du doute raisonnable","Le juge peut présumer la culpabilité","La police peut détenir sans charge 72h"],correct:1,cat:"Droits Fondamentaux",ref:"Déclaration des Droits SA, Art. 1",expl:"Ce principe fondamental protège tout citoyen jusqu'à condamnation définitive."},
+    {id:uid(),q:"Qu'est-ce qu'une mise en examen à San Andreas ?",opts:["Un acquittement provisoire","Un acte formel indiquant qu'une personne est suspectée","Une peine ferme","Un jugement en appel"],correct:1,cat:"Procédure",ref:"Code de Procédure Pénale SA, Art. 23"},
+    {id:uid(),q:"La légitime défense est reconnue si :",opts:["La riposte est disproportionnée","La riposte est proportionnée et immédiate","La victime a provoqué l'agresseur","Le témoin confirme les faits"],correct:1,cat:"Droit Pénal",ref:"Code Pénal SA, Art. 22"},
+    {id:uid(),q:"Devant quelle juridiction se tiennent les affaires criminelles graves ?",opts:["Le tribunal correctionnel","La Cour d'assises de San Andreas","Le tribunal de police","La chambre civile"],correct:1,cat:"Organisation Judiciaire",ref:"Loi Organique sur la Justice SA, Art. 5"},
+    {id:uid(),q:"Qu'est-ce qu'un mandat d'arrêt à San Andreas ?",opts:["Un ordre de libération","Un acte ordonnant l'arrestation d'une personne","Une convocation simple","Un titre foncier"],correct:1,cat:"Procédure",ref:"Code de Procédure Pénale SA, Art. 41"},
+    {id:uid(),q:"En droit civil de San Andreas, la prescription de droit commun est de :",opts:["1 an","3 ans","5 ans","10 ans"],correct:2,cat:"Droit Civil",ref:"Code Civil SA, Art. 112"},
+    {id:uid(),q:"Le principe 'non bis in idem' signifie :",opts:["Nul n'est censé ignorer la loi","On ne peut être jugé deux fois pour les mêmes faits","La loi est rétroactive","Le juge peut rouvrir un dossier classé"],correct:1,cat:"Droits Fondamentaux",ref:"Constitution SA, Art. 14"},
+    {id:uid(),q:"La récidive en droit pénal de San Andreas a pour effet :",opts:["De réduire la peine","D'effacer le casier","D'aggraver la peine applicable","D'entraîner l'acquittement"],correct:2,cat:"Droit Pénal",ref:"Code Pénal SA, Art. 62"},
   ];
-  questions = defaults;
-  saveQuestions();
+  // Default key
+  keys=[{id:uid(),code:"BARREAU",name:"Examen du Barreau",maxUses:0,usedCount:0,examType:"",createdAt:new Date().toISOString()}];
+  save();
 }
 
-function uid() { return Math.random().toString(36).slice(2,9); }
-function saveQuestions() { localStorage.setItem(LS_QUESTIONS, JSON.stringify(questions)); }
-function saveWebhook() {
-  webhookURL = document.getElementById('inp-webhook').value.trim();
-  localStorage.setItem(LS_WEBHOOK, webhookURL);
-  updateStats();
-}
-function saveDraw() {
-  drawCount = parseInt(document.getElementById('inp-draw').value) || 15;
-  localStorage.setItem(LS_DRAW, drawCount);
-  updateStats();
-}
-
-// ── EXAM ──
-function checkEmptyBank() {
-  const empty = !questions.length;
-  document.getElementById('empty-bank-msg').classList.toggle('hidden', !empty);
-  document.querySelector('#screen-identity .card').style.display = empty ? 'none' : '';
+// ══ KEY PREVIEW ══
+function previewKey(){
+  const val = document.getElementById('inp-key').value.trim().toUpperCase();
+  const el = document.getElementById('key-preview');
+  const err = document.getElementById('key-error');
+  err.textContent='';
+  if(!val){ el.innerHTML=''; return; }
+  const k = keys.find(x=>x.code===val);
+  if(k){
+    const remaining = k.maxUses===0 ? '∞' : (k.maxUses - k.usedCount);
+    el.innerHTML = `<div class="key-badge">✓ ${k.name}${k.examType?' — '+k.examType:''}</div>`;
+  } else {
+    el.innerHTML='';
+  }
 }
 
-function startExam() {
-  const p = document.getElementById('inp-prenom').value.trim();
-  const n = document.getElementById('inp-nom').value.trim();
-  if (!p || !n) { alert('Veuillez saisir votre prénom et votre nom.'); return; }
-  if (!questions.length) { alert('Aucune question disponible. Contactez le greffe.'); return; }
-  candidat = {prenom: p, nom: n};
-  const draw = Math.min(drawCount, questions.length);
-  shuffled = shuffle([...questions]).slice(0, draw).map(q => ({
+// ══ EXAM ══
+function startExam(){
+  const p=document.getElementById('inp-prenom').value.trim();
+  const n=document.getElementById('inp-nom').value.trim();
+  const kv=document.getElementById('inp-key').value.trim().toUpperCase();
+  const err=document.getElementById('key-error');
+  if(!p||!n){ err.textContent='Veuillez saisir votre prénom et votre nom.'; return; }
+  if(!kv){ err.textContent='Veuillez saisir votre clé d\'accès.'; return; }
+  const k=keys.find(x=>x.code===kv);
+  if(!k){ err.textContent='Clé d\'accès invalide. Contactez le greffe.'; return; }
+  if(k.maxUses>0 && k.usedCount>=k.maxUses){ err.textContent='Cette clé a atteint son nombre maximum d\'utilisations.'; return; }
+  err.textContent='';
+  candidat={prenom:p,nom:n};
+  activeKey=k;
+  // increment use
+  k.usedCount=(k.usedCount||0)+1;
+  save();
+  // filter questions
+  let pool = k.examType ? questions.filter(q=>q.cat===k.examType) : questions;
+  if(!pool.length) pool=questions;
+  const draw = Math.min(15, pool.length);
+  shuffled=shuffle([...pool]).slice(0,draw).map(q=>({
     ...q,
-    shuffledOpts: [...q.opts.map((o,i) => ({text:o, orig:i}))].sort(() => Math.random()-0.5)
+    sOpts:[...q.opts.map((o,i)=>({text:o,orig:i}))].sort(()=>Math.random()-.5)
   }));
-  answers = new Array(shuffled.length).fill(null);
-  currentQ = 0;
+  answers=new Array(shuffled.length).fill(null);
+  currentQ=0;
   document.getElementById('screen-identity').classList.add('hidden');
   document.getElementById('screen-exam').classList.remove('hidden');
-  renderQuestion();
+  document.getElementById('exam-badge-wrap').innerHTML=`<div class="exam-badge">${k.name}${k.examType?' — '+k.examType:''}</div>`;
+  renderQ();
 }
 
-function shuffle(arr) { return arr.sort(() => Math.random()-0.5); }
+function shuffle(a){ return a.sort(()=>Math.random()-.5) }
 
-function renderQuestion() {
-  const q = shuffled[currentQ];
-  const total = shuffled.length;
-  const pct = Math.round((currentQ / total) * 100);
-  document.getElementById('prog-label').textContent = `Question ${currentQ+1} / ${total}`;
-  document.getElementById('prog-pct').textContent = pct + ' %';
-  document.getElementById('prog-fill').style.width = pct + '%';
-  const sel = answers[currentQ];
-  const letters = ['A','B','C','D'];
-  let html = `<div class="card">
-    <div class="q-number">Question ${currentQ+1} — ${q.cat||''}</div>
-    <div class="q-text">${q.q}</div>`;
-  if (q.ref) html += `<div class="q-ref">${q.ref}</div>`;
-  html += `<div class="options">`;
-  q.shuffledOpts.forEach((o,i) => {
-    html += `<div class="option${sel===i?' selected':''}" onclick="selectAnswer(${i})">
-      <div class="option-letter">${sel===i?'✓':letters[i]}</div>
-      <div class="option-text">${o.text}</div>
-    </div>`;
+function renderQ(){
+  const q=shuffled[currentQ], total=shuffled.length;
+  const pct=Math.round((currentQ/total)*100);
+  document.getElementById('prog-label').textContent=`Question ${currentQ+1} / ${total}`;
+  document.getElementById('prog-pct').textContent=pct+'%';
+  document.getElementById('prog-fill').style.width=pct+'%';
+  const sel=answers[currentQ];
+  const L=['A','B','C','D'];
+  let h=`<div class="card"><div class="q-num">Question ${currentQ+1} — ${q.cat||''}</div><div class="q-text">${q.q}</div>`;
+  if(q.ref) h+=`<div class="q-ref">${q.ref}</div>`;
+  h+=`<div class="options">`;
+  q.sOpts.forEach((o,i)=>{
+    h+=`<div class="opt${sel===i?' selected':''}" onclick="selAns(${i})"><div class="opt-letter">${sel===i?'✓':L[i]}</div><div class="opt-text">${o.text}</div></div>`;
   });
-  html += `</div></div>`;
-  document.getElementById('question-container').innerHTML = html;
-  document.getElementById('btn-prev').disabled = currentQ === 0;
-  document.getElementById('btn-next').textContent = currentQ === total-1 ? 'Terminer →' : 'Suivant →';
+  h+=`</div></div>`;
+  document.getElementById('question-container').innerHTML=h;
+  document.getElementById('btn-prev').disabled=currentQ===0;
+  document.getElementById('btn-next').textContent=currentQ===total-1?'Terminer →':'Suivant →';
 }
 
-function selectAnswer(i) {
-  answers[currentQ] = i;
-  document.querySelectorAll('.option').forEach((el, idx) => {
-    el.classList.toggle('selected', idx === i);
-    el.querySelector('.option-letter').textContent = idx === i ? '✓' : ['A','B','C','D'][idx];
+function selAns(i){
+  answers[currentQ]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('selected',idx===i);
+    el.querySelector('.opt-letter').textContent=idx===i?'✓':['A','B','C','D'][idx];
   });
 }
 
-function navigate(dir) {
-  if (dir === 1 && currentQ === shuffled.length-1) {
-    const unanswered = answers.filter(a => a === null).length;
-    if (unanswered && !confirm(`Il reste ${unanswered} question(s) sans réponse. Terminer quand même ?`)) return;
+function navigate(dir){
+  if(dir===1&&currentQ===shuffled.length-1){
+    const u=answers.filter(a=>a===null).length;
+    if(u&&!confirm(`${u} question(s) sans réponse. Terminer quand même ?`)) return;
     showResults(); return;
   }
-  currentQ = Math.max(0, Math.min(shuffled.length-1, currentQ+dir));
-  renderQuestion();
+  currentQ=Math.max(0,Math.min(shuffled.length-1,currentQ+dir));
+  renderQ();
 }
 
-function showResults() {
+function showResults(){
   document.getElementById('screen-exam').classList.add('hidden');
   document.getElementById('screen-results').classList.remove('hidden');
-  let correct = 0;
-  const details = [];
-  shuffled.forEach((q,i) => {
-    const userOptIdx = answers[i];
-    const userOrig = userOptIdx !== null ? q.shuffledOpts[userOptIdx].orig : null;
-    const isCorrect = userOrig === q.correct;
-    if (isCorrect) correct++;
-    details.push({
-      question: q.q, categorie: q.cat||'—',
-      reponse_candidate: userOptIdx !== null ? q.shuffledOpts[userOptIdx].text : 'Sans réponse',
-      bonne_reponse: q.opts[q.correct],
-      correct: isCorrect, ref: q.ref||''
-    });
-  });
-  const pct = Math.round((correct / shuffled.length) * 100);
-  document.getElementById('score-num').textContent = pct + '%';
-  document.getElementById('score-sub').textContent = `${correct} / ${shuffled.length} questions correctes`;
-  let mention = '';
-  if (pct >= 90) mention = 'Mention Très Bien — Admis(e) avec distinction';
-  else if (pct >= 75) mention = 'Mention Bien — Admis(e)';
-  else if (pct >= 60) mention = 'Mention Passable — Admis(e)';
-  else mention = 'Insuffisant — Non admis(e)';
-  document.getElementById('score-mention').textContent = mention;
 
-  let rev = '<div class="section-title" style="margin-bottom:1rem">Détail des réponses</div>';
-  const letters = ['A','B','C','D'];
-  shuffled.forEach((q,i) => {
-    const userOptIdx = answers[i];
-    const userOrig = userOptIdx !== null ? q.shuffledOpts[userOptIdx].orig : null;
-    rev += `<div class="card" style="margin-bottom:1rem">
-      <div class="q-number">Q${i+1} — ${q.cat||''}</div>
-      <div class="q-text" style="font-size:15px">${q.q}</div>
-      ${q.ref?`<div class="q-ref">${q.ref}</div>`:''}
-      <div class="options" style="margin-top:1rem">`;
-    q.shuffledOpts.forEach((o,j) => {
-      const isUser = j === userOptIdx;
-      const isCorrectAns = o.orig === q.correct;
-      let cls = '';
-      if (isUser && isCorrectAns) cls = 'correct';
-      else if (isUser && !isCorrectAns) cls = 'wrong';
-      else if (isCorrectAns) cls = 'reveal-correct';
-      rev += `<div class="option ${cls}" style="cursor:default">
-        <div class="option-letter">${isCorrectAns?'✓':letters[j]}</div>
-        <div class="option-text">${o.text}</div>
-      </div>`;
-    });
-    rev += `</div>`;
-    if (q.expl) rev += `<div class="explanation-box">${q.expl}</div>`;
-    rev += `</div>`;
+  // Calcul silencieux — rien n'est affiché au candidat
+  let correct=0; const details=[];
+  shuffled.forEach((q,i)=>{
+    const ui=answers[i], uo=ui!==null?q.sOpts[ui].orig:null;
+    const ok=uo===q.correct;
+    if(ok) correct++;
+    details.push({question:q.q,categorie:q.cat||'—',reponse:ui!==null?q.sOpts[ui].text:'Sans réponse',bonne_reponse:q.opts[q.correct],correct:ok,ref:q.ref||'',expl:q.expl||''});
   });
-  document.getElementById('review-container').innerHTML = rev;
-  sendWebhook({candidat, score:pct, correct, total:shuffled.length, mention, details, date:new Date().toLocaleString('fr-FR')});
+  const pct=Math.round((correct/shuffled.length)*100);
+  const mention=pct>=90?'Mention Très Bien':pct>=75?'Mention Bien':pct>=60?'Mention Passable':'Insuffisant';
+
+  // Afficher juste le prénom du candidat dans le message
+  document.getElementById('candidat-confirm').textContent=
+    candidat.prenom+' '+candidat.nom+' — '+( activeKey?activeKey.name:'');
+
+  sendWebhook({candidat,key:activeKey?activeKey.code:'—',exam:activeKey?activeKey.name:'—',score:pct,correct,total:shuffled.length,mention,details,date:new Date().toLocaleString('fr-FR')});
 }
 
-async function sendWebhook(data) {
-  const st = document.getElementById('webhook-status');
-  const url = localStorage.getItem(LS_WEBHOOK) || '';
-  if (!url) { st.textContent = ''; return; }
-  st.className = 'webhook-status sending';
-  st.textContent = 'Transmission au greffe...';
-  const lines = data.details.map((d,i) =>
-    `**Q${i+1}** [${d.categorie}] ${d.correct?'✅':'❌'} — *${d.reponse_candidate}* | Correct : *${d.bonne_reponse}*`
-  ).join('\n');
-  const embed = {embeds:[{
-    title: `📋 QCM — ${data.candidat.prenom} ${data.candidat.nom}`,
-    color: data.score >= 60 ? 3066993 : 15158332,
-    fields: [
-      {name:"Candidat", value:`${data.candidat.prenom} ${data.candidat.nom}`, inline:true},
-      {name:"Score", value:`${data.score}% (${data.correct}/${data.total})`, inline:true},
-      {name:"Mention", value:data.mention, inline:false},
-      {name:"Date", value:data.date, inline:false},
-      {name:"Détail", value:lines.substring(0,1020)+(lines.length>1020?'\n…':'')}
-    ]
+async function sendWebhook(data){
+  const st=document.getElementById('wh-status');
+  const url=localStorage.getItem(LS_WH)||'';
+  if(!url){st.textContent='';return;}
+  st.className='wh-status sending'; st.textContent='Transmission en cours...';
+
+  const fautes=data.details.filter(d=>!d.correct);
+  const fautesText=fautes.length===0
+    ? 'Aucune erreur'
+    : fautes.map(d=>`- ${d.question}`).join('\n');
+
+  // Découpe si >1024 chars
+  const fautesFields=[];
+  const chunks=[];
+  let cur='';
+  fautesText.split('\n').forEach(line=>{
+    if((cur+'\n'+line).length>1020){chunks.push(cur);cur=line;}
+    else{cur=cur?(cur+'\n'+line):line;}
+  });
+  if(cur) chunks.push(cur);
+  chunks.forEach((c,i)=>fautesFields.push({name:i===0?'Erreurs':'(suite)',value:c}));
+
+  const embed={embeds:[{
+    title:`${data.candidat.prenom} ${data.candidat.nom} — ${data.exam} — ${data.correct}/${data.total}`,
+    color:data.score>=60?3066993:15158332,
+    fields:[{name:'Date',value:data.date,inline:true},...fautesFields]
   }]};
-  try {
-    const r = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(embed)});
-    if (r.ok) { st.className='webhook-status sent'; st.textContent='✓ Résultats transmis au greffe.'; }
-    else { st.className='webhook-status error'; st.textContent='Erreur webhook (vérifiez l\'URL).'; }
-  } catch(e) { st.className='webhook-status error'; st.textContent='Impossible de joindre le greffe.'; }
+  try{
+    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(embed)});
+    if(r.ok){st.className='wh-status sent';st.textContent='✓ Copie transmise au greffe.';}
+    else{st.className='wh-status error';st.textContent='Erreur de transmission — contactez le greffe.';}
+  }catch(e){st.className='wh-status error';st.textContent='Transmission impossible — contactez le greffe.';}
 }
 
-function restartExam() {
+function restartExam(){
   document.getElementById('screen-results').classList.add('hidden');
   document.getElementById('screen-identity').classList.remove('hidden');
-  document.getElementById('inp-prenom').value = '';
-  document.getElementById('inp-nom').value = '';
-  checkEmptyBank();
+  document.getElementById('inp-prenom').value='';
+  document.getElementById('inp-nom').value='';
+  document.getElementById('inp-key').value='';
+  document.getElementById('key-preview').innerHTML='';
+  activeKey=null;
 }
 
-// ── ADMIN AUTH ──
-function goAdmin() {
+// ══ ADMIN AUTH ══
+function goAdmin(){
   document.getElementById('exam-app').classList.add('hidden');
   document.getElementById('admin-panel').classList.add('active');
-  document.getElementById('admin-toggle-btn').style.display = 'none';
-  if (sessionStorage.getItem(LS_AUTHED) === '1') showDash();
+  document.getElementById('admin-toggle-btn').style.display='none';
+  if(sessionStorage.getItem(LS_AUTH)==='1') showDash();
 }
-
-function goExam() {
+function goExam(){
   document.getElementById('admin-panel').classList.remove('active');
   document.getElementById('exam-app').classList.remove('hidden');
-  document.getElementById('admin-toggle-btn').style.display = '';
+  document.getElementById('admin-toggle-btn').style.display='';
   document.getElementById('admin-login').classList.remove('hidden');
   document.getElementById('admin-dash').classList.add('hidden');
 }
-
-function checkPwd() {
-  const v = document.getElementById('pwd-input').value;
-  if (v === ADMIN_PASSWORD) {
-    sessionStorage.setItem(LS_AUTHED, '1');
-    document.getElementById('login-error').textContent = '';
-    document.getElementById('pwd-input').value = '';
+function checkPwd(){
+  if(document.getElementById('pwd-input').value===ADMIN_PWD){
+    sessionStorage.setItem(LS_AUTH,'1');
+    document.getElementById('login-err').textContent='';
+    document.getElementById('pwd-input').value='';
     showDash();
-  } else {
-    document.getElementById('login-error').textContent = 'Mot de passe incorrect.';
-  }
+  } else { document.getElementById('login-err').textContent='Mot de passe incorrect.'; }
 }
-
-function adminLogout() {
-  sessionStorage.removeItem(LS_AUTHED);
+function adminLogout(){
+  sessionStorage.removeItem(LS_AUTH);
   document.getElementById('admin-dash').classList.add('hidden');
   document.getElementById('admin-login').classList.remove('hidden');
 }
-
-function showDash() {
+function showDash(){
   document.getElementById('admin-login').classList.add('hidden');
   document.getElementById('admin-dash').classList.remove('hidden');
-  document.getElementById('inp-webhook').value = localStorage.getItem(LS_WEBHOOK) || '';
-  document.getElementById('inp-draw').value = localStorage.getItem(LS_DRAW) || '15';
+  document.getElementById('inp-webhook').value=localStorage.getItem(LS_WH)||'';
+  updateStats(); renderKeyList(); renderQList(); populateExamTypeSelects();
+}
+
+// ══ TABS ══
+function switchTab(tab, btn){
+  document.querySelectorAll('.a-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-keys').classList.toggle('hidden', tab!=='keys');
+  document.getElementById('tab-questions').classList.toggle('hidden', tab!=='questions');
+}
+
+// ══ WEBHOOK ══
+function saveWebhook(){
+  webhookURL=document.getElementById('inp-webhook').value.trim();
+  localStorage.setItem(LS_WH,webhookURL);
   updateStats();
-  renderQList();
 }
 
-// ── ADMIN QUESTIONS ──
-function selectCorrect(el) {
-  document.querySelectorAll('.radio-opt').forEach(r => r.classList.remove('active'));
-  el.classList.add('active');
-  correctSelected = parseInt(el.dataset.val);
+// ══ KEYS ══
+function genCode(){
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code='';
+  for(let i=0;i<6;i++) code+=chars[Math.floor(Math.random()*chars.length)];
+  document.getElementById('k-code').value=code;
 }
 
-function saveQuestion() {
-  const q = document.getElementById('f-question').value.trim();
-  const a = document.getElementById('f-a').value.trim();
-  const b = document.getElementById('f-b').value.trim();
-  const c = document.getElementById('f-c').value.trim();
-  const d = document.getElementById('f-d').value.trim();
-  const cat = document.getElementById('f-cat').value.trim();
-  const ref = document.getElementById('f-ref').value.trim();
-  const expl = document.getElementById('f-expl').value.trim();
-  if (!q || !a || !b || !c) { showToast('Remplissez la question et les propositions A, B, C.'); return; }
-  const opts = [a, b, c];
-  if (d) opts.push(d);
-  const correct = Math.min(correctSelected, opts.length-1);
-  const id = editingId || uid();
-  const entry = {id, q, opts, correct, cat: cat||'Général', ref, expl};
-  if (editingId) {
-    questions = questions.map(x => x.id === editingId ? entry : x);
-    showToast('Question modifiée.');
+function saveKey(){
+  const code=document.getElementById('k-code').value.trim().toUpperCase();
+  const name=document.getElementById('k-name').value.trim();
+  const maxUses=parseInt(document.getElementById('k-uses').value)||0;
+  const examType=document.getElementById('k-exam-type').value;
+  if(!code||!name){showToast('Remplissez le code et le nom.');return;}
+  if(!editKeyId && keys.find(k=>k.code===code)){showToast('Ce code existe déjà.');return;}
+  if(editKeyId){
+    keys=keys.map(k=>k.id===editKeyId?{...k,code,name,maxUses,examType}:k);
+    showToast('Clé modifiée.');
   } else {
-    questions.push(entry);
-    showToast('Question ajoutée.');
+    keys.push({id:uid(),code,name,maxUses,usedCount:0,examType,createdAt:new Date().toISOString()});
+    showToast('Clé créée.');
   }
-  saveQuestions();
-  renderQList();
-  updateStats();
-  resetForm();
+  save(); renderKeyList(); updateStats(); resetKeyForm();
 }
 
-function editQuestion(id) {
-  const q = questions.find(x => x.id === id);
-  if (!q) return;
-  editingId = id;
-  document.getElementById('f-question').value = q.q;
-  document.getElementById('f-a').value = q.opts[0]||'';
-  document.getElementById('f-b').value = q.opts[1]||'';
-  document.getElementById('f-c').value = q.opts[2]||'';
-  document.getElementById('f-d').value = q.opts[3]||'';
-  document.getElementById('f-cat').value = q.cat||'';
-  document.getElementById('f-ref').value = q.ref||'';
-  document.getElementById('f-expl').value = q.expl||'';
-  correctSelected = q.correct;
-  document.querySelectorAll('.radio-opt').forEach(r => r.classList.toggle('active', parseInt(r.dataset.val) === q.correct));
-  document.getElementById('form-section-title').textContent = 'Modifier la question';
-  document.getElementById('save-q-btn').textContent = 'Enregistrer les modifications';
-  document.getElementById('cancel-edit-btn').style.display = '';
-  document.getElementById('form-section-title').scrollIntoView({behavior:'smooth'});
+function editKey(id){
+  const k=keys.find(x=>x.id===id); if(!k) return;
+  editKeyId=id;
+  document.getElementById('k-code').value=k.code;
+  document.getElementById('k-name').value=k.name;
+  document.getElementById('k-uses').value=k.maxUses;
+  document.getElementById('k-exam-type').value=k.examType||'';
+  document.getElementById('save-key-btn').textContent='Enregistrer';
+  document.getElementById('cancel-key-btn').classList.remove('hidden');
 }
 
-function deleteQuestion(id) {
-  if (!confirm('Supprimer cette question définitivement ?')) return;
-  questions = questions.filter(x => x.id !== id);
-  saveQuestions();
-  renderQList();
-  updateStats();
+function resetKeyUses(id){
+  const k=keys.find(x=>x.id===id); if(!k) return;
+  k.usedCount=0; save(); renderKeyList();
+  showToast('Compteur remis à zéro.');
+}
+
+function deleteKey(id){
+  if(!confirm('Supprimer cette clé ?')) return;
+  keys=keys.filter(x=>x.id!==id); save(); renderKeyList(); updateStats();
+  showToast('Clé supprimée.');
+}
+
+function resetKeyForm(){
+  editKeyId=null;
+  document.getElementById('k-code').value='';
+  document.getElementById('k-name').value='';
+  document.getElementById('k-uses').value='10';
+  document.getElementById('k-exam-type').value='';
+  document.getElementById('save-key-btn').textContent='Créer la clé';
+  document.getElementById('cancel-key-btn').classList.add('hidden');
+}
+
+function renderKeyList(){
+  const el=document.getElementById('key-list');
+  document.getElementById('key-count').textContent=keys.length;
+  if(!keys.length){el.innerHTML='<p style="color:var(--a-muted);font-size:13px;padding:10px 0">Aucune clé créée.</p>';return;}
+  el.innerHTML=keys.map(k=>{
+    const used=k.usedCount||0;
+    const max=k.maxUses||0;
+    const pct=max>0?Math.round((used/max)*100):0;
+    const barColor=pct>=100?'#C47070':pct>=70?'#D4AF37':'#1D9E75';
+    const usageStr=max===0?`${used} utilisation(s) (illimité)`:`${used} / ${max} utilisations`;
+    const statusDot=max>0&&used>=max?'🔴':'🟢';
+    return `<div class="key-item">
+      <div class="key-code">${k.code}</div>
+      <div class="key-info">
+        <div class="key-name">${k.name}</div>
+        <div class="key-meta">${k.examType?k.examType+' · ':'Toutes questions · '}Créée le ${new Date(k.createdAt).toLocaleDateString('fr-FR')}</div>
+      </div>
+      <div class="key-uses">
+        <div class="key-uses-num">${statusDot} ${max===0?used:used+'/'+max}</div>
+        <div class="key-uses-lbl">${max===0?'utilisations':'utilisations'}</div>
+        ${max>0?`<div class="key-bar"><div class="key-bar-fill" style="width:${pct}%;background:${barColor}"></div></div>`:''}
+      </div>
+      <div class="key-actions">
+        <button class="k-btn" onclick="editKey('${k.id}')">Modifier</button>
+        <button class="k-btn" onclick="resetKeyUses('${k.id}')">Reset</button>
+        <button class="k-btn del" onclick="deleteKey('${k.id}')">Supprimer</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══ QUESTIONS ══
+function selCorrect(el){
+  document.querySelectorAll('.radio-opt').forEach(r=>r.classList.remove('active'));
+  el.classList.add('active');
+  correctSel=parseInt(el.dataset.val);
+}
+
+function saveQuestion(){
+  const q=document.getElementById('f-q').value.trim();
+  const a=document.getElementById('f-a').value.trim();
+  const b=document.getElementById('f-b').value.trim();
+  const c=document.getElementById('f-c').value.trim();
+  const d=document.getElementById('f-d').value.trim();
+  const cat=document.getElementById('f-cat').value.trim();
+  const ref=document.getElementById('f-ref').value.trim();
+  const expl=document.getElementById('f-expl').value.trim();
+  if(!q||!a||!b||!c){showToast('Question et propositions A, B, C obligatoires.');return;}
+  const opts=[a,b,c]; if(d) opts.push(d);
+  const correct=Math.min(correctSel,opts.length-1);
+  const entry={id:editQId||uid(),q,opts,correct,cat:cat||'Général',ref,expl};
+  if(editQId){ questions=questions.map(x=>x.id===editQId?entry:x); showToast('Question modifiée.'); }
+  else { questions.push(entry); showToast('Question ajoutée.'); }
+  save(); renderQList(); updateStats(); populateExamTypeSelects(); resetQForm();
+}
+
+function editQuestion(id){
+  const q=questions.find(x=>x.id===id); if(!q) return;
+  editQId=id;
+  document.getElementById('f-q').value=q.q;
+  document.getElementById('f-a').value=q.opts[0]||'';
+  document.getElementById('f-b').value=q.opts[1]||'';
+  document.getElementById('f-c').value=q.opts[2]||'';
+  document.getElementById('f-d').value=q.opts[3]||'';
+  document.getElementById('f-cat').value=q.cat||'';
+  document.getElementById('f-ref').value=q.ref||'';
+  document.getElementById('f-expl').value=q.expl||'';
+  correctSel=q.correct;
+  document.querySelectorAll('.radio-opt').forEach((r,i)=>r.classList.toggle('active',i===q.correct));
+  document.getElementById('q-form-title').textContent='Modifier la question';
+  document.getElementById('save-q-btn').textContent='Enregistrer';
+  document.getElementById('cancel-q-btn').classList.remove('hidden');
+  document.getElementById('q-form-title').scrollIntoView({behavior:'smooth'});
+}
+
+function deleteQuestion(id){
+  if(!confirm('Supprimer cette question ?')) return;
+  questions=questions.filter(x=>x.id!==id);
+  save(); renderQList(); updateStats(); populateExamTypeSelects();
   showToast('Question supprimée.');
 }
 
-function resetForm() {
-  editingId = null;
-  ['f-question','f-a','f-b','f-c','f-d','f-cat','f-ref','f-expl'].forEach(id => document.getElementById(id).value = '');
-  correctSelected = 0;
-  document.querySelectorAll('.radio-opt').forEach((r,i) => r.classList.toggle('active', i===0));
-  document.getElementById('form-section-title').textContent = 'Ajouter une question';
-  document.getElementById('save-q-btn').textContent = 'Ajouter la question';
-  document.getElementById('cancel-edit-btn').style.display = 'none';
+function resetQForm(){
+  editQId=null;
+  ['f-q','f-a','f-b','f-c','f-d','f-cat','f-ref','f-expl'].forEach(id=>document.getElementById(id).value='');
+  correctSel=0;
+  document.querySelectorAll('.radio-opt').forEach((r,i)=>r.classList.toggle('active',i===0));
+  document.getElementById('q-form-title').textContent='Ajouter une question';
+  document.getElementById('save-q-btn').textContent='Ajouter';
+  document.getElementById('cancel-q-btn').classList.add('hidden');
 }
 
-function renderQList() {
-  const el = document.getElementById('q-list');
-  document.getElementById('q-count').textContent = questions.length;
-  if (!questions.length) { el.innerHTML = '<p style="color:var(--admin-muted);font-size:13px;padding:12px 0">Aucune question dans la banque.</p>'; return; }
-  el.innerHTML = questions.map((q,i) => `
-    <div class="q-list-item">
-      <div class="q-list-num">${i+1}</div>
-      <div class="q-list-content">
-        <div class="q-list-text">${q.q}</div>
-        <div class="q-list-meta">${q.cat||'—'} ${q.ref?'· '+q.ref:''} · Bonne réponse : ${['A','B','C','D'][q.correct]} (${q.opts[q.correct]})</div>
+function renderQList(){
+  const filter=document.getElementById('q-filter')?.value||'';
+  const filtered=filter?questions.filter(q=>q.cat===filter):questions;
+  document.getElementById('q-count').textContent=questions.length;
+  const el=document.getElementById('q-list');
+  if(!filtered.length){el.innerHTML='<p style="color:var(--a-muted);font-size:13px;padding:10px 0">Aucune question.</p>';return;}
+  el.innerHTML=filtered.map((q,i)=>`
+    <div class="q-item">
+      <div class="q-num-badge">${i+1}</div>
+      <div class="q-content">
+        <div class="q-text-preview">${q.q}</div>
+        <div class="q-meta">${q.cat} ${q.ref?'· '+q.ref:''} · Bonne réponse : ${['A','B','C','D'][q.correct]} (${q.opts[q.correct]})</div>
       </div>
-      <div class="q-list-actions">
-        <button class="q-list-btn" onclick="editQuestion('${q.id}')">Modifier</button>
-        <button class="q-list-btn del" onclick="deleteQuestion('${q.id}')">Supprimer</button>
+      <div class="q-actions">
+        <button class="k-btn" onclick="editQuestion('${q.id}')">Modifier</button>
+        <button class="k-btn del" onclick="deleteQuestion('${q.id}')">Supprimer</button>
       </div>
     </div>`).join('');
 }
 
-function updateStats() {
-  const cats = new Set(questions.map(q => q.cat||'Général'));
-  const draw = parseInt(localStorage.getItem(LS_DRAW)||'15');
-  document.getElementById('stat-total').textContent = questions.length;
-  document.getElementById('stat-cats').textContent = cats.size;
-  document.getElementById('stat-draw').textContent = Math.min(draw, questions.length);
-  const wh = localStorage.getItem(LS_WEBHOOK) || '';
-  document.getElementById('stat-webhook').textContent = wh ? '✓' : '✗';
-  checkEmptyBank();
+function populateExamTypeSelects(){
+  const cats=[...new Set(questions.map(q=>q.cat||'Général'))].sort();
+  // Key exam type select
+  const kSel=document.getElementById('k-exam-type');
+  const kVal=kSel.value;
+  kSel.innerHTML='<option value="">— Toutes les questions —</option>'+cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+  kSel.value=kVal;
+  // Q filter
+  const qF=document.getElementById('q-filter');
+  const qVal=qF?qF.value:'';
+  if(qF){ qF.innerHTML='<option value="">Toutes catégories</option>'+cats.map(c=>`<option value="${c}">${c}</option>`).join(''); qF.value=qVal; }
+  // Exam types badges
+  const etEl=document.getElementById('exam-types-list');
+  if(etEl) etEl.innerHTML=cats.map(c=>{
+    const count=questions.filter(q=>q.cat===c).length;
+    return `<span style="padding:5px 12px;border-radius:20px;font-size:12px;background:rgba(212,175,55,.08);border:0.5px solid var(--a-border);color:var(--a-gold)">${c} <span style="color:var(--a-muted)">(${count})</span></span>`;
+  }).join('');
 }
 
-// ── IMPORT / EXPORT ──
-function exportJSON() {
-  const data = {
-    meta: {export_date: new Date().toISOString(), source: "Cour Suprême de San Andreas"},
-    webhook: localStorage.getItem(LS_WEBHOOK)||'',
-    draw: parseInt(localStorage.getItem(LS_DRAW)||'15'),
-    questions
-  };
-  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'banque-questions-cssandreas.json';
-  a.click();
-  showToast('Export JSON téléchargé.');
+function updateStats(){
+  const cats=new Set(questions.map(q=>q.cat||'Général'));
+  document.getElementById('stat-keys').textContent=keys.filter(k=>k.maxUses===0||k.usedCount<k.maxUses).length;
+  document.getElementById('stat-exams').textContent=cats.size;
+  document.getElementById('stat-qs').textContent=questions.length;
+  document.getElementById('stat-wh').textContent=localStorage.getItem(LS_WH)?'✓':'✗';
 }
 
-function importJSON(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    try {
-      const data = JSON.parse(e.target.result);
-      if (data.questions && Array.isArray(data.questions)) {
-        if (!confirm(`Importer ${data.questions.length} question(s) ? Les questions actuelles seront remplacées.`)) return;
-        questions = data.questions.map(q => ({...q, id: q.id || uid()}));
-        saveQuestions();
-        if (data.webhook) { localStorage.setItem(LS_WEBHOOK, data.webhook); document.getElementById('inp-webhook').value = data.webhook; }
-        if (data.draw) { localStorage.setItem(LS_DRAW, data.draw); document.getElementById('inp-draw').value = data.draw; }
-        renderQList();
-        updateStats();
-        showToast(`${questions.length} questions importées.`);
-      } else { showToast('Format JSON invalide.'); }
-    } catch(err) { showToast('Erreur de lecture du fichier.'); }
+// ══ IMPORT / EXPORT ══
+function exportJSON(){
+  const data={meta:{export_date:new Date().toISOString(),source:"Cour Suprême de San Andreas"},webhook:localStorage.getItem(LS_WH)||'',questions,keys};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='greffe-cssandreas.json'; a.click();
+  showToast('Export téléchargé.');
+}
+
+function importJSON(event){
+  const file=event.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      if(!confirm('Remplacer les données actuelles par celles du fichier ?')) return;
+      if(data.questions) questions=data.questions.map(q=>({...q,id:q.id||uid()}));
+      if(data.keys) keys=data.keys.map(k=>({...k,id:k.id||uid(),usedCount:k.usedCount||0}));
+      save();
+      if(data.webhook){localStorage.setItem(LS_WH,data.webhook);document.getElementById('inp-webhook').value=data.webhook;}
+      renderKeyList(); renderQList(); updateStats(); populateExamTypeSelects();
+      showToast(`Import réussi : ${questions.length} questions, ${keys.length} clés.`);
+    }catch(e){showToast('Erreur de lecture JSON.');}
   };
   reader.readAsText(file);
-  event.target.value = '';
+  event.target.value='';
 }
 
-// ── TOAST ──
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
+// ══ TOAST ══
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
 }
 
 init();
