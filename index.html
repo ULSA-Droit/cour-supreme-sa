@@ -43,7 +43,12 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
 .prog-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:5px}
 .prog-bar{background:rgba(184,150,12,.12);border-radius:3px;height:3px;overflow:hidden}
 .prog-fill{height:100%;background:var(--gold);transition:width .4s;border-radius:3px}
-.exam-badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;background:#FFF9E6;border:0.5px solid var(--gold);color:var(--gold);letter-spacing:.06em;margin-bottom:1rem}
+.exam-badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;background:#FFF9E6;border:0.5px solid var(--gold);color:var(--gold);letter-spacing:.06em;margin-bottom:.5rem}
+.timer-wrap{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;gap:8px}
+.timer-display{font-family:'Playfair Display',serif;font-size:17px;font-weight:500;color:var(--ink);letter-spacing:.06em;padding:4px 14px;border:0.5px solid var(--border);border-radius:20px;background:var(--white);transition:all .3s}
+.timer-display.warning{color:#8B4500;border-color:#D4A030;background:#FFF8EC}
+.timer-display.danger{color:var(--err);border-color:var(--err);background:var(--err-bg);animation:blink .8s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.5}}
 .q-num{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem}
 .q-text{font-family:'Playfair Display',serif;font-size:17px;line-height:1.65;margin-bottom:1.1rem}
 .q-ref{font-size:11px;color:var(--muted);font-style:italic;margin-bottom:.9rem;padding:5px 10px;border-left:2px solid var(--border)}
@@ -164,6 +169,10 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
       <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
     </div>
     <div id="exam-badge-wrap"></div>
+    <div id="timer-wrap" class="timer-wrap" style="display:none">
+      <div></div>
+      <div id="timer-display" class="timer-display">⏱ --:--</div>
+    </div>
     <div id="question-container"></div>
     <div class="nav-row">
       <button class="btn-secondary" id="btn-prev" onclick="navigate(-1)">← Précédent</button>
@@ -290,6 +299,10 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
               <input type="number" id="k-uses" value="10" min="0">
             </div>
           </div>
+          <div class="a-field" style="margin-top:10px">
+            <label>Durée limite (minutes) — 0 = pas de limite</label>
+            <input type="number" id="k-duration" value="0" min="0" max="180" placeholder="ex : 30">
+          </div>
           <div style="margin-top:12px">
             <label style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--a-muted);display:block;margin-bottom:8px">Pools de questions</label>
             <div id="k-pools-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px"></div>
@@ -410,6 +423,7 @@ let shuffled=[], answers=[], currentQ=0, candidat={}, activeKey=null;
 let correctSel=0, editKeyId=null, editQId=null;
 let currentPools=[];
 let antiCheatCount=0;
+let timerInterval=null, timerSeconds=0, timerExpired=false;
 // @@CFG_START@@
 const PUBLISHED_SB_URL="";
 const PUBLISHED_SB_KEY="";
@@ -537,11 +551,43 @@ function stopAntiCheat(){
   document.removeEventListener('visibilitychange', onVisibilityChange);
   window.removeEventListener('blur', onWindowBlur);
 }
-function onVisibilityChange(){
-  if(document.hidden) antiCheatCount++;
+function onVisibilityChange(){ if(document.hidden) antiCheatCount++; }
+function onWindowBlur(){ antiCheatCount++; }
+
+// ── TIMER ──
+function startTimer(minutes){
+  clearInterval(timerInterval);
+  timerSeconds=minutes*60;
+  timerExpired=false;
+  const wrap=document.getElementById('timer-wrap');
+  if(minutes<=0){ wrap.style.display='none'; return; }
+  wrap.style.display='flex';
+  updateTimerDisplay();
+  timerInterval=setInterval(()=>{
+    timerSeconds--;
+    updateTimerDisplay();
+    if(timerSeconds<=0){
+      clearInterval(timerInterval);
+      timerExpired=true;
+      stopAntiCheat();
+      showResults();
+    }
+  },1000);
 }
-function onWindowBlur(){
-  antiCheatCount++;
+function updateTimerDisplay(){
+  const disp=document.getElementById('timer-display');
+  if(!disp) return;
+  const m=Math.floor(Math.max(0,timerSeconds)/60);
+  const s=Math.max(0,timerSeconds)%60;
+  disp.textContent=`⏱ ${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  disp.className='timer-display';
+  if(timerSeconds<=60) disp.classList.add('danger');
+  else if(timerSeconds<=180) disp.classList.add('warning');
+}
+function stopTimer(){
+  clearInterval(timerInterval);
+  const wrap=document.getElementById('timer-wrap');
+  if(wrap) wrap.style.display='none';
 }
 
 // ── KEY PREVIEW ──
@@ -599,6 +645,7 @@ function startExam(){
   const poolStr=pools.length?pools.map(p=>`${p.count}×${p.cat}`).join(' + '):'';
   document.getElementById('exam-badge-wrap').innerHTML=`<div class="exam-badge">${k.name}${poolStr?' — '+poolStr:''}</div>`;
   startAntiCheat();
+  startTimer(k.duration||0);
   renderQ();
 }
 
@@ -637,6 +684,7 @@ function navigate(dir){
     const u=answers.filter(a=>a===null).length;
     if(u&&!confirm(`${u} question(s) sans réponse. Terminer quand même ?`)) return;
     stopAntiCheat();
+    stopTimer();
     showResults(); return;
   }
   currentQ=Math.max(0,Math.min(shuffled.length-1,currentQ+dir));
@@ -656,7 +704,11 @@ function showResults(){
   const pct=Math.round((correct/shuffled.length)*100);
   const mention=pct>=90?'Mention Très Bien':pct>=75?'Mention Bien':pct>=60?'Mention Passable':'Insuffisant';
   document.getElementById('candidat-confirm').textContent=candidat.prenom+' '+candidat.nom+(activeKey?' — '+activeKey.name:'');
-  sendWebhook({candidat,key:activeKey?activeKey.code:'—',exam:activeKey?activeKey.name:'—',score:pct,correct,total:shuffled.length,mention,details,date:new Date().toLocaleString('fr-FR'),antiCheat:antiCheatCount});
+  // Calcul temps utilisé
+  const duration=activeKey?activeKey.duration||0:0;
+  const secondsUsed=duration>0?(duration*60-Math.max(0,timerSeconds)):0;
+  const timeUsed=duration>0?`${Math.floor(secondsUsed/60)}m${secondsUsed%60}s / ${duration}min`:'';
+  sendWebhook({candidat,key:activeKey?activeKey.code:'—',exam:activeKey?activeKey.name:'—',score:pct,correct,total:shuffled.length,mention,details,date:new Date().toLocaleString('fr-FR'),antiCheat:antiCheatCount,timerExpired,timeUsed});
 }
 
 async function sendWebhook(data){
@@ -682,6 +734,7 @@ async function sendWebhook(data){
       {name:'Score',value:`${data.score}% — ${data.mention}`,inline:true},
       {name:'Date',value:data.date,inline:true},
       {name:'Changements onglet',value:data.antiCheat>0?`⚠️ ${data.antiCheat} détecté(s)`:'✅ Aucun',inline:true},
+      {name:'Temps',value:data.timerExpired?'⏰ Temps écoulé':data.timeUsed?`${data.timeUsed} utilisé`:'Sans limite',inline:true},
       ...fautesFields
     ]
   }]};
@@ -699,7 +752,7 @@ function restartExam(){
   document.getElementById('inp-nom').value='';
   document.getElementById('inp-key').value='';
   document.getElementById('key-preview').innerHTML='';
-  activeKey=null; antiCheatCount=0;
+  activeKey=null; antiCheatCount=0; timerExpired=false; stopTimer();
 }
 
 // ── ADMIN AUTH ──
@@ -808,14 +861,15 @@ function saveKey(){
   const code=document.getElementById('k-code').value.trim().toUpperCase();
   const name=document.getElementById('k-name').value.trim();
   const maxUses=parseInt(document.getElementById('k-uses').value)||0;
+  const duration=parseInt(document.getElementById('k-duration').value)||0;
   if(!code||!name){showToast('Remplissez le code et le nom.');return;}
   if(!editKeyId&&keys.find(k=>k.code===code)){showToast('Ce code existe déjà.');return;}
   const pools=currentPools.length?[...currentPools]:[];
   if(editKeyId){
-    keys=keys.map(k=>k.id===editKeyId?{...k,code,name,maxUses,pools}:k);
+    keys=keys.map(k=>k.id===editKeyId?{...k,code,name,maxUses,duration,pools}:k);
     showToast('Clé modifiée.');
   } else {
-    keys.push({id:uid(),code,name,maxUses,usedCount:0,pools,createdAt:new Date().toISOString()});
+    keys.push({id:uid(),code,name,maxUses,duration,usedCount:0,pools,createdAt:new Date().toISOString()});
     showToast('Clé créée.');
   }
   save(); renderKeyList(); updateStats(); resetKeyForm();
@@ -827,6 +881,7 @@ function editKey(id){
   document.getElementById('k-code').value=k.code;
   document.getElementById('k-name').value=k.name;
   document.getElementById('k-uses').value=k.maxUses;
+  document.getElementById('k-duration').value=k.duration||0;
   currentPools=k.pools?[...k.pools]:(k.examType?[{cat:k.examType,count:15}]:[]);
   renderPools();
   document.getElementById('save-key-btn').textContent='Enregistrer';
@@ -851,6 +906,7 @@ function resetKeyForm(){
   document.getElementById('k-code').value='';
   document.getElementById('k-name').value='';
   document.getElementById('k-uses').value='10';
+  document.getElementById('k-duration').value='0';
   document.getElementById('k-pool-cat').value='';
   document.getElementById('k-pool-count').value='10';
   renderPools();
@@ -874,7 +930,7 @@ function renderKeyList(){
       <div class="key-info">
         <div class="key-name">${k.name}</div>
         <div class="key-meta" style="margin-top:3px">${poolsStr}</div>
-        <div class="key-meta">Créée le ${new Date(k.createdAt).toLocaleDateString('fr-FR')}</div>
+        <div class="key-meta">${k.duration>0?`⏱ ${k.duration} min · `:''}Créée le ${new Date(k.createdAt).toLocaleDateString('fr-FR')}</div>
       </div>
       <div class="key-uses">
         <div class="key-uses-num">${statusDot} ${max===0?used:used+'/'+max}</div>
