@@ -926,6 +926,7 @@ function goAdmin(){
   if(sessionStorage.getItem(LS_AUTH)==='1') showDash();
 }
 function goExam(){
+  sessionStorage.removeItem(LS_AUTH);
   document.getElementById('admin-panel').classList.remove('active');
   document.getElementById('exam-app').classList.remove('hidden');
   document.getElementById('admin-toggle-btn').style.display='';
