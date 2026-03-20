@@ -645,7 +645,7 @@ function startExam(){
   const poolStr=pools.length?pools.map(p=>`${p.count}×${p.cat}`).join(' + '):'';
   document.getElementById('exam-badge-wrap').innerHTML=`<div class="exam-badge">${k.name}${poolStr?' — '+poolStr:''}</div>`;
   startAntiCheat();
-  startTimer(k.duration||0);
+  startTimer(parseInt(k.duration)||0);
   renderQ();
 }
 
