@@ -1,8 +1,10 @@
-<html lang="fr"><head>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cour Suprême de San Andreas — Examen Juridique</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&amp;family=Source+Serif+4:ital,wght@0,300;0,400;1,300&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -165,11 +167,11 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
 </head>
 <body>
 
-<button id="admin-toggle-btn" onclick="goAdmin()" style="display: none;">⚙ Greffe</button>
-<div id="toast" class="toast show">Données envoyées vers JSONBin.</div>
+<button id="admin-toggle-btn" onclick="goAdmin()">⚙ Greffe</button>
+<div id="toast" class="toast"></div>
 
 <!-- ══════════ EXAM ══════════ -->
-<div id="exam-app" class="hidden">
+<div id="exam-app">
   <div class="header">
     <div class="seal">⚖</div>
     <h1>Cour Suprême de San Andreas</h1>
@@ -228,8 +230,8 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
 </div>
 
 <!-- ══════════ ADMIN ══════════ -->
-<div id="admin-panel" class="active">
-  <div id="admin-login" class="login-wrap hidden">
+<div id="admin-panel">
+  <div id="admin-login" class="login-wrap">
     <div class="login-box">
       <div style="font-size:32px;margin-bottom:12px">⚖</div>
       <h2>Greffe — Accès restreint</h2>
@@ -241,7 +243,7 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
     </div>
   </div>
 
-  <div id="admin-dash" class="">
+  <div id="admin-dash" class="hidden">
     <div class="a-topbar">
       <div class="a-topbar-title">⚖ Greffe — Administration</div>
       <div class="a-topbar-right">
@@ -259,10 +261,10 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
     <div class="a-body">
       <!-- Stats -->
       <div class="stats-grid">
-        <div class="stat-box"><div class="stat-num" id="stat-keys">4</div><div class="stat-lbl">Clés actives</div></div>
-        <div class="stat-box"><div class="stat-num" id="stat-exams">3</div><div class="stat-lbl">Types d'examen</div></div>
-        <div class="stat-box"><div class="stat-num" id="stat-qs">80</div><div class="stat-lbl">Questions</div></div>
-        <div class="stat-box"><div class="stat-num" id="stat-wh">✓</div><div class="stat-lbl">Webhook</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-keys">0</div><div class="stat-lbl">Clés actives</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-exams">0</div><div class="stat-lbl">Types d'examen</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-qs">0</div><div class="stat-lbl">Questions</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-wh">—</div><div class="stat-lbl">Webhook</div></div>
       </div>
 
       <!-- Configuration -->
@@ -272,9 +274,9 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
         <!-- JSONBin -->
         <div style="border:0.5px solid var(--a-border);border-radius:6px;padding:14px;margin-bottom:14px">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-            <div id="jb-indicator" style="width: 8px; height: 8px; border-radius: 50%; background: rgb(29, 158, 117); flex-shrink: 0;"></div>
+            <div id="jb-indicator" style="width:8px;height:8px;border-radius:50%;background:#555;flex-shrink:0"></div>
             <span style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--a-gold)">Synchronisation JSONBin</span>
-            <span id="jb-status-lbl" style="font-size:11px;color:var(--a-muted);margin-left:auto">Envoyé ✓</span>
+            <span id="jb-status-lbl" style="font-size:11px;color:var(--a-muted);margin-left:auto"></span>
           </div>
           <div class="a-row2" style="margin-bottom:8px">
             <div class="a-field" style="margin:0">
@@ -283,7 +285,7 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
             </div>
             <div class="a-field" style="margin:0">
               <label>Bin ID <span style="color:var(--a-muted);font-size:10px">(généré automatiquement)</span></label>
-              <input type="text" id="inp-jb-bin" placeholder="Sera créé au premier sync" readonly="" style="color:var(--a-muted)">
+              <input type="text" id="inp-jb-bin" placeholder="Sera créé au premier sync" readonly style="color:var(--a-muted)">
             </div>
           </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -341,7 +343,9 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
             <label style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--a-muted);display:block;margin-bottom:8px">Pools de questions</label>
             <div id="k-pools-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px"></div>
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-              <select id="k-pool-cat" style="font-family:'Source Serif 4',serif;font-size:13px;background:#0A0C12;border:0.5px solid var(--a-border);border-radius:5px;padding:7px 10px;color:var(--a-text);outline:none;flex:1;min-width:160px"><option value="">— Choisir une catégorie —</option><option value="Cours général">Cours général (20 questions)</option><option value="Juge Niv 1">Juge Niv 1 (40 questions)</option><option value="Objections">Objections (20 questions)</option></select>
+              <select id="k-pool-cat" style="font-family:'Source Serif 4',serif;font-size:13px;background:#0A0C12;border:0.5px solid var(--a-border);border-radius:5px;padding:7px 10px;color:var(--a-text);outline:none;flex:1;min-width:160px">
+                <option value="">— Choisir une catégorie —</option>
+              </select>
               <input type="number" id="k-pool-count" value="10" min="1" max="100" style="font-family:'Source Serif 4',serif;font-size:13px;background:#0A0C12;border:0.5px solid var(--a-border);border-radius:5px;padding:7px 10px;color:var(--a-text);outline:none;width:80px" placeholder="nb">
               <button onclick="addPool()" style="background:rgba(212,175,55,.12);border:0.5px solid var(--a-border);border-radius:5px;padding:7px 14px;color:var(--a-gold);cursor:pointer;font-size:13px;white-space:nowrap;font-family:'Source Serif 4',serif">+ Ajouter</button>
             </div>
@@ -353,82 +357,14 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
           </div>
         </div>
 
-        <div class="a-section-title" style="margin-top:1.5rem">Clés d'accès (<span id="key-count">4</span>)</div>
-        <div id="key-list"><div class="key-item">
-      <div class="key-code">BARORAL</div>
-      <div class="key-info">
-        <div class="key-name">Fait passer a l'oral</div>
-        <div class="key-meta" style="margin-top:3px">20×Objections</div>
-        <div class="key-meta">Créée le 20/03/2026</div>
-      </div>
-      <div class="key-uses">
-        <div class="key-uses-num">🟢 2</div>
-        <div class="key-uses-lbl">utilisations</div>
-        
-      </div>
-      <div class="key-actions">
-        <button class="k-btn" onclick="editKey('b0o7w60')">Modifier</button>
-        <button class="k-btn" onclick="resetKeyUses('b0o7w60')">Reset</button>
-        <button class="k-btn del" onclick="deleteKey('b0o7w60')">Supprimer</button>
-      </div>
-    </div><div class="key-item">
-      <div class="key-code">FERRETI</div>
-      <div class="key-info">
-        <div class="key-name">Test du site par Ferreti</div>
-        <div class="key-meta" style="margin-top:3px">8×Juge Niv 1</div>
-        <div class="key-meta">Créée le 20/03/2026</div>
-      </div>
-      <div class="key-uses">
-        <div class="key-uses-num">🟢 0/1</div>
-        <div class="key-uses-lbl">utilisations</div>
-        <div class="key-bar"><div class="key-bar-fill" style="width:0%;background:#1D9E75"></div></div>
-      </div>
-      <div class="key-actions">
-        <button class="k-btn" onclick="editKey('vh06l54')">Modifier</button>
-        <button class="k-btn" onclick="resetKeyUses('vh06l54')">Reset</button>
-        <button class="k-btn del" onclick="deleteKey('vh06l54')">Supprimer</button>
-      </div>
-    </div><div class="key-item">
-      <div class="key-code">KXEEG</div>
-      <div class="key-info">
-        <div class="key-name">Test Users</div>
-        <div class="key-meta" style="margin-top:3px">3×Juge Niv 1</div>
-        <div class="key-meta">Créée le 20/03/2026</div>
-      </div>
-      <div class="key-uses">
-        <div class="key-uses-num">🟢 0</div>
-        <div class="key-uses-lbl">utilisations</div>
-        
-      </div>
-      <div class="key-actions">
-        <button class="k-btn" onclick="editKey('vf5qp4p')">Modifier</button>
-        <button class="k-btn" onclick="resetKeyUses('vf5qp4p')">Reset</button>
-        <button class="k-btn del" onclick="deleteKey('vf5qp4p')">Supprimer</button>
-      </div>
-    </div><div class="key-item">
-      <div class="key-code">TESTKEY</div>
-      <div class="key-info">
-        <div class="key-name">Clé de test publique</div>
-        <div class="key-meta" style="margin-top:3px">3×Juge Niv 1</div>
-        <div class="key-meta">Créée le 20/03/2026</div>
-      </div>
-      <div class="key-uses">
-        <div class="key-uses-num">🟢 0</div>
-        <div class="key-uses-lbl">utilisations</div>
-        
-      </div>
-      <div class="key-actions">
-        <button class="k-btn" onclick="editKey('u25b3f7')">Modifier</button>
-        <button class="k-btn" onclick="resetKeyUses('u25b3f7')">Reset</button>
-        <button class="k-btn del" onclick="deleteKey('u25b3f7')">Supprimer</button>
-      </div>
-    </div></div>
+        <div class="a-section-title" style="margin-top:1.5rem">Clés d'accès (<span id="key-count">0</span>)</div>
+        <div id="key-list"></div>
 
         <div style="margin-top:1.5rem">
           <div class="a-section-title">Types d'examens</div>
           <div class="a-card">
             <p style="font-size:13px;color:var(--a-muted);margin-bottom:10px">Les types d'examens sont créés automatiquement depuis les catégories de vos questions. Chaque clé peut être restreinte à un type d'examen.</p>
-            <div id="exam-types-list" style="display:flex;gap:8px;flex-wrap:wrap"><span style="padding:5px 12px;border-radius:20px;font-size:12px;background:rgba(212,175,55,.08);border:0.5px solid var(--a-border);color:var(--a-gold)">Cours général <span style="color:var(--a-muted)">(20)</span></span><span style="padding:5px 12px;border-radius:20px;font-size:12px;background:rgba(212,175,55,.08);border:0.5px solid var(--a-border);color:var(--a-gold)">Juge Niv 1 <span style="color:var(--a-muted)">(40)</span></span><span style="padding:5px 12px;border-radius:20px;font-size:12px;background:rgba(212,175,55,.08);border:0.5px solid var(--a-border);color:var(--a-gold)">Objections <span style="color:var(--a-muted)">(20)</span></span></div>
+            <div id="exam-types-list" style="display:flex;gap:8px;flex-wrap:wrap"></div>
           </div>
         </div>
       </div>
@@ -497,7 +433,7 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
           <div style="margin-bottom:10px">
             <label style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--a-muted);display:block;margin-bottom:6px">Bonne réponse</label>
             <div class="radio-group" id="correct-rg">
-              <div class="radio-opt active" data-val="0" onclick="selCorrect(this)"><input type="radio" name="cr" checked=""> A</div>
+              <div class="radio-opt active" data-val="0" onclick="selCorrect(this)"><input type="radio" name="cr" checked> A</div>
               <div class="radio-opt" data-val="1" onclick="selCorrect(this)"> B</div>
               <div class="radio-opt" data-val="2" onclick="selCorrect(this)"> C</div>
               <div class="radio-opt" data-val="3" onclick="selCorrect(this)"> D</div>
@@ -515,890 +451,12 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
 
         <!-- Filter + list -->
         <div style="display:flex;align-items:center;gap:10px;margin:1.5rem 0 .75rem;flex-wrap:wrap">
-          <div class="a-section-title" style="margin:0;border:none;padding:0;flex:1">Questions (<span id="q-count">80</span>)</div>
-          <select id="q-filter" onchange="renderQList()" style="font-family:'Source Serif 4',serif;font-size:12px;background:#0A0C12;border:0.5px solid var(--a-border);border-radius:4px;padding:6px 10px;color:var(--a-text);outline:none"><option value="">Toutes catégories</option><option value="Cours général">Cours général</option><option value="Juge Niv 1">Juge Niv 1</option><option value="Objections">Objections</option></select>
+          <div class="a-section-title" style="margin:0;border:none;padding:0;flex:1">Questions (<span id="q-count">0</span>)</div>
+          <select id="q-filter" onchange="renderQList()" style="font-family:'Source Serif 4',serif;font-size:12px;background:#0A0C12;border:0.5px solid var(--a-border);border-radius:4px;padding:6px 10px;color:var(--a-text);outline:none">
+            <option value="">Toutes catégories</option>
+          </select>
         </div>
-        <div id="q-list">
-    <div class="q-item">
-      <div class="q-num-badge">1</div>
-      <div class="q-content">
-        <div class="q-text-preview">Un témoin déclare : « Un collègue m'a raconté que l'accusé avait fui après l'incident. » Quelle objection s'applique ?</div>
-        <div class="q-meta">Objections  · Bonne réponse : B (Ouï-dire)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('s0brh2z')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('s0brh2z')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">2</div>
-      <div class="q-content">
-        <div class="q-text-preview">L'avocat repose une question déjà validée par le témoin plus tôt. Quelle objection ?</div>
-        <div class="q-meta">Objections  · Bonne réponse : B (Répétition inutile)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('40cndlb')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('40cndlb')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">3</div>
-      <div class="q-content">
-        <div class="q-text-preview">Un témoin est interrogé sur son ami proche accusé dans l'affaire. Quelle objection principale ?</div>
-        <div class="q-meta">Objections  · Bonne réponse : B (Partialité)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('au0ipcd')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('au0ipcd')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">4</div>
-      <div class="q-content">
-        <div class="q-text-preview">« Pensez-vous que cette situation reflète une ambiance dangereuse en ville ? » Quelle objection ?</div>
-        <div class="q-meta">Objections  · Bonne réponse : A (Manque de pertinence)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('o82s8jj')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('o82s8jj')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">5</div>
-      <div class="q-content">
-        <div class="q-text-preview">Un civil est interrogé sur la trajectoire balistique d'une arme. Quelle objection ?</div>
-        <div class="q-meta">Objections  · Bonne réponse : B (Incompétence)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('3i1q6el')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('3i1q6el')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">6</div>
-      <div class="q-content">
-        <div class="q-text-preview">« Vous avez vu l'homme courir et entendu une explosion en même temps ? » Quelle objection ?</div>
-        <div class="q-meta">Objections  · Bonne réponse : B (Question composée)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('w9tuz1q')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('w9tuz1q')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">7</div>
-      <div class="q-content">
-        <div class="q-text-preview">L'avocat élève la voix et accuse directement le témoin de mentir. Quelle objection ?</div>
-        <div class="q-meta">Objections  · Bonne réponse : A (Harcèlement)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('6qez7nk')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('6qez7nk')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">8</div>
-      <div class="q-content">
-        <div class="q-text-preview">Une question porte sur un ancien casier sans lien avec l'affaire. Quelle objection ?</div>
-        <div class="q-meta">Objections  · Bonne réponse : B (Inadéquation)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('isp5j0v')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('isp5j0v')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">9</div>
-      <div class="q-content">
-        <div class="q-text-preview">« Vous confirmez encore que vous étiez sur place ? » (déjà établi) Quelle objection ?</div>
-        <div class="q-meta">Objections  · Bonne réponse : B (Répétition inutile)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('8dnm5ug')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('8dnm5ug')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">10</div>
-      <div class="q-content">
-        <div class="q-text-preview">« L'accusé vous a bien menacé avec une arme, n'est-ce pas ? » Quelle objection ?</div>
-        <div class="q-meta">Objections  · Bonne réponse : A (Suggestive)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('gponr5b')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('gponr5b')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">11</div>
-      <div class="q-content">
-        <div class="q-text-preview">« Si vous n'aviez pas fui, pensez-vous que vous auriez été blessé ? » Quelle objection ?</div>
-        <div class="q-meta">Objections  · Bonne réponse : B (Hypothétique)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('h8fg5c7')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('h8fg5c7')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">12</div>
-      <div class="q-content">
-        <div class="q-text-preview">Un enregistrement audio clandestin est présenté sans autorisation. Quelle objection ?</div>
-        <div class="q-meta">Objections  · Bonne réponse : B (Preuve illicite)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('qn5eved')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('qn5eved')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">13</div>
-      <div class="q-content">
-        <div class="q-text-preview">« Je pense qu'il est dangereux. » Quelle objection ?</div>
-        <div class="q-meta">Objections  · Bonne réponse : B (Témoignage d'opinion)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('nkcrvrv')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('nkcrvrv')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">14</div>
-      <div class="q-content">
-        <div class="q-text-preview">Le témoin change sa version entre l'audition et l'audience. Quelle objection ?</div>
-        <div class="q-meta">Objections  · Bonne réponse : B (Contradictoire)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('nut8eet')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('nut8eet')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">15</div>
-      <div class="q-content">
-        <div class="q-text-preview">Un avocat demande des relevés bancaires sans décision judiciaire. Quelle objection ?</div>
-        <div class="q-meta">Objections  · Bonne réponse : A (Absence de fondement)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('swzthhw')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('swzthhw')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">16</div>
-      <div class="q-content">
-        <div class="q-text-preview">« Vous avez entendu un bruit suspect, non ? » Quelle objection principale ?</div>
-        <div class="q-meta">Objections  · Bonne réponse : A (Suggestive)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('00k0ijk')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('00k0ijk')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">17</div>
-      <div class="q-content">
-        <div class="q-text-preview">Une question mélange faits et interprétation sans distinction. Quelle objection ?</div>
-        <div class="q-meta">Objections  · Bonne réponse : A (Imprécision)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('vm8huro')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('vm8huro')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">18</div>
-      <div class="q-content">
-        <div class="q-text-preview">Un avocat insiste 5 fois sur une incohérence mineure. Quelle objection ?</div>
-        <div class="q-meta">Objections  · Bonne réponse : B (Harcèlement)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('67vzi4p')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('67vzi4p')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">19</div>
-      <div class="q-content">
-        <div class="q-text-preview">Le témoin répond à une question sur un domaine technique qu'il ne maîtrise pas. Quelle objection ?</div>
-        <div class="q-meta">Objections  · Bonne réponse : B (Incompétence)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('8ioav0w')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('8ioav0w')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">20</div>
-      <div class="q-content">
-        <div class="q-text-preview">Une question pousse à confirmer une version déjà suggérée. Quelle objection ?</div>
-        <div class="q-meta">Objections  · Bonne réponse : A (Suggestive)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('f7b41d4')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('f7b41d4')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">21</div>
-      <div class="q-content">
-        <div class="q-text-preview">La "probable cause" se distingue du "reasonable suspicion" en ce qu'elle :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : B (Permet une arrestation ou un mandat)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('7rg92qr')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('7rg92qr')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">22</div>
-      <div class="q-content">
-        <div class="q-text-preview">Une arrestation sans probable cause viole principalement :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : C (4th Amendment)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('4mkwm6r')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('4mkwm6r')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">23</div>
-      <div class="q-content">
-        <div class="q-text-preview">Le "Due Process" implique :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : B (Une procédure équitable et régulière)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('99jq1cw')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('99jq1cw')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">24</div>
-      <div class="q-content">
-        <div class="q-text-preview">En droit américain, la présomption d'innocence découle principalement :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : B (5th et 14th Amendments)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('1drg5rm')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('1drg5rm')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">25</div>
-      <div class="q-content">
-        <div class="q-text-preview">Dans Coffin v. United States (1895), la Cour affirme :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : B (La présomption d'innocence est fondamentale)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('ouqra2z')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('ouqra2z')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">26</div>
-      <div class="q-content">
-        <div class="q-text-preview">Le standard "beyond a reasonable doubt" s'applique :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : C (En pénal)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('oahlnns')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('oahlnns')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">27</div>
-      <div class="q-content">
-        <div class="q-text-preview">Le standard civil est :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : C (Prépondérance des preuves)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('jl0wv9a')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('jl0wv9a')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">28</div>
-      <div class="q-content">
-        <div class="q-text-preview">Une preuve obtenue illégalement est :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : C (Généralement exclue)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('e7775mg')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('e7775mg')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">29</div>
-      <div class="q-content">
-        <div class="q-text-preview">La doctrine "Exclusionary Rule" signifie :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : B (Exclusion des preuves illégales)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('5dd1pg9')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('5dd1pg9')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">30</div>
-      <div class="q-content">
-        <div class="q-text-preview">Dans Franks v. Delaware, un mandat est annulé si :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : C (Il repose sur un mensonge intentionnel)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('jpv4vx5')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('jpv4vx5')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">31</div>
-      <div class="q-content">
-        <div class="q-text-preview">Le juge viole son devoir s'il :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : C (Statue sans examiner les éléments)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('8c8sag8')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('8c8sag8')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">32</div>
-      <div class="q-content">
-        <div class="q-text-preview">Le procureur a pour obligation :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : B (De rechercher la vérité)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('296a2oi')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('296a2oi')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">33</div>
-      <div class="q-content">
-        <div class="q-text-preview">L'avocat de la défense peut :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : C (Contester les preuves)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('vghmlwu')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('vghmlwu')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">34</div>
-      <div class="q-content">
-        <div class="q-text-preview">Une arrestation légale nécessite :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : B (Une probable cause)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('lumm87h')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('lumm87h')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">35</div>
-      <div class="q-content">
-        <div class="q-text-preview">Dans Bivens, la responsabilité concerne :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : C (Les agents individuellement)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('mvbqjqr')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('mvbqjqr')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">36</div>
-      <div class="q-content">
-        <div class="q-text-preview">L'immunité de l'État signifie :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : C (L'État ne peut être poursuivi que si la loi le prévoit)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('k0sb9vw')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('k0sb9vw')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">37</div>
-      <div class="q-content">
-        <div class="q-text-preview">Une erreur de procédure entraîne :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : C (Une possible nullité)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('uhh4761')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('uhh4761')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">38</div>
-      <div class="q-content">
-        <div class="q-text-preview">Une nullité de procédure implique :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : B (Une invalidation des actes concernés)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('twxbohy')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('twxbohy')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">39</div>
-      <div class="q-content">
-        <div class="q-text-preview">Le rôle du juge est de :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : C (Arbitrer)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('gftaze4')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('gftaze4')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">40</div>
-      <div class="q-content">
-        <div class="q-text-preview">Le procureur décide :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : C (De l'opportunité des poursuites)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('nwhv6o2')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('nwhv6o2')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">41</div>
-      <div class="q-content">
-        <div class="q-text-preview">Une faute civile nécessite :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : C (Un dommage et un lien)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('b4l2tfk')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('b4l2tfk')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">42</div>
-      <div class="q-content">
-        <div class="q-text-preview">Le lien de causalité signifie :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : B (Une relation directe entre faute et dommage)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('609fmyw')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('609fmyw')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">43</div>
-      <div class="q-content">
-        <div class="q-text-preview">Une jurisprudence :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : B (Interprète la loi)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('u1aqz4m')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('u1aqz4m')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">44</div>
-      <div class="q-content">
-        <div class="q-text-preview">La séparation des pouvoirs vise :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : B (Équilibrer)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('ohcc3c7')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('ohcc3c7')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">45</div>
-      <div class="q-content">
-        <div class="q-text-preview">Une arrestation médiatique constitue :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : B (Une faute si organisée volontairement)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('hdx9z8z')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('hdx9z8z')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">46</div>
-      <div class="q-content">
-        <div class="q-text-preview">Un préjudice moral doit être :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : C (Prouvé)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('d7h3pav')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('d7h3pav')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">47</div>
-      <div class="q-content">
-        <div class="q-text-preview">Un préjudice politique est :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : C (Difficile à prouver)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('hi8vrny')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('hi8vrny')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">48</div>
-      <div class="q-content">
-        <div class="q-text-preview">Une accusation sans preuve :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : C (Peut être illégale)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('ephzxdr')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('ephzxdr')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">49</div>
-      <div class="q-content">
-        <div class="q-text-preview">Le juge doit motiver sa décision pour :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : B (Expliquer juridiquement)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('35gr8hh')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('35gr8hh')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">50</div>
-      <div class="q-content">
-        <div class="q-text-preview">Une décision non motivée est :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : B (Contestable)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('pnb9nez')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('pnb9nez')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">51</div>
-      <div class="q-content">
-        <div class="q-text-preview">Le procureur qui agit sous pression politique :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : B (Est en faute)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('il16kl6')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('il16kl6')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">52</div>
-      <div class="q-content">
-        <div class="q-text-preview">Une preuve vidéo est recevable si :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : B (Elle est légale)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('3gnm5kp')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('3gnm5kp')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">53</div>
-      <div class="q-content">
-        <div class="q-text-preview">La pyramide de Kelsen :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : D (Hiérarchise les textes juridiques)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('yb0kyyt')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('yb0kyyt')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">54</div>
-      <div class="q-content">
-        <div class="q-text-preview">Une arrestation illégale peut :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : B (Engager responsabilité)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('yrdgddi')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('yrdgddi')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">55</div>
-      <div class="q-content">
-        <div class="q-text-preview">Une médiation vise :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : B (Apaiser et résoudre)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('vii73yw')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('vii73yw')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">56</div>
-      <div class="q-content">
-        <div class="q-text-preview">Une indemnisation nécessite :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : A (Une faute)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('v11y6tp')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('v11y6tp')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">57</div>
-      <div class="q-content">
-        <div class="q-text-preview">Le juge ne doit jamais :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : C (Prendre parti)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('g9a6sda')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('g9a6sda')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">58</div>
-      <div class="q-content">
-        <div class="q-text-preview">Une faute lourde implique :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : B (Une négligence grave)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('t7f45a4')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('t7f45a4')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">59</div>
-      <div class="q-content">
-        <div class="q-text-preview">Le droit constitutionnel encadre :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : B (L'organisation des pouvoirs)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('48awdkd')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('48awdkd')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">60</div>
-      <div class="q-content">
-        <div class="q-text-preview">Le rôle du droit est avant tout :</div>
-        <div class="q-meta">Juge Niv 1  · Bonne réponse : B (Organiser et protéger)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('2q8jjqz')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('2q8jjqz')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">61</div>
-      <div class="q-content">
-        <div class="q-text-preview">Qu'est-ce que le droit ?</div>
-        <div class="q-meta">Cours général  · Bonne réponse : B (Un ensemble de règles qui organisent la vie en société)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('wfxpe52')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('wfxpe52')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">62</div>
-      <div class="q-content">
-        <div class="q-text-preview">À qui s'adressent les lois ?</div>
-        <div class="q-meta">Cours général  · Bonne réponse : C (À tous les citoyens et institutions)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('ztsohhs')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('ztsohhs')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">63</div>
-      <div class="q-content">
-        <div class="q-text-preview">Quel est le texte juridique le plus important dans un État ?</div>
-        <div class="q-meta">Cours général  · Bonne réponse : B (La Constitution)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('zf2y8ts')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('zf2y8ts')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">64</div>
-      <div class="q-content">
-        <div class="q-text-preview">Qui vote généralement les lois ?</div>
-        <div class="q-meta">Cours général  · Bonne réponse : C (Le parlement ou l'assemblée)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('344fvxg')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('344fvxg')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">65</div>
-      <div class="q-content">
-        <div class="q-text-preview">À quoi servent les règlements et décrets ?</div>
-        <div class="q-meta">Cours général  · Bonne réponse : B (Appliquer les lois)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('a3thrmo')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('a3thrmo')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">66</div>
-      <div class="q-content">
-        <div class="q-text-preview">Le droit pénal concerne principalement :</div>
-        <div class="q-meta">Cours général  · Bonne réponse : B (Les infractions et les crimes)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('udrhuxa')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('udrhuxa')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">67</div>
-      <div class="q-content">
-        <div class="q-text-preview">Le droit civil concerne :</div>
-        <div class="q-meta">Cours général  · Bonne réponse : A (Les relations entre citoyens)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('ultet8p')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('ultet8p')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">68</div>
-      <div class="q-content">
-        <div class="q-text-preview">Quel est le rôle principal d'un avocat ?</div>
-        <div class="q-meta">Cours général  · Bonne réponse : B (Défendre et conseiller son client)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('58f47bu')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('58f47bu')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">69</div>
-      <div class="q-content">
-        <div class="q-text-preview">Quel est le rôle du procureur ?</div>
-        <div class="q-meta">Cours général  · Bonne réponse : B (Représenter l'État et poursuivre les infractions)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('57lnv6i')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('57lnv6i')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">70</div>
-      <div class="q-content">
-        <div class="q-text-preview">Quel est le rôle du juge ?</div>
-        <div class="q-meta">Cours général  · Bonne réponse : C (Arbitrer le procès et rendre une décision)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('4uzilz1')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('4uzilz1')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">71</div>
-      <div class="q-content">
-        <div class="q-text-preview">Un juge doit être :</div>
-        <div class="q-meta">Cours général  · Bonne réponse : B (Impartial)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('2z7kyfw')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('2z7kyfw')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">72</div>
-      <div class="q-content">
-        <div class="q-text-preview">Que signifie la présomption d'innocence ?</div>
-        <div class="q-meta">Cours général  · Bonne réponse : B (Une personne est innocente jusqu'à preuve de sa culpabilité)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('keurojg')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('keurojg')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">73</div>
-      <div class="q-content">
-        <div class="q-text-preview">Qu'est-ce qu'un droit fondamental ?</div>
-        <div class="q-meta">Cours général  · Bonne réponse : B (Un droit essentiel protégeant les citoyens)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('sjt1jai')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('sjt1jai')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">74</div>
-      <div class="q-content">
-        <div class="q-text-preview">Où trouve-t-on généralement les droits fondamentaux ?</div>
-        <div class="q-meta">Cours général  · Bonne réponse : B (Dans la Constitution et les textes fondamentaux)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('46dzszx')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('46dzszx')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">75</div>
-      <div class="q-content">
-        <div class="q-text-preview">La liberté d'expression permet :</div>
-        <div class="q-meta">Cours général  · Bonne réponse : B (De donner son opinion et participer au débat public)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('l93hx1h')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('l93hx1h')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">76</div>
-      <div class="q-content">
-        <div class="q-text-preview">La liberté de circulation signifie :</div>
-        <div class="q-meta">Cours général  · Bonne réponse : A (Se déplacer librement sur le territoire)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('wtch3fj')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('wtch3fj')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">77</div>
-      <div class="q-content">
-        <div class="q-text-preview">La liberté d'association permet :</div>
-        <div class="q-meta">Cours général  · Bonne réponse : A (De créer des organisations et des associations)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('tdoixjv')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('tdoixjv')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">78</div>
-      <div class="q-content">
-        <div class="q-text-preview">Le droit à un procès équitable signifie :</div>
-        <div class="q-meta">Cours général  · Bonne réponse : B (Que la procédure respecte des règles justes)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('o50ci3n')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('o50ci3n')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">79</div>
-      <div class="q-content">
-        <div class="q-text-preview">Pourquoi les droits fondamentaux sont-ils importants ?</div>
-        <div class="q-meta">Cours général  · Bonne réponse : B (Pour protéger les citoyens et limiter le pouvoir)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('rmly8gn')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('rmly8gn')">Supprimer</button>
-      </div>
-    </div>
-    <div class="q-item">
-      <div class="q-num-badge">80</div>
-      <div class="q-content">
-        <div class="q-text-preview">Dans un État de droit :</div>
-        <div class="q-meta">Cours général  · Bonne réponse : B (L'État et les citoyens doivent respecter la loi)</div>
-      </div>
-      <div class="q-actions">
-        <button class="k-btn" onclick="editQuestion('f9egqgj')">Modifier</button>
-        <button class="k-btn del" onclick="deleteQuestion('f9egqgj')">Supprimer</button>
-      </div>
-    </div></div>
+        <div id="q-list"></div>
       </div>
     </div>
   </div>
@@ -1419,19 +477,19 @@ const JB_API  = "https://api.jsonbin.io/v3";
 let questions=[], keys=[], webhookURL="";
 let shuffled=[], answers=[], currentQ=0, candidat={}, activeKey=null;
 let correctSel=0, editKeyId=null, editQId=null;
-let jbKey="$2a$10$ksiF84q2k8975CI6TJASJePe892DX11d40r4NnMnZZbDFoU9u27Km", jbBin="69bd5429b7ec241ddc87cc46", jbSyncing=false;
+// @@CFG_START@@
+const PUBLISHED_JB_KEY="";
+const PUBLISHED_JB_BIN="";
+// @@CFG_END@@
+let jbKey="", jbBin="", jbSyncing=false;
 
 // ── INIT ──
 async function init(){
-  if(localStorage.getItem('cssa_pub_token')!=='pub_1774016617249'){
-    localStorage.removeItem('cssa_questions');
-    localStorage.removeItem('cssa_keys');
-    localStorage.removeItem('cssa_jb_key');
-    localStorage.removeItem('cssa_jb_bin');
-    localStorage.setItem('cssa_pub_token','pub_1774016617249');
-  }
-  jbKey = localStorage.getItem(LS_JBKEY)||"";
-  jbBin = localStorage.getItem(LS_JBBIN)||"";
+  // Priorité : constantes baked (publiées) > localStorage
+  jbKey = PUBLISHED_JB_KEY || localStorage.getItem(LS_JBKEY)||"";
+  jbBin = PUBLISHED_JB_BIN || localStorage.getItem(LS_JBBIN)||"";
+  if(jbKey) localStorage.setItem(LS_JBKEY, jbKey);
+  if(jbBin) localStorage.setItem(LS_JBBIN, jbBin);
   webhookURL = localStorage.getItem(LS_WH)||"";
   // Essayer JSONBin en priorité, sinon localStorage
   if(jbKey && jbBin){
@@ -2053,38 +1111,28 @@ function exportJSON(){
 
 function publishSite(){
   if(!jbKey||!jbBin){
-    if(!confirm('JSONBin non configuré — le site publié utilisera les données locales (non partagées). Continuer quand même ?')) return;
+    if(!confirm('JSONBin non configuré. Continuer quand même ?')) return;
   }
-  const html=document.documentElement.outerHTML;
-  const webhookVal=localStorage.getItem(LS_WH)||'';
-  const pubToken='pub_'+Date.now();
+  let output=document.documentElement.outerHTML;
 
-  // Injecter jbKey et jbBin comme constantes dans le HTML publié
-  // Ainsi tous les visiteurs se connectent automatiquement au bon JSONBin
-  let output=html.replace(
-    'let jbKey="", jbBin="", jbSyncing=false;',
-    `let jbKey="${jbKey.replace(/"/g,'\\"')}", jbBin="${jbBin}", jbSyncing=false;`
-  );
+  // Remplace le bloc config quel que soit son contenu actuel (regex)
+  const cfgRegex=/\/\/ @@CFG_START@@[\s\S]*?\/\/ @@CFG_END@@/;
+  const cfgBlock=`// @@CFG_START@@
+const PUBLISHED_JB_KEY="${jbKey.replace(/"/g,'\\"')}";
+const PUBLISHED_JB_BIN="${jbBin}";
+// @@CFG_END@@`;
+  output=output.replace(cfgRegex, cfgBlock);
 
-  // Forcer rechargement JSONBin au premier chargement (vider le localStorage des visiteurs)
-  output=output.replace(
-    'async function init(){',
-    `async function init(){
-  if(localStorage.getItem('cssa_pub_token')!=='${pubToken}'){
-    localStorage.removeItem('${LS_Q}');
-    localStorage.removeItem('${LS_K}');
-    localStorage.removeItem('${LS_JBKEY}');
-    localStorage.removeItem('${LS_JBBIN}');
-    localStorage.setItem('cssa_pub_token','${pubToken}');
-  }`
-  );
+  if(!cfgRegex.test(document.documentElement.outerHTML)){
+    showToast('Erreur : marqueur CFG introuvable dans le HTML.');return;
+  }
 
   const blob=new Blob([output],{type:'text/html;charset=utf-8'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
   a.download='index.html';
   a.click();
-  showToast('index.html généré — uploadez-le sur GitHub !');
+  showToast('index.html publié — uploadez-le sur GitHub !');
 }
 
 function importJSON(event){
@@ -2161,6 +1209,5 @@ function showToast(msg){
 }
 
 init();</script>
-
-
-</body></html>
+</body>
+</html>
