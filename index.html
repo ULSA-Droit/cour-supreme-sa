@@ -267,9 +267,45 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
         <div class="stat-box"><div class="stat-num" id="stat-wh">—</div><div class="stat-lbl">Webhook</div></div>
       </div>
 
-      <!-- Webhook -->
+      <!-- Configuration -->
       <div class="a-card" style="margin-bottom:1.5rem">
         <div class="a-section-title">Configuration</div>
+
+        <!-- JSONBin -->
+        <div style="border:0.5px solid var(--a-border);border-radius:6px;padding:14px;margin-bottom:14px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <div id="jb-indicator" style="width:8px;height:8px;border-radius:50%;background:#555;flex-shrink:0"></div>
+            <span style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--a-gold)">Synchronisation JSONBin</span>
+            <span id="jb-status-lbl" style="font-size:11px;color:var(--a-muted);margin-left:auto"></span>
+          </div>
+          <div class="a-row2" style="margin-bottom:8px">
+            <div class="a-field" style="margin:0">
+              <label>Clé API JSONBin <a href="https://jsonbin.io" target="_blank" style="color:var(--a-gold);font-size:10px;margin-left:4px">→ jsonbin.io</a></label>
+              <input type="password" id="inp-jb-key" placeholder="$2b$10$..." oninput="saveJBConfig()">
+            </div>
+            <div class="a-field" style="margin:0">
+              <label>Bin ID <span style="color:var(--a-muted);font-size:10px">(généré automatiquement)</span></label>
+              <input type="text" id="inp-jb-bin" placeholder="Sera créé au premier sync" readonly style="color:var(--a-muted)">
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="a-btn accent" onclick="jbSync()" id="jb-sync-btn">↕ Synchroniser</button>
+            <button class="a-btn" onclick="jbPush()" id="jb-push-btn">⬆ Envoyer vers JSONBin</button>
+            <button class="a-btn" onclick="jbPull()" id="jb-pull-btn">⬇ Récupérer depuis JSONBin</button>
+          </div>
+          <details style="margin-top:12px">
+            <summary style="font-size:11px;color:var(--a-muted);cursor:pointer;letter-spacing:.06em;text-transform:uppercase">Guide de configuration ▾</summary>
+            <ol style="font-size:12px;color:var(--a-muted);line-height:2;margin-top:8px;padding-left:18px">
+              <li>Allez sur <strong style="color:var(--a-text)">jsonbin.io</strong> → créez un compte gratuit</li>
+              <li>Cliquez sur votre avatar → <strong style="color:var(--a-text)">API Keys</strong> → <strong style="color:var(--a-text)">+ Create Access Key</strong></li>
+              <li>Cochez <strong style="color:var(--a-text)">Create Bin, Read Bin, Update Bin</strong> → nommez-la "Greffe" → créez</li>
+              <li>Copiez la clé affichée (commence par <code style="color:var(--a-gold)">$2b$10$...</code>) et collez-la ci-dessus</li>
+              <li>Cliquez <strong style="color:var(--a-gold)">↕ Synchroniser</strong> — un Bin est créé automatiquement</li>
+              <li>Désormais chaque modification est envoyée automatiquement en temps réel</li>
+            </ol>
+          </details>
+        </div>
+
         <div class="a-field" style="margin:0">
           <label>URL Webhook Discord</label>
           <input type="text" id="inp-webhook" placeholder="https://discord.com/api/webhooks/..." oninput="saveWebhook()">
@@ -429,25 +465,136 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
 <script>
 // ── CONSTANTS ──
 const ADMIN_PWD = "greffe2024"; // Changez ce mot de passe !
-const LS_Q   = "cssa_questions";
-const LS_K   = "cssa_keys";
-const LS_WH  = "cssa_webhook";
-const LS_AUTH= "cssa_authed";
+const LS_Q    = "cssa_questions";
+const LS_K    = "cssa_keys";
+const LS_WH   = "cssa_webhook";
+const LS_AUTH = "cssa_authed";
+const LS_JBKEY= "cssa_jb_key";
+const LS_JBBIN= "cssa_jb_bin";
+const JB_API  = "https://api.jsonbin.io/v3";
 
 // ── STATE ──
 let questions=[], keys=[], webhookURL="";
 let shuffled=[], answers=[], currentQ=0, candidat={}, activeKey=null;
 let correctSel=0, editKeyId=null, editQId=null;
+let jbKey="", jbBin="", jbSyncing=false;
 
 // ── INIT ──
-function init(){
-  questions = JSON.parse(localStorage.getItem(LS_Q)||"[]");
-  keys       = JSON.parse(localStorage.getItem(LS_K)||"[]");
+async function init(){
+  jbKey = localStorage.getItem(LS_JBKEY)||"";
+  jbBin = localStorage.getItem(LS_JBBIN)||"";
   webhookURL = localStorage.getItem(LS_WH)||"";
+  // Essayer JSONBin en priorité, sinon localStorage
+  if(jbKey && jbBin){
+    const ok = await jbPullSilent();
+    if(!ok) loadFromLocal();
+  } else {
+    loadFromLocal();
+  }
+}
+
+function loadFromLocal(){
+  questions = JSON.parse(localStorage.getItem(LS_Q)||"[]");
+  keys      = JSON.parse(localStorage.getItem(LS_K)||"[]");
   if(!questions.length) loadDefaults();
 }
+
 function uid(){ return Math.random().toString(36).slice(2,9) }
-function save(){ localStorage.setItem(LS_Q,JSON.stringify(questions)); localStorage.setItem(LS_K,JSON.stringify(keys)); }
+
+function saveLocal(){
+  localStorage.setItem(LS_Q, JSON.stringify(questions));
+  localStorage.setItem(LS_K, JSON.stringify(keys));
+}
+
+// save = local + JSONBin si configuré
+async function save(){
+  saveLocal();
+  if(jbKey && jbBin) await jbPushSilent();
+}
+
+// ── JSONBIN ──
+function jbSetStatus(state, msg){
+  const ind=document.getElementById('jb-indicator');
+  const lbl=document.getElementById('jb-status-lbl');
+  if(!ind||!lbl) return;
+  const colors={ok:'#1D9E75',error:'#C47070',sync:'#D4AF37',idle:'#555'};
+  ind.style.background=colors[state]||colors.idle;
+  lbl.textContent=msg||'';
+}
+
+function saveJBConfig(){
+  jbKey=document.getElementById('inp-jb-key').value.trim();
+  localStorage.setItem(LS_JBKEY, jbKey);
+}
+
+async function jbPullSilent(){
+  try{
+    const r=await fetch(`${JB_API}/b/${jbBin}/latest`,{headers:{'X-Master-Key':jbKey,'X-Bin-Meta':'false'}});
+    if(!r.ok) return false;
+    const data=await r.json();
+    if(data.questions) questions=data.questions;
+    if(data.keys) keys=data.keys;
+    if(data.webhook){ webhookURL=data.webhook; localStorage.setItem(LS_WH,data.webhook); }
+    saveLocal();
+    return true;
+  }catch(e){ return false; }
+}
+
+async function jbPushSilent(){
+  if(!jbKey||!jbBin) return false;
+  try{
+    const payload={questions,keys,webhook:localStorage.getItem(LS_WH)||'',updated:new Date().toISOString()};
+    await fetch(`${JB_API}/b/${jbBin}`,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':jbKey},body:JSON.stringify(payload)});
+    return true;
+  }catch(e){ return false; }
+}
+
+async function jbSync(){
+  if(!jbKey){ showToast('Entrez votre clé API JSONBin.'); return; }
+  jbSetStatus('sync','Synchronisation...');
+  // Si pas de bin, en créer un
+  if(!jbBin){
+    try{
+      const payload={questions,keys,webhook:localStorage.getItem(LS_WH)||'',updated:new Date().toISOString()};
+      const r=await fetch(`${JB_API}/b`,{method:'POST',headers:{'Content-Type':'application/json','X-Master-Key':jbKey,'X-Bin-Name':'Greffe-CSSA','X-Bin-Private':'true'},body:JSON.stringify(payload)});
+      if(!r.ok) throw new Error(await r.text());
+      const data=await r.json();
+      jbBin=data.metadata.id;
+      localStorage.setItem(LS_JBBIN, jbBin);
+      document.getElementById('inp-jb-bin').value=jbBin;
+      jbSetStatus('ok','Bin créé et synchronisé ✓');
+      showToast('Bin JSONBin créé ! Données envoyées.');
+    }catch(e){ jbSetStatus('error','Erreur : '+e.message); showToast('Erreur JSONBin : '+e.message); }
+    return;
+  }
+  // Sinon push
+  const ok=await jbPushSilent();
+  jbSetStatus(ok?'ok':'error', ok?'Synchronisé ✓':'Erreur de connexion');
+  showToast(ok?'Synchronisé avec JSONBin.':'Erreur de synchronisation.');
+}
+
+async function jbPush(){
+  if(!jbKey||!jbBin){ showToast('Configurez JSONBin d\'abord.'); return; }
+  jbSetStatus('sync','Envoi...');
+  const ok=await jbPushSilent();
+  jbSetStatus(ok?'ok':'error', ok?'Envoyé ✓':'Erreur');
+  showToast(ok?'Données envoyées vers JSONBin.':'Erreur d\'envoi.');
+}
+
+async function jbPull(){
+  if(!jbKey||!jbBin){ showToast('Configurez JSONBin d\'abord.'); return; }
+  jbSetStatus('sync','Récupération...');
+  const ok=await jbPullSilent();
+  if(ok){
+    jbSetStatus('ok','Récupéré ✓');
+    showToast('Données récupérées depuis JSONBin.');
+    if(document.getElementById('admin-dash').classList.contains('hidden')) return;
+    renderKeyList(); renderQList(); updateStats(); populateExamTypeSelects();
+  } else {
+    jbSetStatus('error','Erreur');
+    showToast('Erreur de récupération.');
+  }
+}
 
 // ── DEFAULT DATA ──
 function loadDefaults(){
@@ -668,6 +815,13 @@ function showDash(){
   document.getElementById('admin-login').classList.add('hidden');
   document.getElementById('admin-dash').classList.remove('hidden');
   document.getElementById('inp-webhook').value=localStorage.getItem(LS_WH)||'';
+  document.getElementById('inp-jb-key').value=localStorage.getItem(LS_JBKEY)||'';
+  document.getElementById('inp-jb-bin').value=localStorage.getItem(LS_JBBIN)||'';
+  jbKey=localStorage.getItem(LS_JBKEY)||'';
+  jbBin=localStorage.getItem(LS_JBBIN)||'';
+  if(jbKey && jbBin) jbSetStatus('ok','Connecté');
+  else if(jbKey) jbSetStatus('sync','Bin non créé');
+  else jbSetStatus('idle','Non configuré');
   updateStats(); renderKeyList(); renderQList(); populateExamTypeSelects();
 }
 
@@ -1065,7 +1219,6 @@ function showToast(msg){
   setTimeout(()=>t.classList.remove('show'),2800);
 }
 
-init();
-</script>
+init();</script>
 </body>
 </html>
