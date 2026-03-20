@@ -624,7 +624,7 @@ async function init(){
 function loadFromLocal(){
   questions = JSON.parse(localStorage.getItem(LS_Q)||"[]");
   keys      = JSON.parse(localStorage.getItem(LS_K)||"[]");
-  if(!questions.length) loadDefaults();
+  if(!questions.length && !PUBLISHED_JB_KEY) loadDefaults();
 }
 
 function uid(){ return Math.random().toString(36).slice(2,9) }
