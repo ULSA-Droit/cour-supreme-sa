@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
+<html lang="fr"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cour Suprême de San Andreas — Examen Juridique</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&amp;family=Source+Serif+4:ital,wght@0,300;0,400;1,300&amp;display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -167,11 +165,11 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
 </head>
 <body>
 
-<button id="admin-toggle-btn" onclick="goAdmin()">⚙ Greffe</button>
-<div id="toast" class="toast"></div>
+<button id="admin-toggle-btn" onclick="goAdmin()" style="display: none;">⚙ Greffe</button>
+<div id="toast" class="toast">Synchronisé avec JSONBin.</div>
 
 <!-- ══════════ EXAM ══════════ -->
-<div id="exam-app">
+<div id="exam-app" class="hidden">
   <div class="header">
     <div class="seal">⚖</div>
     <h1>Cour Suprême de San Andreas</h1>
@@ -230,8 +228,8 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
 </div>
 
 <!-- ══════════ ADMIN ══════════ -->
-<div id="admin-panel">
-  <div id="admin-login" class="login-wrap">
+<div id="admin-panel" class="active">
+  <div id="admin-login" class="login-wrap hidden">
     <div class="login-box">
       <div style="font-size:32px;margin-bottom:12px">⚖</div>
       <h2>Greffe — Accès restreint</h2>
@@ -243,7 +241,7 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
     </div>
   </div>
 
-  <div id="admin-dash" class="hidden">
+  <div id="admin-dash" class="">
     <div class="a-topbar">
       <div class="a-topbar-title">⚖ Greffe — Administration</div>
       <div class="a-topbar-right">
@@ -261,10 +259,10 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
     <div class="a-body">
       <!-- Stats -->
       <div class="stats-grid">
-        <div class="stat-box"><div class="stat-num" id="stat-keys">0</div><div class="stat-lbl">Clés actives</div></div>
-        <div class="stat-box"><div class="stat-num" id="stat-exams">0</div><div class="stat-lbl">Types d'examen</div></div>
-        <div class="stat-box"><div class="stat-num" id="stat-qs">0</div><div class="stat-lbl">Questions</div></div>
-        <div class="stat-box"><div class="stat-num" id="stat-wh">—</div><div class="stat-lbl">Webhook</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-keys">1</div><div class="stat-lbl">Clés actives</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-exams">5</div><div class="stat-lbl">Types d'examen</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-qs">10</div><div class="stat-lbl">Questions</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-wh">✓</div><div class="stat-lbl">Webhook</div></div>
       </div>
 
       <!-- Configuration -->
@@ -274,9 +272,9 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
         <!-- JSONBin -->
         <div style="border:0.5px solid var(--a-border);border-radius:6px;padding:14px;margin-bottom:14px">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-            <div id="jb-indicator" style="width:8px;height:8px;border-radius:50%;background:#555;flex-shrink:0"></div>
+            <div id="jb-indicator" style="width: 8px; height: 8px; border-radius: 50%; background: rgb(29, 158, 117); flex-shrink: 0;"></div>
             <span style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--a-gold)">Synchronisation JSONBin</span>
-            <span id="jb-status-lbl" style="font-size:11px;color:var(--a-muted);margin-left:auto"></span>
+            <span id="jb-status-lbl" style="font-size:11px;color:var(--a-muted);margin-left:auto">Synchronisé ✓</span>
           </div>
           <div class="a-row2" style="margin-bottom:8px">
             <div class="a-field" style="margin:0">
@@ -285,7 +283,7 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
             </div>
             <div class="a-field" style="margin:0">
               <label>Bin ID <span style="color:var(--a-muted);font-size:10px">(généré automatiquement)</span></label>
-              <input type="text" id="inp-jb-bin" placeholder="Sera créé au premier sync" readonly style="color:var(--a-muted)">
+              <input type="text" id="inp-jb-bin" placeholder="Sera créé au premier sync" readonly="" style="color:var(--a-muted)">
             </div>
           </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -343,9 +341,7 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
             <label style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--a-muted);display:block;margin-bottom:8px">Pools de questions</label>
             <div id="k-pools-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px"></div>
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-              <select id="k-pool-cat" style="font-family:'Source Serif 4',serif;font-size:13px;background:#0A0C12;border:0.5px solid var(--a-border);border-radius:5px;padding:7px 10px;color:var(--a-text);outline:none;flex:1;min-width:160px">
-                <option value="">— Choisir une catégorie —</option>
-              </select>
+              <select id="k-pool-cat" style="font-family:'Source Serif 4',serif;font-size:13px;background:#0A0C12;border:0.5px solid var(--a-border);border-radius:5px;padding:7px 10px;color:var(--a-text);outline:none;flex:1;min-width:160px"><option value="">— Choisir une catégorie —</option><option value="Droit Civil">Droit Civil (1 questions)</option><option value="Droit Pénal">Droit Pénal (3 questions)</option><option value="Droits Fondamentaux">Droits Fondamentaux (2 questions)</option><option value="Organisation Judiciaire">Organisation Judiciaire (2 questions)</option><option value="Procédure">Procédure (2 questions)</option></select>
               <input type="number" id="k-pool-count" value="10" min="1" max="100" style="font-family:'Source Serif 4',serif;font-size:13px;background:#0A0C12;border:0.5px solid var(--a-border);border-radius:5px;padding:7px 10px;color:var(--a-text);outline:none;width:80px" placeholder="nb">
               <button onclick="addPool()" style="background:rgba(212,175,55,.12);border:0.5px solid var(--a-border);border-radius:5px;padding:7px 14px;color:var(--a-gold);cursor:pointer;font-size:13px;white-space:nowrap;font-family:'Source Serif 4',serif">+ Ajouter</button>
             </div>
@@ -357,14 +353,31 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
           </div>
         </div>
 
-        <div class="a-section-title" style="margin-top:1.5rem">Clés d'accès (<span id="key-count">0</span>)</div>
-        <div id="key-list"></div>
+        <div class="a-section-title" style="margin-top:1.5rem">Clés d'accès (<span id="key-count">1</span>)</div>
+        <div id="key-list"><div class="key-item">
+      <div class="key-code">BARREAU</div>
+      <div class="key-info">
+        <div class="key-name">Examen du Barreau</div>
+        <div class="key-meta" style="margin-top:3px">Toutes les questions</div>
+        <div class="key-meta">Créée le 20/03/2026</div>
+      </div>
+      <div class="key-uses">
+        <div class="key-uses-num">🟢 0</div>
+        <div class="key-uses-lbl">utilisations</div>
+        
+      </div>
+      <div class="key-actions">
+        <button class="k-btn" onclick="editKey('4dl0b4t')">Modifier</button>
+        <button class="k-btn" onclick="resetKeyUses('4dl0b4t')">Reset</button>
+        <button class="k-btn del" onclick="deleteKey('4dl0b4t')">Supprimer</button>
+      </div>
+    </div></div>
 
         <div style="margin-top:1.5rem">
           <div class="a-section-title">Types d'examens</div>
           <div class="a-card">
             <p style="font-size:13px;color:var(--a-muted);margin-bottom:10px">Les types d'examens sont créés automatiquement depuis les catégories de vos questions. Chaque clé peut être restreinte à un type d'examen.</p>
-            <div id="exam-types-list" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+            <div id="exam-types-list" style="display:flex;gap:8px;flex-wrap:wrap"><span style="padding:5px 12px;border-radius:20px;font-size:12px;background:rgba(212,175,55,.08);border:0.5px solid var(--a-border);color:var(--a-gold)">Droit Civil <span style="color:var(--a-muted)">(1)</span></span><span style="padding:5px 12px;border-radius:20px;font-size:12px;background:rgba(212,175,55,.08);border:0.5px solid var(--a-border);color:var(--a-gold)">Droit Pénal <span style="color:var(--a-muted)">(3)</span></span><span style="padding:5px 12px;border-radius:20px;font-size:12px;background:rgba(212,175,55,.08);border:0.5px solid var(--a-border);color:var(--a-gold)">Droits Fondamentaux <span style="color:var(--a-muted)">(2)</span></span><span style="padding:5px 12px;border-radius:20px;font-size:12px;background:rgba(212,175,55,.08);border:0.5px solid var(--a-border);color:var(--a-gold)">Organisation Judiciaire <span style="color:var(--a-muted)">(2)</span></span><span style="padding:5px 12px;border-radius:20px;font-size:12px;background:rgba(212,175,55,.08);border:0.5px solid var(--a-border);color:var(--a-gold)">Procédure <span style="color:var(--a-muted)">(2)</span></span></div>
           </div>
         </div>
       </div>
@@ -433,7 +446,7 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
           <div style="margin-bottom:10px">
             <label style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--a-muted);display:block;margin-bottom:6px">Bonne réponse</label>
             <div class="radio-group" id="correct-rg">
-              <div class="radio-opt active" data-val="0" onclick="selCorrect(this)"><input type="radio" name="cr" checked> A</div>
+              <div class="radio-opt active" data-val="0" onclick="selCorrect(this)"><input type="radio" name="cr" checked=""> A</div>
               <div class="radio-opt" data-val="1" onclick="selCorrect(this)"> B</div>
               <div class="radio-opt" data-val="2" onclick="selCorrect(this)"> C</div>
               <div class="radio-opt" data-val="3" onclick="selCorrect(this)"> D</div>
@@ -451,12 +464,120 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
 
         <!-- Filter + list -->
         <div style="display:flex;align-items:center;gap:10px;margin:1.5rem 0 .75rem;flex-wrap:wrap">
-          <div class="a-section-title" style="margin:0;border:none;padding:0;flex:1">Questions (<span id="q-count">0</span>)</div>
-          <select id="q-filter" onchange="renderQList()" style="font-family:'Source Serif 4',serif;font-size:12px;background:#0A0C12;border:0.5px solid var(--a-border);border-radius:4px;padding:6px 10px;color:var(--a-text);outline:none">
-            <option value="">Toutes catégories</option>
-          </select>
+          <div class="a-section-title" style="margin:0;border:none;padding:0;flex:1">Questions (<span id="q-count">10</span>)</div>
+          <select id="q-filter" onchange="renderQList()" style="font-family:'Source Serif 4',serif;font-size:12px;background:#0A0C12;border:0.5px solid var(--a-border);border-radius:4px;padding:6px 10px;color:var(--a-text);outline:none"><option value="">Toutes catégories</option><option value="Droit Civil">Droit Civil</option><option value="Droit Pénal">Droit Pénal</option><option value="Droits Fondamentaux">Droits Fondamentaux</option><option value="Organisation Judiciaire">Organisation Judiciaire</option><option value="Procédure">Procédure</option></select>
         </div>
-        <div id="q-list"></div>
+        <div id="q-list">
+    <div class="q-item">
+      <div class="q-num-badge">1</div>
+      <div class="q-content">
+        <div class="q-text-preview">En droit pénal de San Andreas, quel article définit le meurtre au premier degré ?</div>
+        <div class="q-meta">Droit Pénal · Code Pénal SA, Art. 187 · Bonne réponse : B (Art. 187 du Code Pénal)</div>
+      </div>
+      <div class="q-actions">
+        <button class="k-btn" onclick="editQuestion('27obj5h')">Modifier</button>
+        <button class="k-btn del" onclick="deleteQuestion('27obj5h')">Supprimer</button>
+      </div>
+    </div>
+    <div class="q-item">
+      <div class="q-num-badge">2</div>
+      <div class="q-content">
+        <div class="q-text-preview">Quel est le rôle du Procureur Général de l'État de San Andreas ?</div>
+        <div class="q-meta">Organisation Judiciaire · Constitution SA, Art. 8 · Bonne réponse : B (Il représente l'État dans les affaires pénales)</div>
+      </div>
+      <div class="q-actions">
+        <button class="k-btn" onclick="editQuestion('9ygw7dg')">Modifier</button>
+        <button class="k-btn del" onclick="deleteQuestion('9ygw7dg')">Supprimer</button>
+      </div>
+    </div>
+    <div class="q-item">
+      <div class="q-num-badge">3</div>
+      <div class="q-content">
+        <div class="q-text-preview">La présomption d'innocence implique que :</div>
+        <div class="q-meta">Droits Fondamentaux · Déclaration des Droits SA, Art. 1 · Bonne réponse : B (La culpabilité doit être prouvée au-delà du doute raisonnable)</div>
+      </div>
+      <div class="q-actions">
+        <button class="k-btn" onclick="editQuestion('etwc2sv')">Modifier</button>
+        <button class="k-btn del" onclick="deleteQuestion('etwc2sv')">Supprimer</button>
+      </div>
+    </div>
+    <div class="q-item">
+      <div class="q-num-badge">4</div>
+      <div class="q-content">
+        <div class="q-text-preview">Qu'est-ce qu'une mise en examen à San Andreas ?</div>
+        <div class="q-meta">Procédure · Code de Procédure Pénale SA, Art. 23 · Bonne réponse : B (Un acte formel indiquant qu'une personne est suspectée)</div>
+      </div>
+      <div class="q-actions">
+        <button class="k-btn" onclick="editQuestion('l5dc1ea')">Modifier</button>
+        <button class="k-btn del" onclick="deleteQuestion('l5dc1ea')">Supprimer</button>
+      </div>
+    </div>
+    <div class="q-item">
+      <div class="q-num-badge">5</div>
+      <div class="q-content">
+        <div class="q-text-preview">La légitime défense est reconnue si :</div>
+        <div class="q-meta">Droit Pénal · Code Pénal SA, Art. 22 · Bonne réponse : B (La riposte est proportionnée et immédiate)</div>
+      </div>
+      <div class="q-actions">
+        <button class="k-btn" onclick="editQuestion('xlotl7f')">Modifier</button>
+        <button class="k-btn del" onclick="deleteQuestion('xlotl7f')">Supprimer</button>
+      </div>
+    </div>
+    <div class="q-item">
+      <div class="q-num-badge">6</div>
+      <div class="q-content">
+        <div class="q-text-preview">Devant quelle juridiction se tiennent les affaires criminelles graves ?</div>
+        <div class="q-meta">Organisation Judiciaire · Loi Organique sur la Justice SA, Art. 5 · Bonne réponse : B (La Cour d'assises de San Andreas)</div>
+      </div>
+      <div class="q-actions">
+        <button class="k-btn" onclick="editQuestion('11d9v0b')">Modifier</button>
+        <button class="k-btn del" onclick="deleteQuestion('11d9v0b')">Supprimer</button>
+      </div>
+    </div>
+    <div class="q-item">
+      <div class="q-num-badge">7</div>
+      <div class="q-content">
+        <div class="q-text-preview">Qu'est-ce qu'un mandat d'arrêt à San Andreas ?</div>
+        <div class="q-meta">Procédure · Code de Procédure Pénale SA, Art. 41 · Bonne réponse : B (Un acte ordonnant l'arrestation d'une personne)</div>
+      </div>
+      <div class="q-actions">
+        <button class="k-btn" onclick="editQuestion('bkul9h2')">Modifier</button>
+        <button class="k-btn del" onclick="deleteQuestion('bkul9h2')">Supprimer</button>
+      </div>
+    </div>
+    <div class="q-item">
+      <div class="q-num-badge">8</div>
+      <div class="q-content">
+        <div class="q-text-preview">En droit civil de San Andreas, la prescription de droit commun est de :</div>
+        <div class="q-meta">Droit Civil · Code Civil SA, Art. 112 · Bonne réponse : C (5 ans)</div>
+      </div>
+      <div class="q-actions">
+        <button class="k-btn" onclick="editQuestion('gx152q6')">Modifier</button>
+        <button class="k-btn del" onclick="deleteQuestion('gx152q6')">Supprimer</button>
+      </div>
+    </div>
+    <div class="q-item">
+      <div class="q-num-badge">9</div>
+      <div class="q-content">
+        <div class="q-text-preview">Le principe 'non bis in idem' signifie :</div>
+        <div class="q-meta">Droits Fondamentaux · Constitution SA, Art. 14 · Bonne réponse : B (On ne peut être jugé deux fois pour les mêmes faits)</div>
+      </div>
+      <div class="q-actions">
+        <button class="k-btn" onclick="editQuestion('w3l9m0n')">Modifier</button>
+        <button class="k-btn del" onclick="deleteQuestion('w3l9m0n')">Supprimer</button>
+      </div>
+    </div>
+    <div class="q-item">
+      <div class="q-num-badge">10</div>
+      <div class="q-content">
+        <div class="q-text-preview">La récidive en droit pénal de San Andreas a pour effet :</div>
+        <div class="q-meta">Droit Pénal · Code Pénal SA, Art. 62 · Bonne réponse : C (D'aggraver la peine applicable)</div>
+      </div>
+      <div class="q-actions">
+        <button class="k-btn" onclick="editQuestion('7x5wowb')">Modifier</button>
+        <button class="k-btn del" onclick="deleteQuestion('7x5wowb')">Supprimer</button>
+      </div>
+    </div></div>
       </div>
     </div>
   </div>
@@ -478,8 +599,8 @@ let questions=[], keys=[], webhookURL="";
 let shuffled=[], answers=[], currentQ=0, candidat={}, activeKey=null;
 let correctSel=0, editKeyId=null, editQId=null;
 // @@CFG_START@@
-const PUBLISHED_JB_KEY="";
-const PUBLISHED_JB_BIN="";
+const PUBLISHED_JB_KEY="$2a$10$ksiF84q2k8975CI6TJASJePe892DX11d40r4NnMnZZbDFoU9u27Km";
+const PUBLISHED_JB_BIN="69bd58ddb7ec241ddc87decb";
 // @@CFG_END@@
 let jbKey="", jbBin="", jbSyncing=false;
 
@@ -1209,5 +1330,6 @@ function showToast(msg){
 }
 
 init();</script>
-</body>
-</html>
+
+
+</body></html>
