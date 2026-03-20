@@ -606,18 +606,20 @@ let jbKey="", jbBin="", jbSyncing=false;
 
 // ── INIT ──
 async function init(){
-  // Priorité : constantes baked (publiées) > localStorage
   jbKey = PUBLISHED_JB_KEY || localStorage.getItem(LS_JBKEY)||"";
   jbBin = PUBLISHED_JB_BIN || localStorage.getItem(LS_JBBIN)||"";
   if(jbKey) localStorage.setItem(LS_JBKEY, jbKey);
   if(jbBin) localStorage.setItem(LS_JBBIN, jbBin);
   webhookURL = localStorage.getItem(LS_WH)||"";
-  // Essayer JSONBin en priorité, sinon localStorage
   if(jbKey && jbBin){
     const ok = await jbPullSilent();
-    if(!ok) loadFromLocal();
+    if(!ok){
+      loadFromLocal();
+      if(!questions.length) showToast('JSONBin inaccessible — données locales chargées.');
+    }
   } else {
     loadFromLocal();
+    if(!questions.length && !jbKey) loadDefaults();
   }
 }
 
