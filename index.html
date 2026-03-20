@@ -585,7 +585,7 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
 
 <script>
 // ── CONSTANTS ──
-const ADMIN_PWD = "greffe2024"; // Changez ce mot de passe !
+const ADMIN_PWD_HASH = "c0c4a69b7e1cf3b7e43b67dcf754e408a28432bbdad765ebdb36b60f06700b48";
 const LS_Q    = "cssa_questions";
 const LS_K    = "cssa_keys";
 const LS_WH   = "cssa_webhook";
@@ -932,9 +932,13 @@ function goExam(){
   document.getElementById('admin-toggle-btn').style.display='';
   document.getElementById('admin-login').classList.remove('hidden');
   document.getElementById('admin-dash').classList.add('hidden');
+}  
+async function sha256(str){
+  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
-function checkPwd(){
-  if(document.getElementById('pwd-input').value===ADMIN_PWD){
+async function checkPwd(){
+  const inputHash = await sha256(document.getElementById('pwd-input').value); if(inputHash===ADMIN_PWD_HASH){
     sessionStorage.setItem(LS_AUTH,'1');
     document.getElementById('login-err').textContent='';
     document.getElementById('pwd-input').value='';
