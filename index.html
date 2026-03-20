@@ -250,8 +250,9 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
         <button class="a-btn" onclick="exportJSON()">Exporter JSON</button>
         <button class="a-btn" onclick="document.getElementById('import-file').click()">Importer JSON</button>
         <input type="file" id="import-file" accept=".json" class="hidden" onchange="importJSON(event)">
-        <button class="a-btn accent" onclick="document.getElementById('import-csv-file').click()">Importer CSV</button>
+        <button class="a-btn" onclick="document.getElementById('import-csv-file').click()">Importer CSV</button>
         <input type="file" id="import-csv-file" accept=".csv" class="hidden" onchange="importCSV(event)">
+        <button class="a-btn accent" onclick="publishSite()" style="font-weight:500">⬆ Publier</button>
         <button class="a-btn" onclick="goExam()">Voir l'examen</button>
         <button class="a-btn" onclick="adminLogout()">Déconnexion</button>
       </div>
@@ -939,6 +940,56 @@ function exportJSON(){
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='greffe-cssandreas.json'; a.click();
   showToast('Export téléchargé.');
+}
+
+function publishSite(){
+  // Récupère le HTML source complet de la page
+  const html=document.documentElement.outerHTML;
+
+  // Injecte les données actuelles en remplaçant le marqueur dans loadDefaults
+  // On cherche le bloc loadDefaults et on y injecte les vraies données
+  const questionsJSON=JSON.stringify(questions);
+  const keysJSON=JSON.stringify(keys);
+  const webhookVal=localStorage.getItem(LS_WH)||'';
+
+  // Remplace la fonction loadDefaults par une version avec les données actuelles
+  const newLoadDefaults=`function loadDefaults(){
+  questions=${questionsJSON};
+  keys=${keysJSON};
+  // Remettre les compteurs d'utilisation à 0 uniquement si données vierges
+  save();
+}`;
+
+  // Remplace aussi le webhook par défaut
+  let output=html.replace(/function loadDefaults\(\)\{[\s\S]*?save\(\);\s*\}/,newLoadDefaults);
+
+  // Injecte le webhook sauvegardé comme valeur par défaut au init
+  // On remplace la ligne de init pour pré-remplir le webhook
+  output=output.replace(
+    "webhookURL = localStorage.getItem(LS_WH)||'';",
+    `webhookURL = localStorage.getItem(LS_WH)||'${webhookVal.replace(/'/g,"\\'")}';`
+  );
+
+  // Force la réinitialisation du localStorage au premier chargement pour les nouveaux visiteurs
+  // On ajoute un token de version basé sur la date de publication
+  const pubToken='pub_'+Date.now();
+  output=output.replace(
+    'function init(){',
+    `function init(){
+  // Forcer rechargement si nouvelle publication
+  if(localStorage.getItem('cssa_pub_token')!=='${pubToken}'){
+    localStorage.removeItem('${LS_Q}');
+    localStorage.removeItem('${LS_K}');
+    localStorage.setItem('cssa_pub_token','${pubToken}');
+  }`
+  );
+
+  const blob=new Blob([output],{type:'text/html;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='index.html';
+  a.click();
+  showToast('index.html généré — uploadez-le sur GitHub !');
 }
 
 function importJSON(event){
