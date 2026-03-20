@@ -250,6 +250,8 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
         <button class="a-btn" onclick="exportJSON()">Exporter JSON</button>
         <button class="a-btn" onclick="document.getElementById('import-file').click()">Importer JSON</button>
         <input type="file" id="import-file" accept=".json" class="hidden" onchange="importJSON(event)">
+        <button class="a-btn accent" onclick="document.getElementById('import-csv-file').click()">Importer CSV</button>
+        <input type="file" id="import-csv-file" accept=".csv" class="hidden" onchange="importCSV(event)">
         <button class="a-btn" onclick="goExam()">Voir l'examen</button>
         <button class="a-btn" onclick="adminLogout()">Déconnexion</button>
       </div>
@@ -326,6 +328,44 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
 
       <!-- TAB: QUESTIONS -->
       <div id="tab-questions" class="hidden">
+
+        <!-- Guide CSV -->
+        <div class="a-card" style="margin-bottom:1.5rem;border-color:rgba(212,175,55,0.4)">
+          <div class="a-section-title" style="margin-bottom:.75rem">Import depuis Google Sheets / CSV</div>
+          <p style="font-size:13px;color:var(--a-muted);line-height:1.7;margin-bottom:10px">Préparez votre Google Sheets avec exactement ces colonnes dans cet ordre, puis <strong style="color:var(--a-text)">Fichier → Télécharger → CSV</strong> et cliquez sur <strong style="color:var(--a-gold)">Importer CSV</strong> en haut.</p>
+          <div style="overflow-x:auto">
+            <table style="width:100%;border-collapse:collapse;font-size:12px">
+              <thead>
+                <tr style="border-bottom:0.5px solid var(--a-border)">
+                  <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">question</th>
+                  <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">A</th>
+                  <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">B</th>
+                  <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">C</th>
+                  <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">D</th>
+                  <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">correct</th>
+                  <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">categorie</th>
+                  <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">reference</th>
+                  <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">explication</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="padding:6px 10px;color:var(--a-muted);font-style:italic">Qu'est-ce que...</td>
+                  <td style="padding:6px 10px;color:var(--a-muted)">Rep1</td>
+                  <td style="padding:6px 10px;color:var(--a-muted)">Rep2</td>
+                  <td style="padding:6px 10px;color:var(--a-muted)">Rep3</td>
+                  <td style="padding:6px 10px;color:var(--a-muted);font-style:italic">optionnel</td>
+                  <td style="padding:6px 10px;color:var(--a-text);font-weight:500">A</td>
+                  <td style="padding:6px 10px;color:var(--a-muted)">Barreau</td>
+                  <td style="padding:6px 10px;color:var(--a-muted);font-style:italic">optionnel</td>
+                  <td style="padding:6px 10px;color:var(--a-muted);font-style:italic">optionnel</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p style="font-size:11px;color:var(--a-muted);margin-top:8px">⚠ La colonne <strong style="color:var(--a-text)">correct</strong> doit contenir la lettre A, B, C ou D. La 1ère ligne (en-tête) est ignorée automatiquement.</p>
+        </div>
+
         <div class="a-section-title" id="q-form-title">Ajouter une question</div>
         <div class="a-card">
           <input type="hidden" id="q-edit-id">
@@ -847,6 +887,53 @@ function importJSON(event){
     }catch(e){showToast('Erreur de lecture JSON.');}
   };
   reader.readAsText(file);
+  event.target.value='';
+}
+
+function importCSV(event){
+  const file=event.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const text=e.target.result;
+      // Parse CSV (gère les guillemets et virgules dans les cellules)
+      function parseCSVLine(line){
+        const result=[]; let cur='', inQ=false;
+        for(let i=0;i<line.length;i++){
+          const c=line[i];
+          if(c==='"'){ if(inQ&&line[i+1]==='"'){cur+='"';i++;} else inQ=!inQ; }
+          else if(c===','&&!inQ){ result.push(cur.trim()); cur=''; }
+          else cur+=c;
+        }
+        result.push(cur.trim()); return result;
+      }
+      const lines=text.split(/\r?\n/).filter(l=>l.trim());
+      if(lines.length<2){showToast('CSV vide ou invalide.');return;}
+      // Ignorer la 1ère ligne (en-têtes)
+      const rows=lines.slice(1);
+      const imported=[]; const errors=[];
+      rows.forEach((line,idx)=>{
+        const cols=parseCSVLine(line);
+        // Colonnes : question(0) A(1) B(2) C(3) D(4) correct(5) categorie(6) reference(7) explication(8)
+        const q=cols[0]||'', a=cols[1]||'', b=cols[2]||'', c=cols[3]||'';
+        const d=cols[4]||'', correctLetter=(cols[5]||'A').toUpperCase().trim();
+        const cat=cols[6]||'Général', ref=cols[7]||'', expl=cols[8]||'';
+        if(!q||!a||!b||!c){ errors.push(`Ligne ${idx+2} ignorée (champs manquants)`); return; }
+        const letterMap={'A':0,'B':1,'C':2,'D':3};
+        const correct=letterMap[correctLetter]??0;
+        const opts=[a,b,c]; if(d) opts.push(d);
+        imported.push({id:uid(),q,opts,correct:Math.min(correct,opts.length-1),cat,ref,expl});
+      });
+      if(!imported.length){showToast('Aucune question valide trouvée dans le CSV.');return;}
+      const mode=confirm(`${imported.length} question(s) trouvée(s).\n\nOK = Ajouter aux questions existantes\nAnnuler = Remplacer toutes les questions`);
+      if(mode){ questions=[...questions,...imported]; }
+      else { questions=imported; }
+      save(); renderQList(); updateStats(); populateExamTypeSelects();
+      const msg=errors.length?`${imported.length} questions importées. ${errors.length} ligne(s) ignorée(s).`:`${imported.length} questions importées avec succès.`;
+      showToast(msg);
+    }catch(err){showToast('Erreur de lecture CSV : '+err.message);}
+  };
+  reader.readAsText(file,'UTF-8');
   event.target.value='';
 }
 
