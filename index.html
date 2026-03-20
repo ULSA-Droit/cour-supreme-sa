@@ -703,7 +703,7 @@ function showResults(){
     details.push({question:q.q,categorie:q.cat||'—',reponse:ui!==null?q.sOpts[ui].text:'Sans réponse',bonne_reponse:q.opts[q.correct],correct:ok,ref:q.ref||'',expl:q.expl||''});
   });
   const pct=Math.round((correct/shuffled.length)*100);
-  const mention=pct>=90?'Mention Très Bien':pct>=75?'Mention Bien':pct>=60?'Mention Passable':'Insuffisant';
+  const mention=pct===100?'Excellence':pct>=90?'Mention Très Bien':pct>=75?'Mention Bien':pct>=65?'Mention Passable — Rattrapage conseillé':'Échec — Merci de réviser avant de repasser';
   document.getElementById('candidat-confirm').textContent=candidat.prenom+' '+candidat.nom+(activeKey?' — '+activeKey.name:'');
   // Calcul temps utilisé
   const duration=activeKey?activeKey.duration||0:0;
