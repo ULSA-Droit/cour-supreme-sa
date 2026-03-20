@@ -531,12 +531,17 @@ function loadDefaults(){
 function startAntiCheat(){
   antiCheatCount=0;
   document.addEventListener('visibilitychange', onVisibilityChange);
+  window.addEventListener('blur', onWindowBlur);
 }
 function stopAntiCheat(){
   document.removeEventListener('visibilitychange', onVisibilityChange);
+  window.removeEventListener('blur', onWindowBlur);
 }
 function onVisibilityChange(){
   if(document.hidden) antiCheatCount++;
+}
+function onWindowBlur(){
+  antiCheatCount++;
 }
 
 // ── KEY PREVIEW ──
