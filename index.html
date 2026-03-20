@@ -612,10 +612,13 @@ async function init(){
   if(jbBin) localStorage.setItem(LS_JBBIN, jbBin);
   webhookURL = localStorage.getItem(LS_WH)||"";
   if(jbKey && jbBin){
-    const ok = await jbPullSilent();
+    let ok = await jbPullSilent();
+    if(!ok){
+      await new Promise(r=>setTimeout(r,1500));
+      ok = await jbPullSilent();
+    }
     if(!ok){
       loadFromLocal();
-      if(!questions.length) showToast('JSONBin inaccessible — données locales chargées.');
     }
   } else {
     loadFromLocal();
