@@ -609,23 +609,24 @@ async function init(){
   jbKey = PUBLISHED_JB_KEY || localStorage.getItem(LS_JBKEY)||"";
   jbBin = PUBLISHED_JB_BIN || localStorage.getItem(LS_JBBIN)||"";
   if(jbKey) localStorage.setItem(LS_JBKEY, jbKey);
-  if(jbBin) localStorage.setItem(LS_JBBIN, jbBin);
+ if(jbBin) localStorage.setItem(LS_JBBIN, jbBin);
   webhookURL = localStorage.getItem(LS_WH)||"";
   if(jbKey && jbBin){
     let ok = await jbPullSilent();
     if(!ok){
-      await new Promise(r=>setTimeout(r,1500));
+      await new Promise(r=>setTimeout(r,2000));
       ok = await jbPullSilent();
     }
     if(!ok){
-      loadFromLocal();
+      await new Promise(r=>setTimeout(r,3000));
+      ok = await jbPullSilent();
     }
+    if(!ok) loadFromLocal();
   } else {
     loadFromLocal();
     if(!questions.length && !jbKey) loadDefaults();
   }
 }
-
 function loadFromLocal(){
   questions = JSON.parse(localStorage.getItem(LS_Q)||"[]");
   keys      = JSON.parse(localStorage.getItem(LS_K)||"[]");
