@@ -302,13 +302,19 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
               <input type="number" id="k-uses" value="10" min="0">
             </div>
           </div>
-          <div class="a-field" style="margin-top:10px">
-            <label>Associer à un type d'examen (filtre les questions par catégorie)</label>
-            <select id="k-exam-type">
-              <option value="">— Toutes les questions —</option>
-            </select>
+          <div style="margin-top:12px">
+            <label style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--a-muted);display:block;margin-bottom:8px">Pools de questions</label>
+            <div id="k-pools-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px"></div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <select id="k-pool-cat" style="font-family:'Source Serif 4',serif;font-size:13px;background:#0A0C12;border:0.5px solid var(--a-border);border-radius:5px;padding:7px 10px;color:var(--a-text);outline:none;flex:1;min-width:160px">
+                <option value="">— Choisir une catégorie —</option>
+              </select>
+              <input type="number" id="k-pool-count" value="10" min="1" max="100" style="font-family:'Source Serif 4',serif;font-size:13px;background:#0A0C12;border:0.5px solid var(--a-border);border-radius:5px;padding:7px 10px;color:var(--a-text);outline:none;width:80px" placeholder="nb">
+              <button onclick="addPool()" style="background:rgba(212,175,55,.12);border:0.5px solid var(--a-border);border-radius:5px;padding:7px 14px;color:var(--a-gold);cursor:pointer;font-size:13px;white-space:nowrap;font-family:'Source Serif 4',serif">+ Ajouter</button>
+            </div>
+            <p style="font-size:11px;color:var(--a-muted);margin-top:6px">Ajoutez autant de pools que nécessaire. Ex : 10 Objections + 10 Juge Niv 1 = 20 questions au total.</p>
           </div>
-          <div style="display:flex;gap:8px;margin-top:12px">
+          <div style="display:flex;gap:8px;margin-top:14px">
             <button class="a-btn accent" onclick="saveKey()" id="save-key-btn">Créer la clé</button>
             <button class="a-btn hidden" id="cancel-key-btn" onclick="resetKeyForm()">Annuler</button>
           </div>
@@ -464,18 +470,17 @@ function loadDefaults(){
 
 // ══ KEY PREVIEW ══
 function previewKey(){
-  const val = document.getElementById('inp-key').value.trim().toUpperCase();
-  const el = document.getElementById('key-preview');
-  const err = document.getElementById('key-error');
+  const val=document.getElementById('inp-key').value.trim().toUpperCase();
+  const el=document.getElementById('key-preview');
+  const err=document.getElementById('key-error');
   err.textContent='';
-  if(!val){ el.innerHTML=''; return; }
-  const k = keys.find(x=>x.code===val);
+  if(!val){el.innerHTML='';return;}
+  const k=keys.find(x=>x.code===val);
   if(k){
-    const remaining = k.maxUses===0 ? '∞' : (k.maxUses - k.usedCount);
-    el.innerHTML = `<div class="key-badge">✓ ${k.name}${k.examType?' — '+k.examType:''}</div>`;
-  } else {
-    el.innerHTML='';
-  }
+    const pools=k.pools&&k.pools.length?k.pools:[];
+    const poolStr=pools.length?pools.map(p=>`${p.count}×${p.cat}`).join(' + '):'';
+    el.innerHTML=`<div class="key-badge">✓ ${k.name}${poolStr?' — '+poolStr:''}</div>`;
+  } else { el.innerHTML=''; }
 }
 
 // ══ EXAM ══
@@ -484,30 +489,44 @@ function startExam(){
   const n=document.getElementById('inp-nom').value.trim();
   const kv=document.getElementById('inp-key').value.trim().toUpperCase();
   const err=document.getElementById('key-error');
-  if(!p||!n){ err.textContent='Veuillez saisir votre prénom et votre nom.'; return; }
-  if(!kv){ err.textContent='Veuillez saisir votre clé d\'accès.'; return; }
+  if(!p||!n){err.textContent='Veuillez saisir votre prénom et votre nom.';return;}
+  if(!kv){err.textContent='Veuillez saisir votre clé d\'accès.';return;}
   const k=keys.find(x=>x.code===kv);
-  if(!k){ err.textContent='Clé d\'accès invalide. Contactez le greffe.'; return; }
-  if(k.maxUses>0 && k.usedCount>=k.maxUses){ err.textContent='Cette clé a atteint son nombre maximum d\'utilisations.'; return; }
+  if(!k){err.textContent='Clé d\'accès invalide. Contactez le greffe.';return;}
+  if(k.maxUses>0&&k.usedCount>=k.maxUses){err.textContent='Cette clé a atteint son nombre maximum d\'utilisations.';return;}
   err.textContent='';
   candidat={prenom:p,nom:n};
   activeKey=k;
-  // increment use
   k.usedCount=(k.usedCount||0)+1;
   save();
-  // filter questions
-  let pool = k.examType ? questions.filter(q=>q.cat===k.examType) : questions;
-  if(!pool.length) pool=questions;
-  const draw = Math.min(15, pool.length);
-  shuffled=shuffle([...pool]).slice(0,draw).map(q=>({
-    ...q,
-    sOpts:[...q.opts.map((o,i)=>({text:o,orig:i}))].sort(()=>Math.random()-.5)
-  }));
+
+  // Construire le pool depuis les pools définis (ou tout si aucun pool)
+  let pool=[];
+  const pools=k.pools&&k.pools.length?k.pools:[];
+  if(pools.length){
+    pools.forEach(p=>{
+      const catQ=shuffle(questions.filter(q=>q.cat===p.cat));
+      const drawn=catQ.slice(0,Math.min(p.count,catQ.length));
+      pool=[...pool,...drawn];
+    });
+    pool=shuffle(pool); // mélange global des questions des différents pools
+  } else if(k.examType){
+    // compat ancien format
+    const catQ=questions.filter(q=>q.cat===k.examType);
+    pool=shuffle(catQ.length?catQ:questions).slice(0,15);
+  } else {
+    pool=shuffle([...questions]).slice(0,15);
+  }
+
+  if(!pool.length){err.textContent='Aucune question disponible pour cet examen. Contactez le greffe.';return;}
+
+  shuffled=pool.map(q=>({...q,sOpts:[...q.opts.map((o,i)=>({text:o,orig:i}))].sort(()=>Math.random()-.5)}));
   answers=new Array(shuffled.length).fill(null);
   currentQ=0;
   document.getElementById('screen-identity').classList.add('hidden');
   document.getElementById('screen-exam').classList.remove('hidden');
-  document.getElementById('exam-badge-wrap').innerHTML=`<div class="exam-badge">${k.name}${k.examType?' — '+k.examType:''}</div>`;
+  const poolStr=pools.length?pools.map(p=>`${p.count}×${p.cat}`).join(' + '):'';
+  document.getElementById('exam-badge-wrap').innerHTML=`<div class="exam-badge">${k.name}${poolStr?' — '+poolStr:''}</div>`;
   renderQ();
 }
 
@@ -667,6 +686,8 @@ function saveWebhook(){
 }
 
 // ══ KEYS ══
+let currentPools=[]; // [{cat, count}]
+
 function genCode(){
   const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let code='';
@@ -674,18 +695,51 @@ function genCode(){
   document.getElementById('k-code').value=code;
 }
 
+function addPool(){
+  const cat=document.getElementById('k-pool-cat').value;
+  const count=parseInt(document.getElementById('k-pool-count').value)||10;
+  if(!cat){showToast('Choisissez une catégorie.');return;}
+  if(currentPools.find(p=>p.cat===cat)){showToast('Cette catégorie est déjà ajoutée.');return;}
+  currentPools.push({cat,count});
+  renderPools();
+  document.getElementById('k-pool-cat').value='';
+  document.getElementById('k-pool-count').value='10';
+}
+
+function removePool(cat){
+  currentPools=currentPools.filter(p=>p.cat!==cat);
+  renderPools();
+}
+
+function renderPools(){
+  const el=document.getElementById('k-pools-list');
+  if(!currentPools.length){
+    el.innerHTML='<p style="font-size:12px;color:var(--a-muted);font-style:italic">Aucun pool — toutes les questions seront utilisées.</p>';
+    return;
+  }
+  const total=currentPools.reduce((s,p)=>s+p.count,0);
+  el.innerHTML=currentPools.map(p=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:7px 12px;background:#0A0C12;border:0.5px solid var(--a-border);border-radius:5px">
+      <span style="flex:1;font-size:13px;color:var(--a-text)">${p.cat}</span>
+      <span style="font-family:'Playfair Display',serif;font-size:15px;color:var(--a-gold);min-width:32px;text-align:right">${p.count}</span>
+      <span style="font-size:11px;color:var(--a-muted)">questions</span>
+      <button onclick="removePool('${p.cat.replace(/'/g,"\\'")}') " style="background:none;border:none;color:#C47070;cursor:pointer;font-size:14px;padding:0 2px">✕</button>
+    </div>`).join('')+
+    `<div style="font-size:12px;color:var(--a-muted);text-align:right;padding:4px 2px">Total : <strong style="color:var(--a-gold)">${total} questions</strong></div>`;
+}
+
 function saveKey(){
   const code=document.getElementById('k-code').value.trim().toUpperCase();
   const name=document.getElementById('k-name').value.trim();
   const maxUses=parseInt(document.getElementById('k-uses').value)||0;
-  const examType=document.getElementById('k-exam-type').value;
   if(!code||!name){showToast('Remplissez le code et le nom.');return;}
   if(!editKeyId && keys.find(k=>k.code===code)){showToast('Ce code existe déjà.');return;}
+  const pools=currentPools.length?[...currentPools]:[];
   if(editKeyId){
-    keys=keys.map(k=>k.id===editKeyId?{...k,code,name,maxUses,examType}:k);
+    keys=keys.map(k=>k.id===editKeyId?{...k,code,name,maxUses,pools}:k);
     showToast('Clé modifiée.');
   } else {
-    keys.push({id:uid(),code,name,maxUses,usedCount:0,examType,createdAt:new Date().toISOString()});
+    keys.push({id:uid(),code,name,maxUses,usedCount:0,pools,createdAt:new Date().toISOString()});
     showToast('Clé créée.');
   }
   save(); renderKeyList(); updateStats(); resetKeyForm();
@@ -697,9 +751,12 @@ function editKey(id){
   document.getElementById('k-code').value=k.code;
   document.getElementById('k-name').value=k.name;
   document.getElementById('k-uses').value=k.maxUses;
-  document.getElementById('k-exam-type').value=k.examType||'';
+  // Compat ancien format (examType)
+  currentPools=k.pools?[...k.pools]:(k.examType?[{cat:k.examType,count:15}]:[]);
+  renderPools();
   document.getElementById('save-key-btn').textContent='Enregistrer';
   document.getElementById('cancel-key-btn').classList.remove('hidden');
+  document.getElementById('k-code').scrollIntoView({behavior:'smooth'});
 }
 
 function resetKeyUses(id){
@@ -716,10 +773,13 @@ function deleteKey(id){
 
 function resetKeyForm(){
   editKeyId=null;
+  currentPools=[];
   document.getElementById('k-code').value='';
   document.getElementById('k-name').value='';
   document.getElementById('k-uses').value='10';
-  document.getElementById('k-exam-type').value='';
+  document.getElementById('k-pool-cat').value='';
+  document.getElementById('k-pool-count').value='10';
+  renderPools();
   document.getElementById('save-key-btn').textContent='Créer la clé';
   document.getElementById('cancel-key-btn').classList.add('hidden');
 }
@@ -733,17 +793,22 @@ function renderKeyList(){
     const max=k.maxUses||0;
     const pct=max>0?Math.round((used/max)*100):0;
     const barColor=pct>=100?'#C47070':pct>=70?'#D4AF37':'#1D9E75';
-    const usageStr=max===0?`${used} utilisation(s) (illimité)`:`${used} / ${max} utilisations`;
     const statusDot=max>0&&used>=max?'🔴':'🟢';
+    // Affichage des pools
+    const pools=k.pools&&k.pools.length?k.pools:k.examType?[{cat:k.examType,count:'?'}]:[];
+    const poolsStr=pools.length
+      ?pools.map(p=>`${p.count}×${p.cat}`).join(' + ')
+      :'Toutes les questions';
     return `<div class="key-item">
       <div class="key-code">${k.code}</div>
       <div class="key-info">
         <div class="key-name">${k.name}</div>
-        <div class="key-meta">${k.examType?k.examType+' · ':'Toutes questions · '}Créée le ${new Date(k.createdAt).toLocaleDateString('fr-FR')}</div>
+        <div class="key-meta" style="margin-top:3px">${poolsStr}</div>
+        <div class="key-meta">Créée le ${new Date(k.createdAt).toLocaleDateString('fr-FR')}</div>
       </div>
       <div class="key-uses">
         <div class="key-uses-num">${statusDot} ${max===0?used:used+'/'+max}</div>
-        <div class="key-uses-lbl">${max===0?'utilisations':'utilisations'}</div>
+        <div class="key-uses-lbl">utilisations</div>
         ${max>0?`<div class="key-bar"><div class="key-bar-fill" style="width:${pct}%;background:${barColor}"></div></div>`:''}
       </div>
       <div class="key-actions">
@@ -838,11 +903,16 @@ function renderQList(){
 
 function populateExamTypeSelects(){
   const cats=[...new Set(questions.map(q=>q.cat||'Général'))].sort();
-  // Key exam type select
-  const kSel=document.getElementById('k-exam-type');
-  const kVal=kSel.value;
-  kSel.innerHTML='<option value="">— Toutes les questions —</option>'+cats.map(c=>`<option value="${c}">${c}</option>`).join('');
-  kSel.value=kVal;
+  // Pool cat select
+  const kSel=document.getElementById('k-pool-cat');
+  if(kSel){
+    const kVal=kSel.value;
+    kSel.innerHTML='<option value="">— Choisir une catégorie —</option>'+cats.map(c=>{
+      const count=questions.filter(q=>q.cat===c).length;
+      return `<option value="${c}">${c} (${count} questions)</option>`;
+    }).join('');
+    kSel.value=kVal;
+  }
   // Q filter
   const qF=document.getElementById('q-filter');
   const qVal=qF?qF.value:'';
