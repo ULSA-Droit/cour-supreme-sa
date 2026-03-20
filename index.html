@@ -16,20 +16,14 @@
 }
 html{scroll-behavior:smooth}
 body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink);min-height:100vh}
-
-/* NAV */
-#top-nav{position:fixed;top:0;right:0;z-index:200;padding:10px 16px}
-#admin-toggle-btn{font-family:'Source Serif 4',serif;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);background:transparent;border:0.5px solid rgba(0,0,0,0.12);border-radius:4px;padding:6px 12px;cursor:pointer;transition:all .2s}
+#admin-toggle-btn{position:fixed;top:10px;right:16px;z-index:200;font-family:'Source Serif 4',serif;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);background:transparent;border:0.5px solid rgba(0,0,0,0.12);border-radius:4px;padding:6px 12px;cursor:pointer;transition:all .2s}
 #admin-toggle-btn:hover{color:var(--gold);border-color:var(--gold)}
-
-/* EXAM WRAPPER */
 #exam-app{max-width:760px;margin:0 auto;padding:3rem 1.5rem 5rem}
 .header{text-align:center;padding:2rem 0 2.5rem;border-bottom:1px solid var(--border);margin-bottom:2.5rem}
 .seal{width:68px;height:68px;border:1.5px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;font-size:28px;color:var(--gold)}
 .header h1{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px}
 .header p{font-size:12px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
 .section-lbl{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.9rem}
-
 .card{background:var(--white);border:0.5px solid var(--border);border-radius:8px;padding:1.75rem;margin-bottom:1.5rem}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:.75rem}
 .field{display:flex;flex-direction:column;gap:5px}
@@ -41,20 +35,15 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
 .key-error{font-size:12px;color:var(--err);margin-top:6px;min-height:18px}
 .key-badge{display:inline-block;margin-top:10px;padding:6px 14px;border-radius:20px;font-size:12px;background:#FFF9E6;border:0.5px solid var(--gold);color:var(--gold);letter-spacing:.06em}
 .note{font-size:12px;color:var(--muted);font-style:italic;margin-top:8px}
-
 .btn-primary{width:100%;padding:13px;font-family:'Playfair Display',serif;font-size:13px;letter-spacing:.08em;text-transform:uppercase;background:var(--ink);color:#F5E6C8;border:none;border-radius:6px;cursor:pointer;transition:background .2s;margin-top:1rem}
 .btn-primary:hover{background:#2e2e4e}
 .btn-secondary{padding:10px 20px;font-family:'Playfair Display',serif;font-size:12px;letter-spacing:.07em;text-transform:uppercase;background:transparent;color:var(--muted);border:0.5px solid rgba(0,0,0,0.14);border-radius:5px;cursor:pointer;transition:all .15s}
 .btn-secondary:hover{border-color:var(--ink);color:var(--ink)}
-
-/* PROGRESS */
 .prog-wrap{margin-bottom:1.75rem}
 .prog-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:5px}
 .prog-bar{background:rgba(184,150,12,.12);border-radius:3px;height:3px;overflow:hidden}
 .prog-fill{height:100%;background:var(--gold);transition:width .4s;border-radius:3px}
 .exam-badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;background:#FFF9E6;border:0.5px solid var(--gold);color:var(--gold);letter-spacing:.06em;margin-bottom:1rem}
-
-/* QUESTION */
 .q-num{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem}
 .q-text{font-family:'Playfair Display',serif;font-size:17px;line-height:1.65;margin-bottom:1.1rem}
 .q-ref{font-size:11px;color:var(--muted);font-style:italic;margin-bottom:.9rem;padding:5px 10px;border-left:2px solid var(--border)}
@@ -62,25 +51,12 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
 .opt{display:flex;align-items:flex-start;gap:12px;padding:11px 14px;border:0.5px solid rgba(0,0,0,.1);border-radius:6px;cursor:pointer;transition:all .14s;background:#FAFAF8}
 .opt:hover{border-color:var(--gold);background:#FFFDF5}
 .opt.selected{border-color:var(--gold);background:#FFFBEA}
-.opt.correct{border-color:var(--ok);background:var(--ok-bg)}
-.opt.wrong{border-color:var(--err);background:var(--err-bg)}
-.opt.reveal{border-color:var(--reveal);background:var(--reveal-bg)}
 .opt-letter{width:22px;height:22px;border-radius:50%;border:0.5px solid rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0;margin-top:1px;color:var(--muted);transition:all .14s}
 .opt.selected .opt-letter{background:var(--gold);border-color:var(--gold);color:#fff}
-.opt.correct .opt-letter,.opt.reveal .opt-letter{background:var(--ok);border-color:var(--ok);color:#fff}
-.opt.wrong .opt-letter{background:var(--err);border-color:var(--err);color:#fff}
 .opt-text{font-size:14px;line-height:1.5}
-.expl-box{margin-top:.9rem;padding:9px 13px;background:#F9F6EE;border-left:2px solid var(--gold);border-radius:0 5px 5px 0;font-size:13px;color:var(--muted);font-style:italic}
 .nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;gap:1rem}
-
-/* RESULTS */
-.score-big{font-family:'Playfair Display',serif;font-size:56px;font-weight:700;line-height:1}
-.score-sub{font-size:14px;color:var(--muted);margin-top:5px}
-.score-mention{font-family:'Playfair Display',serif;font-size:17px;margin-top:1.25rem;padding-top:1.25rem;border-top:0.5px solid var(--border)}
 .wh-status{font-size:12px;text-align:center;margin:8px 0 16px;min-height:18px;color:var(--muted)}
 .wh-status.sending{color:var(--gold)}.wh-status.sent{color:var(--ok)}.wh-status.error{color:var(--err)}
-
-/* ═══ ADMIN ═══ */
 #admin-panel{display:none;min-height:100vh;background:var(--a-bg);color:var(--a-text);font-family:'Source Serif 4',serif}
 #admin-panel.active{display:block}
 #exam-app.hidden{display:none}
@@ -93,7 +69,6 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
 .login-btn{width:100%;padding:12px;font-family:'Playfair Display',serif;font-size:13px;letter-spacing:.08em;text-transform:uppercase;background:var(--a-gold);color:var(--a-bg);border:none;border-radius:5px;cursor:pointer}
 .login-btn:hover{background:#c9a22e}
 .login-err{font-size:12px;color:#C47070;margin-top:8px;min-height:18px}
-
 .a-topbar{background:var(--a-surf);border-bottom:0.5px solid var(--a-border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:54px;position:sticky;top:0;z-index:50}
 .a-topbar-title{font-family:'Playfair Display',serif;font-size:15px;color:var(--a-gold);letter-spacing:.03em}
 .a-topbar-right{display:flex;gap:8px;align-items:center}
@@ -101,16 +76,11 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
 .a-btn:hover{border-color:var(--a-gold);color:var(--a-gold)}
 .a-btn.accent{background:var(--a-gold);color:var(--a-bg);border-color:var(--a-gold)}
 .a-btn.accent:hover{background:#c9a22e}
-.a-btn.danger:hover{border-color:#C47070;color:#C47070}
-
 .a-body{max-width:960px;margin:0 auto;padding:1.75rem 1.5rem 5rem}
-
-/* TABS */
 .a-tabs{display:flex;gap:2px;border-bottom:0.5px solid var(--a-border);margin-bottom:1.75rem}
 .a-tab{padding:10px 18px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--a-muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Source Serif 4',serif}
 .a-tab:hover{color:var(--a-gold)}
 .a-tab.active{color:var(--a-gold);border-bottom-color:var(--a-gold)}
-
 .a-section-title{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--a-gold);margin-bottom:1rem;padding-bottom:7px;border-bottom:0.5px solid var(--a-border)}
 .a-card{background:var(--a-surf);border:0.5px solid var(--a-border);border-radius:8px;padding:1.25rem 1.5rem;margin-bottom:1rem}
 .a-field{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
@@ -120,14 +90,10 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
 .a-field textarea{resize:vertical;min-height:66px}
 .a-row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .a-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-.a-row4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}
-
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem}
 .stat-box{background:var(--a-surf);border:0.5px solid var(--a-border);border-radius:6px;padding:12px;text-align:center}
 .stat-num{font-family:'Playfair Display',serif;font-size:26px;color:var(--a-gold)}
 .stat-lbl{font-size:11px;color:var(--a-muted);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
-
-/* KEY LIST */
 .key-item{background:var(--a-surf);border:0.5px solid var(--a-border);border-radius:6px;padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;gap:14px;transition:border-color .15s}
 .key-item:hover{border-color:rgba(212,175,55,.4)}
 .key-code{font-family:'Playfair Display',serif;font-size:17px;letter-spacing:.18em;color:var(--a-gold);min-width:110px}
@@ -143,8 +109,6 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
 .k-btn{font-size:11px;padding:4px 10px;border-radius:3px;border:0.5px solid var(--a-border);background:transparent;color:var(--a-muted);cursor:pointer;transition:all .15s;font-family:'Source Serif 4',serif}
 .k-btn:hover{border-color:var(--a-gold);color:var(--a-gold)}
 .k-btn.del:hover{border-color:#C47070;color:#C47070}
-
-/* Q LIST */
 .q-item{background:var(--a-surf);border:0.5px solid var(--a-border);border-radius:6px;padding:11px 15px;margin-bottom:7px;display:flex;align-items:flex-start;gap:12px}
 .q-item:hover{border-color:rgba(212,175,55,.35)}
 .q-num-badge{font-size:11px;color:var(--a-gold);min-width:26px;padding-top:2px}
@@ -152,17 +116,15 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
 .q-text-preview{font-size:14px;color:var(--a-text);line-height:1.5;margin-bottom:3px}
 .q-meta{font-size:11px;color:var(--a-muted)}
 .q-actions{display:flex;gap:5px;flex-shrink:0}
-
 .radio-group{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
 .radio-opt{display:flex;align-items:center;gap:5px;padding:5px 10px;border:0.5px solid var(--a-border);border-radius:4px;cursor:pointer;font-size:13px;color:var(--a-muted);transition:all .14s}
 .radio-opt:hover{border-color:var(--a-gold);color:var(--a-gold)}
 .radio-opt.active{border-color:var(--a-gold);color:var(--a-gold);background:rgba(212,175,55,.08)}
 .radio-opt input{display:none}
-
 .toast{position:fixed;bottom:22px;right:22px;background:var(--a-surf);border:0.5px solid var(--a-gold);color:var(--a-gold);padding:10px 18px;border-radius:6px;font-size:13px;z-index:999;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none}
 .toast.show{opacity:1;transform:translateY(0)}
 .hidden{display:none!important}
-@media(max-width:580px){.field-row,.a-row2,.a-row3,.a-row4,.stats-grid{grid-template-columns:1fr}.key-item{flex-wrap:wrap}}
+@media(max-width:580px){.field-row,.a-row2,.a-row3,.stats-grid{grid-template-columns:1fr}.key-item{flex-wrap:wrap}}
 </style>
 </head>
 <body>
@@ -170,7 +132,7 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
 <button id="admin-toggle-btn" onclick="goAdmin()">⚙ Greffe</button>
 <div id="toast" class="toast"></div>
 
-<!-- ══════════ EXAM ══════════ -->
+<!-- EXAM -->
 <div id="exam-app">
   <div class="header">
     <div class="seal">⚖</div>
@@ -178,7 +140,6 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
     <p>Examen de qualification juridique</p>
   </div>
 
-  <!-- Screen: Identity + Key -->
   <div id="screen-identity">
     <div class="card">
       <div class="section-lbl">Identification du candidat</div>
@@ -197,7 +158,6 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
     </div>
   </div>
 
-  <!-- Screen: Exam -->
   <div id="screen-exam" class="hidden">
     <div class="prog-wrap">
       <div class="prog-labels"><span id="prog-label">Question 1 / 15</span><span id="prog-pct">0 %</span></div>
@@ -211,14 +171,13 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
     </div>
   </div>
 
-  <!-- Screen: Results -->
   <div id="screen-results" class="hidden">
     <div class="card" style="text-align:center;padding:2.5rem 2rem">
       <div style="font-size:42px;margin-bottom:1.25rem">⚖</div>
       <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:500;color:var(--ink);margin-bottom:.75rem">Copie remise au greffe</div>
       <div style="font-size:15px;color:var(--muted);line-height:1.8;max-width:440px;margin:0 auto">
-        Nous avons bien reçu votre copie,<br>
-        <span style="font-style:italic">Maître ${''}</span> Le greffe reviendra vers vous dans les meilleurs délais avec votre résultat.
+        Nous avons bien reçu votre copie.<br>
+        Le greffe reviendra vers vous dans les meilleurs délais avec votre résultat.
       </div>
       <div id="candidat-confirm" style="margin-top:1.25rem;font-family:'Playfair Display',serif;font-size:16px;color:var(--gold)"></div>
     </div>
@@ -229,7 +188,7 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
   </div>
 </div>
 
-<!-- ══════════ ADMIN ══════════ -->
+<!-- ADMIN -->
 <div id="admin-panel">
   <div id="admin-login" class="login-wrap">
     <div class="login-box">
@@ -259,7 +218,6 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
     </div>
 
     <div class="a-body">
-      <!-- Stats -->
       <div class="stats-grid">
         <div class="stat-box"><div class="stat-num" id="stat-keys">0</div><div class="stat-lbl">Clés actives</div></div>
         <div class="stat-box"><div class="stat-num" id="stat-exams">0</div><div class="stat-lbl">Types d'examen</div></div>
@@ -267,31 +225,28 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
         <div class="stat-box"><div class="stat-num" id="stat-wh">—</div><div class="stat-lbl">Webhook</div></div>
       </div>
 
-      <!-- Configuration -->
       <div class="a-card" style="margin-bottom:1.5rem">
         <div class="a-section-title">Configuration</div>
-
-        <!-- JSONBin -->
         <div style="border:0.5px solid var(--a-border);border-radius:6px;padding:14px;margin-bottom:14px">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-            <div id="jb-indicator" style="width:8px;height:8px;border-radius:50%;background:#555;flex-shrink:0"></div>
+            <div id="sb-indicator" style="width:8px;height:8px;border-radius:50%;background:#555;flex-shrink:0"></div>
             <span style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--a-gold)">Synchronisation Supabase</span>
-            <span id="jb-status-lbl" style="font-size:11px;color:var(--a-muted);margin-left:auto"></span>
+            <span id="sb-status-lbl" style="font-size:11px;color:var(--a-muted);margin-left:auto"></span>
           </div>
           <div class="a-row2" style="margin-bottom:8px">
             <div class="a-field" style="margin:0">
               <label>Project URL <a href="https://supabase.com" target="_blank" style="color:var(--a-gold);font-size:10px;margin-left:4px">→ supabase.com</a></label>
-              <input type="text" id="inp-jb-key" placeholder="https://xxxx.supabase.co" oninput="saveJBConfig()">
+              <input type="text" id="inp-sb-url" placeholder="https://xxxx.supabase.co" oninput="saveSBConfig()">
             </div>
             <div class="a-field" style="margin:0">
               <label>Clé API (anon public)</label>
-              <input type="password" id="inp-jb-bin" placeholder="eyJ..." oninput="saveJBConfig()">
+              <input type="password" id="inp-sb-key" placeholder="eyJ..." oninput="saveSBConfig()">
             </div>
           </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="a-btn accent" onclick="jbSync()" id="jb-sync-btn">↕ Connecter</button>
-            <button class="a-btn" onclick="jbPush()" id="jb-push-btn">⬆ Envoyer</button>
-            <button class="a-btn" onclick="jbPull()" id="jb-pull-btn">⬇ Récupérer</button>
+            <button class="a-btn accent" onclick="sbConnect()">↕ Connecter</button>
+            <button class="a-btn" onclick="sbPush()">⬆ Envoyer</button>
+            <button class="a-btn" onclick="sbPull()">⬇ Récupérer</button>
           </div>
           <details style="margin-top:12px">
             <summary style="font-size:11px;color:var(--a-muted);cursor:pointer;letter-spacing:.06em;text-transform:uppercase">Guide de configuration ▾</summary>
@@ -303,20 +258,18 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
             </ol>
           </details>
         </div>
-
         <div class="a-field" style="margin:0">
           <label>URL Webhook Discord</label>
           <input type="text" id="inp-webhook" placeholder="https://discord.com/api/webhooks/..." oninput="saveWebhook()">
         </div>
       </div>
 
-      <!-- Tabs -->
       <div class="a-tabs">
         <button class="a-tab active" onclick="switchTab('keys',this)">Clés d'accès</button>
         <button class="a-tab" onclick="switchTab('questions',this)">Banque de questions</button>
       </div>
 
-      <!-- TAB: KEYS -->
+      <!-- TAB CLÉS -->
       <div id="tab-keys">
         <div class="a-section-title">Créer une clé d'accès</div>
         <div class="a-card">
@@ -344,10 +297,10 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
               <select id="k-pool-cat" style="font-family:'Source Serif 4',serif;font-size:13px;background:#0A0C12;border:0.5px solid var(--a-border);border-radius:5px;padding:7px 10px;color:var(--a-text);outline:none;flex:1;min-width:160px">
                 <option value="">— Choisir une catégorie —</option>
               </select>
-              <input type="number" id="k-pool-count" value="10" min="1" max="100" style="font-family:'Source Serif 4',serif;font-size:13px;background:#0A0C12;border:0.5px solid var(--a-border);border-radius:5px;padding:7px 10px;color:var(--a-text);outline:none;width:80px" placeholder="nb">
+              <input type="number" id="k-pool-count" value="10" min="1" max="100" style="font-family:'Source Serif 4',serif;font-size:13px;background:#0A0C12;border:0.5px solid var(--a-border);border-radius:5px;padding:7px 10px;color:var(--a-text);outline:none;width:80px">
               <button onclick="addPool()" style="background:rgba(212,175,55,.12);border:0.5px solid var(--a-border);border-radius:5px;padding:7px 14px;color:var(--a-gold);cursor:pointer;font-size:13px;white-space:nowrap;font-family:'Source Serif 4',serif">+ Ajouter</button>
             </div>
-            <p style="font-size:11px;color:var(--a-muted);margin-top:6px">Ajoutez autant de pools que nécessaire. Ex : 10 Objections + 10 Juge Niv 1 = 20 questions au total.</p>
+            <p style="font-size:11px;color:var(--a-muted);margin-top:6px">Ex : 10 Objections + 10 Juge Niv 1 = 20 questions au total.</p>
           </div>
           <div style="display:flex;gap:8px;margin-top:14px">
             <button class="a-btn accent" onclick="saveKey()" id="save-key-btn">Créer la clé</button>
@@ -361,68 +314,53 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
         <div style="margin-top:1.5rem">
           <div class="a-section-title">Types d'examens</div>
           <div class="a-card">
-            <p style="font-size:13px;color:var(--a-muted);margin-bottom:10px">Les types d'examens sont créés automatiquement depuis les catégories de vos questions. Chaque clé peut être restreinte à un type d'examen.</p>
+            <p style="font-size:13px;color:var(--a-muted);margin-bottom:10px">Les catégories sont créées automatiquement depuis vos questions.</p>
             <div id="exam-types-list" style="display:flex;gap:8px;flex-wrap:wrap"></div>
           </div>
         </div>
       </div>
 
-      <!-- TAB: QUESTIONS -->
+      <!-- TAB QUESTIONS -->
       <div id="tab-questions" class="hidden">
-
-        <!-- Guide CSV -->
         <div class="a-card" style="margin-bottom:1.5rem;border-color:rgba(212,175,55,0.4)">
           <div class="a-section-title" style="margin-bottom:.75rem">Import depuis Google Sheets / CSV</div>
-          <p style="font-size:13px;color:var(--a-muted);line-height:1.7;margin-bottom:10px">Préparez votre Google Sheets avec exactement ces colonnes dans cet ordre, puis <strong style="color:var(--a-text)">Fichier → Télécharger → CSV</strong> et cliquez sur <strong style="color:var(--a-gold)">Importer CSV</strong> en haut.</p>
+          <p style="font-size:13px;color:var(--a-muted);line-height:1.7;margin-bottom:10px">Colonnes attendues dans cet ordre — <strong style="color:var(--a-text)">Fichier → Télécharger → CSV</strong> puis <strong style="color:var(--a-gold)">Importer CSV</strong></p>
           <div style="overflow-x:auto">
             <table style="width:100%;border-collapse:collapse;font-size:12px">
-              <thead>
-                <tr style="border-bottom:0.5px solid var(--a-border)">
-                  <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">question</th>
-                  <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">A</th>
-                  <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">B</th>
-                  <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">C</th>
-                  <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">D</th>
-                  <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">correct</th>
-                  <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">categorie</th>
-                  <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">reference</th>
-                  <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">explication</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style="padding:6px 10px;color:var(--a-muted);font-style:italic">Qu'est-ce que...</td>
-                  <td style="padding:6px 10px;color:var(--a-muted)">Rep1</td>
-                  <td style="padding:6px 10px;color:var(--a-muted)">Rep2</td>
-                  <td style="padding:6px 10px;color:var(--a-muted)">Rep3</td>
-                  <td style="padding:6px 10px;color:var(--a-muted);font-style:italic">optionnel</td>
-                  <td style="padding:6px 10px;color:var(--a-text);font-weight:500">A</td>
-                  <td style="padding:6px 10px;color:var(--a-muted)">Barreau</td>
-                  <td style="padding:6px 10px;color:var(--a-muted);font-style:italic">optionnel</td>
-                  <td style="padding:6px 10px;color:var(--a-muted);font-style:italic">optionnel</td>
-                </tr>
-              </tbody>
+              <thead><tr style="border-bottom:0.5px solid var(--a-border)">
+                <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">question</th>
+                <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">A</th>
+                <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">B</th>
+                <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">C</th>
+                <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">D</th>
+                <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">correct</th>
+                <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">categorie</th>
+                <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">reference</th>
+                <th style="padding:6px 10px;text-align:left;color:var(--a-gold);font-weight:500">explication</th>
+              </tr></thead>
+              <tbody><tr>
+                <td style="padding:6px 10px;color:var(--a-muted);font-style:italic">Qu'est-ce que...</td>
+                <td style="padding:6px 10px;color:var(--a-muted)">Rep1</td>
+                <td style="padding:6px 10px;color:var(--a-muted)">Rep2</td>
+                <td style="padding:6px 10px;color:var(--a-muted)">Rep3</td>
+                <td style="padding:6px 10px;color:var(--a-muted);font-style:italic">optionnel</td>
+                <td style="padding:6px 10px;color:var(--a-text);font-weight:500">A</td>
+                <td style="padding:6px 10px;color:var(--a-muted)">Barreau</td>
+                <td style="padding:6px 10px;color:var(--a-muted);font-style:italic">optionnel</td>
+                <td style="padding:6px 10px;color:var(--a-muted);font-style:italic">optionnel</td>
+              </tr></tbody>
             </table>
           </div>
-          <p style="font-size:11px;color:var(--a-muted);margin-top:8px">⚠ La colonne <strong style="color:var(--a-text)">correct</strong> doit contenir la lettre A, B, C ou D. La 1ère ligne (en-tête) est ignorée automatiquement.</p>
+          <p style="font-size:11px;color:var(--a-muted);margin-top:8px">⚠ La colonne <strong style="color:var(--a-text)">correct</strong> doit contenir A, B, C ou D. La 1ère ligne est ignorée.</p>
         </div>
 
         <div class="a-section-title" id="q-form-title">Ajouter une question</div>
         <div class="a-card">
           <input type="hidden" id="q-edit-id">
-          <div class="a-field">
-            <label>Question</label>
-            <textarea id="f-q" placeholder="Rédigez la question..."></textarea>
-          </div>
+          <div class="a-field"><label>Question</label><textarea id="f-q" placeholder="Rédigez la question..."></textarea></div>
           <div class="a-row2" style="margin-bottom:10px">
-            <div class="a-field" style="margin:0">
-              <label>Catégorie / Type d'examen</label>
-              <input type="text" id="f-cat" placeholder="ex : Droit Pénal, Barreau, Concours Juge...">
-            </div>
-            <div class="a-field" style="margin:0">
-              <label>Référence juridique (optionnel)</label>
-              <input type="text" id="f-ref" placeholder="ex : Art. 42 du Code Pénal de SA">
-            </div>
+            <div class="a-field" style="margin:0"><label>Catégorie</label><input type="text" id="f-cat" placeholder="ex : Droit Pénal, Barreau..."></div>
+            <div class="a-field" style="margin:0"><label>Référence juridique (optionnel)</label><input type="text" id="f-ref" placeholder="ex : Art. 42 du Code Pénal SA"></div>
           </div>
           <div class="a-field"><label>Proposition A</label><input type="text" id="f-a" placeholder="Réponse A"></div>
           <div class="a-field"><label>Proposition B</label><input type="text" id="f-b" placeholder="Réponse B"></div>
@@ -437,17 +375,13 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
               <div class="radio-opt" data-val="3" onclick="selCorrect(this)"> D</div>
             </div>
           </div>
-          <div class="a-field">
-            <label>Explication (optionnel)</label>
-            <textarea id="f-expl" placeholder="Commentaire affiché après correction..."></textarea>
-          </div>
+          <div class="a-field"><label>Explication (optionnel)</label><textarea id="f-expl" placeholder="Commentaire affiché après correction..."></textarea></div>
           <div style="display:flex;gap:8px;margin-top:10px">
             <button class="a-btn accent" onclick="saveQuestion()" id="save-q-btn">Ajouter</button>
             <button class="a-btn hidden" id="cancel-q-btn" onclick="resetQForm()">Annuler</button>
           </div>
         </div>
 
-        <!-- Filter + list -->
         <div style="display:flex;align-items:center;gap:10px;margin:1.5rem 0 .75rem;flex-wrap:wrap">
           <div class="a-section-title" style="margin:0;border:none;padding:0;flex:1">Questions (<span id="q-count">0</span>)</div>
           <select id="q-filter" onchange="renderQList()" style="font-family:'Source Serif 4',serif;font-size:12px;background:#0A0C12;border:0.5px solid var(--a-border);border-radius:4px;padding:6px 10px;color:var(--a-text);outline:none">
@@ -474,11 +408,13 @@ const LS_SBKEY= "cssa_sb_key";
 let questions=[], keys=[], webhookURL="";
 let shuffled=[], answers=[], currentQ=0, candidat={}, activeKey=null;
 let correctSel=0, editKeyId=null, editQId=null;
+let currentPools=[];
+let antiCheatCount=0;
 // @@CFG_START@@
 const PUBLISHED_SB_URL="";
 const PUBLISHED_SB_KEY="";
 // @@CFG_END@@
-let sbUrl="", sbKey="", jbSyncing=false;
+let sbUrl="", sbKey="";
 
 // ── INIT ──
 async function init(){
@@ -489,10 +425,7 @@ async function init(){
   webhookURL = localStorage.getItem(LS_WH)||"";
   if(sbUrl && sbKey){
     let ok = await sbPullSilent();
-    if(!ok){
-      await new Promise(r=>setTimeout(r,2000));
-      ok = await sbPullSilent();
-    }
+    if(!ok){ await new Promise(r=>setTimeout(r,2000)); ok=await sbPullSilent(); }
     if(!ok) loadFromLocal();
   } else {
     loadFromLocal();
@@ -507,36 +440,26 @@ function loadFromLocal(){
 }
 
 function uid(){ return Math.random().toString(36).slice(2,9) }
-
-function saveLocal(){
-  localStorage.setItem(LS_Q, JSON.stringify(questions));
-  localStorage.setItem(LS_K, JSON.stringify(keys));
-}
-
-async function save(){
-  saveLocal();
-  if(sbUrl && sbKey) await sbPushSilent();
-}
+function saveLocal(){ localStorage.setItem(LS_Q,JSON.stringify(questions)); localStorage.setItem(LS_K,JSON.stringify(keys)); }
+async function save(){ saveLocal(); if(sbUrl&&sbKey) await sbPushSilent(); }
 
 // ── SUPABASE ──
-function sbHeaders(){
-  return {'apikey':sbKey,'Authorization':'Bearer '+sbKey,'Content-Type':'application/json'};
-}
+function sbHeaders(){ return {'apikey':sbKey,'Authorization':'Bearer '+sbKey,'Content-Type':'application/json'}; }
 
-function sbSetStatus(state, msg){
-  const ind=document.getElementById('jb-indicator');
-  const lbl=document.getElementById('jb-status-lbl');
+function sbSetStatus(state,msg){
+  const ind=document.getElementById('sb-indicator');
+  const lbl=document.getElementById('sb-status-lbl');
   if(!ind||!lbl) return;
   const colors={ok:'#1D9E75',error:'#C47070',sync:'#D4AF37',idle:'#555'};
   ind.style.background=colors[state]||colors.idle;
   lbl.textContent=msg||'';
 }
 
-function saveJBConfig(){
-  sbUrl=document.getElementById('inp-jb-key').value.trim();
-  sbKey=document.getElementById('inp-jb-bin').value.trim();
-  localStorage.setItem(LS_SBURL, sbUrl);
-  localStorage.setItem(LS_SBKEY, sbKey);
+function saveSBConfig(){
+  sbUrl=document.getElementById('inp-sb-url').value.trim();
+  sbKey=document.getElementById('inp-sb-key').value.trim();
+  localStorage.setItem(LS_SBURL,sbUrl);
+  localStorage.setItem(LS_SBKEY,sbKey);
 }
 
 async function sbPullSilent(){
@@ -550,8 +473,7 @@ async function sbPullSilent(){
     if(data.questions) questions=data.questions;
     if(data.keys) keys=data.keys;
     if(data.webhook){ webhookURL=data.webhook; localStorage.setItem(LS_WH,data.webhook); }
-    saveLocal();
-    return true;
+    saveLocal(); return true;
   }catch(e){ return false; }
 }
 
@@ -564,67 +486,64 @@ async function sbPushSilent(){
   }catch(e){ return false; }
 }
 
-async function jbSync(){
-  sbUrl=document.getElementById('inp-jb-key').value.trim();
-  sbKey=document.getElementById('inp-jb-bin').value.trim();
+async function sbConnect(){
+  sbUrl=document.getElementById('inp-sb-url').value.trim();
+  sbKey=document.getElementById('inp-sb-key').value.trim();
   if(!sbUrl||!sbKey){ showToast('Remplissez l\'URL et la clé Supabase.'); return; }
-  localStorage.setItem(LS_SBURL, sbUrl);
-  localStorage.setItem(LS_SBKEY, sbKey);
-  sbSetStatus('sync','Synchronisation...');
+  localStorage.setItem(LS_SBURL,sbUrl); localStorage.setItem(LS_SBKEY,sbKey);
+  sbSetStatus('sync','Connexion...');
   const ok=await sbPushSilent();
-  sbSetStatus(ok?'ok':'error', ok?'Connecté ✓':'Erreur — vérifiez l\'URL et la clé');
-  showToast(ok?'Supabase connecté et synchronisé !':'Erreur de connexion Supabase.');
+  sbSetStatus(ok?'ok':'error', ok?'Connecté ✓':'Erreur — vérifiez URL et clé');
+  showToast(ok?'Supabase connecté !':'Erreur de connexion.');
 }
 
-async function jbPush(){
+async function sbPush(){
   if(!sbUrl||!sbKey){ showToast('Configurez Supabase d\'abord.'); return; }
   sbSetStatus('sync','Envoi...');
   const ok=await sbPushSilent();
   sbSetStatus(ok?'ok':'error', ok?'Envoyé ✓':'Erreur');
-  showToast(ok?'Données envoyées vers Supabase.':'Erreur d\'envoi.');
+  showToast(ok?'Données envoyées.':'Erreur d\'envoi.');
 }
 
-async function jbPull(){
+async function sbPull(){
   if(!sbUrl||!sbKey){ showToast('Configurez Supabase d\'abord.'); return; }
   sbSetStatus('sync','Récupération...');
   const ok=await sbPullSilent();
   if(ok){
-    sbSetStatus('ok','Récupéré ✓');
-    showToast('Données récupérées depuis Supabase.');
-    if(document.getElementById('admin-dash').classList.contains('hidden')) return;
-    renderKeyList(); renderQList(); updateStats(); populateExamTypeSelects();
-  } else {
-    sbSetStatus('error','Erreur');
-    showToast('Erreur de récupération Supabase.');
-  }
+    sbSetStatus('ok','Récupéré ✓'); showToast('Données récupérées.');
+    if(!document.getElementById('admin-dash').classList.contains('hidden')){
+      renderKeyList(); renderQList(); updateStats(); populateExamTypeSelects();
+    }
+  } else { sbSetStatus('error','Erreur'); showToast('Erreur de récupération.'); }
 }
 
 // ── DEFAULT DATA ──
 function loadDefaults(){
-  const cats=["Droit Pénal","Procédure","Droits Fondamentaux","Droit Civil","Organisation Judiciaire"];
   questions=[
-    {id:uid(),q:"En droit pénal de San Andreas, quel article définit le meurtre au premier degré ?",opts:["Art. 12 du Code Pénal","Art. 187 du Code Pénal","Art. 3 du Code Pénal","Art. 55 du Code Pénal"],correct:1,cat:"Droit Pénal",ref:"Code Pénal SA, Art. 187",expl:"L'article 187 définit le meurtre prémédité comme un acte volontaire commis avec préméditation."},
-    {id:uid(),q:"Quel est le rôle du Procureur Général de l'État de San Andreas ?",opts:["Il défend les accusés","Il représente l'État dans les affaires pénales","Il préside les audiences","Il nomme les juges"],correct:1,cat:"Organisation Judiciaire",ref:"Constitution SA, Art. 8",expl:"Le Procureur Général est le chef du ministère public."},
-    {id:uid(),q:"La présomption d'innocence implique que :",opts:["L'accusé doit prouver son innocence","La culpabilité doit être prouvée au-delà du doute raisonnable","Le juge peut présumer la culpabilité","La police peut détenir sans charge 72h"],correct:1,cat:"Droits Fondamentaux",ref:"Déclaration des Droits SA, Art. 1",expl:"Ce principe fondamental protège tout citoyen jusqu'à condamnation définitive."},
-    {id:uid(),q:"Qu'est-ce qu'une mise en examen à San Andreas ?",opts:["Un acquittement provisoire","Un acte formel indiquant qu'une personne est suspectée","Une peine ferme","Un jugement en appel"],correct:1,cat:"Procédure",ref:"Code de Procédure Pénale SA, Art. 23"},
-    {id:uid(),q:"La légitime défense est reconnue si :",opts:["La riposte est disproportionnée","La riposte est proportionnée et immédiate","La victime a provoqué l'agresseur","Le témoin confirme les faits"],correct:1,cat:"Droit Pénal",ref:"Code Pénal SA, Art. 22"},
-    {id:uid(),q:"Devant quelle juridiction se tiennent les affaires criminelles graves ?",opts:["Le tribunal correctionnel","La Cour d'assises de San Andreas","Le tribunal de police","La chambre civile"],correct:1,cat:"Organisation Judiciaire",ref:"Loi Organique sur la Justice SA, Art. 5"},
-    {id:uid(),q:"Qu'est-ce qu'un mandat d'arrêt à San Andreas ?",opts:["Un ordre de libération","Un acte ordonnant l'arrestation d'une personne","Une convocation simple","Un titre foncier"],correct:1,cat:"Procédure",ref:"Code de Procédure Pénale SA, Art. 41"},
-    {id:uid(),q:"En droit civil de San Andreas, la prescription de droit commun est de :",opts:["1 an","3 ans","5 ans","10 ans"],correct:2,cat:"Droit Civil",ref:"Code Civil SA, Art. 112"},
-    {id:uid(),q:"Le principe 'non bis in idem' signifie :",opts:["Nul n'est censé ignorer la loi","On ne peut être jugé deux fois pour les mêmes faits","La loi est rétroactive","Le juge peut rouvrir un dossier classé"],correct:1,cat:"Droits Fondamentaux",ref:"Constitution SA, Art. 14"},
-    {id:uid(),q:"La récidive en droit pénal de San Andreas a pour effet :",opts:["De réduire la peine","D'effacer le casier","D'aggraver la peine applicable","D'entraîner l'acquittement"],correct:2,cat:"Droit Pénal",ref:"Code Pénal SA, Art. 62"},
+    {id:uid(),q:"En droit pénal de San Andreas, quel article définit le meurtre au premier degré ?",opts:["Art. 12 du Code Pénal","Art. 187 du Code Pénal","Art. 3 du Code Pénal","Art. 55 du Code Pénal"],correct:1,cat:"Droit Pénal",ref:"Code Pénal SA, Art. 187",expl:"L'article 187 définit le meurtre prémédité."},
+    {id:uid(),q:"La présomption d'innocence implique que :",opts:["L'accusé doit prouver son innocence","La culpabilité doit être prouvée au-delà du doute raisonnable","Le juge peut présumer la culpabilité","La police peut détenir sans charge 72h"],correct:1,cat:"Droits Fondamentaux",ref:"Déclaration des Droits SA, Art. 1"},
   ];
-  // Default key
-  keys=[{id:uid(),code:"BARREAU",name:"Examen du Barreau",maxUses:0,usedCount:0,examType:"",createdAt:new Date().toISOString()}];
+  keys=[{id:uid(),code:"BARREAU",name:"Examen du Barreau",maxUses:0,usedCount:0,pools:[],createdAt:new Date().toISOString()}];
   save();
 }
 
-// ══ KEY PREVIEW ══
+// ── ANTI-CHEAT ──
+function startAntiCheat(){
+  antiCheatCount=0;
+  document.addEventListener('visibilitychange', onVisibilityChange);
+}
+function stopAntiCheat(){
+  document.removeEventListener('visibilitychange', onVisibilityChange);
+}
+function onVisibilityChange(){
+  if(document.hidden) antiCheatCount++;
+}
+
+// ── KEY PREVIEW ──
 function previewKey(){
   const val=document.getElementById('inp-key').value.trim().toUpperCase();
   const el=document.getElementById('key-preview');
-  const err=document.getElementById('key-error');
-  err.textContent='';
+  document.getElementById('key-error').textContent='';
   if(!val){el.innerHTML='';return;}
   const k=keys.find(x=>x.code===val);
   if(k){
@@ -634,7 +553,7 @@ function previewKey(){
   } else { el.innerHTML=''; }
 }
 
-// ══ EXAM ══
+// ── EXAM ──
 function startExam(){
   const p=document.getElementById('inp-prenom').value.trim();
   const n=document.getElementById('inp-nom').value.trim();
@@ -651,25 +570,21 @@ function startExam(){
   k.usedCount=(k.usedCount||0)+1;
   save();
 
-  // Construire le pool depuis les pools définis (ou tout si aucun pool)
   let pool=[];
   const pools=k.pools&&k.pools.length?k.pools:[];
   if(pools.length){
     pools.forEach(p=>{
       const catQ=shuffle(questions.filter(q=>q.cat===p.cat));
-      const drawn=catQ.slice(0,Math.min(p.count,catQ.length));
-      pool=[...pool,...drawn];
+      pool=[...pool,...catQ.slice(0,Math.min(p.count,catQ.length))];
     });
-    pool=shuffle(pool); // mélange global des questions des différents pools
+    pool=shuffle(pool);
   } else if(k.examType){
-    // compat ancien format
     const catQ=questions.filter(q=>q.cat===k.examType);
-    pool=shuffle(catQ.length?catQ:questions).slice(0,15);
+    pool=shuffle(catQ.length?catQ:[...questions]).slice(0,15);
   } else {
     pool=shuffle([...questions]).slice(0,15);
   }
-
-  if(!pool.length){err.textContent='Aucune question disponible pour cet examen. Contactez le greffe.';return;}
+  if(!pool.length){err.textContent='Aucune question disponible. Contactez le greffe.';return;}
 
   shuffled=pool.map(q=>({...q,sOpts:[...q.opts.map((o,i)=>({text:o,orig:i}))].sort(()=>Math.random()-.5)}));
   answers=new Array(shuffled.length).fill(null);
@@ -678,6 +593,7 @@ function startExam(){
   document.getElementById('screen-exam').classList.remove('hidden');
   const poolStr=pools.length?pools.map(p=>`${p.count}×${p.cat}`).join(' + '):'';
   document.getElementById('exam-badge-wrap').innerHTML=`<div class="exam-badge">${k.name}${poolStr?' — '+poolStr:''}</div>`;
+  startAntiCheat();
   renderQ();
 }
 
@@ -715,6 +631,7 @@ function navigate(dir){
   if(dir===1&&currentQ===shuffled.length-1){
     const u=answers.filter(a=>a===null).length;
     if(u&&!confirm(`${u} question(s) sans réponse. Terminer quand même ?`)) return;
+    stopAntiCheat();
     showResults(); return;
   }
   currentQ=Math.max(0,Math.min(shuffled.length-1,currentQ+dir));
@@ -724,8 +641,6 @@ function navigate(dir){
 function showResults(){
   document.getElementById('screen-exam').classList.add('hidden');
   document.getElementById('screen-results').classList.remove('hidden');
-
-  // Calcul silencieux — rien n'est affiché au candidat
   let correct=0; const details=[];
   shuffled.forEach((q,i)=>{
     const ui=answers[i], uo=ui!==null?q.sOpts[ui].orig:null;
@@ -735,12 +650,8 @@ function showResults(){
   });
   const pct=Math.round((correct/shuffled.length)*100);
   const mention=pct>=90?'Mention Très Bien':pct>=75?'Mention Bien':pct>=60?'Mention Passable':'Insuffisant';
-
-  // Afficher juste le prénom du candidat dans le message
-  document.getElementById('candidat-confirm').textContent=
-    candidat.prenom+' '+candidat.nom+' — '+( activeKey?activeKey.name:'');
-
-  sendWebhook({candidat,key:activeKey?activeKey.code:'—',exam:activeKey?activeKey.name:'—',score:pct,correct,total:shuffled.length,mention,details,date:new Date().toLocaleString('fr-FR')});
+  document.getElementById('candidat-confirm').textContent=candidat.prenom+' '+candidat.nom+(activeKey?' — '+activeKey.name:'');
+  sendWebhook({candidat,key:activeKey?activeKey.code:'—',exam:activeKey?activeKey.name:'—',score:pct,correct,total:shuffled.length,mention,details,date:new Date().toLocaleString('fr-FR'),antiCheat:antiCheatCount});
 }
 
 async function sendWebhook(data){
@@ -748,13 +659,8 @@ async function sendWebhook(data){
   const url=localStorage.getItem(LS_WH)||'';
   if(!url){st.textContent='';return;}
   st.className='wh-status sending'; st.textContent='Transmission en cours...';
-
   const fautes=data.details.filter(d=>!d.correct);
-  const fautesText=fautes.length===0
-    ? 'Aucune erreur'
-    : fautes.map(d=>`- ${d.question}`).join('\n');
-
-  // Découpe si >1024 chars
+  const fautesText=fautes.length===0?'Aucune erreur':fautes.map(d=>`- ${d.question}`).join('\n');
   const fautesFields=[];
   const chunks=[];
   let cur='';
@@ -764,11 +670,15 @@ async function sendWebhook(data){
   });
   if(cur) chunks.push(cur);
   chunks.forEach((c,i)=>fautesFields.push({name:i===0?'Erreurs':'(suite)',value:c}));
-
   const embed={embeds:[{
     title:`${data.candidat.prenom} ${data.candidat.nom} — ${data.exam} — ${data.correct}/${data.total}`,
     color:data.score>=60?3066993:15158332,
-    fields:[{name:'Date',value:data.date,inline:true},...fautesFields]
+    fields:[
+      {name:'Score',value:`${data.score}% — ${data.mention}`,inline:true},
+      {name:'Date',value:data.date,inline:true},
+      {name:'Changements onglet',value:data.antiCheat>0?`⚠️ ${data.antiCheat} détecté(s)`:'✅ Aucun',inline:true},
+      ...fautesFields
+    ]
   }]};
   try{
     const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(embed)});
@@ -784,30 +694,31 @@ function restartExam(){
   document.getElementById('inp-nom').value='';
   document.getElementById('inp-key').value='';
   document.getElementById('key-preview').innerHTML='';
-  activeKey=null;
+  activeKey=null; antiCheatCount=0;
 }
 
-// ══ ADMIN AUTH ══
+// ── ADMIN AUTH ──
 function goAdmin(){
   document.getElementById('exam-app').classList.add('hidden');
   document.getElementById('admin-panel').classList.add('active');
   document.getElementById('admin-toggle-btn').style.display='none';
   if(sessionStorage.getItem(LS_AUTH)==='1') showDash();
 }
-  function goExam(){
+function goExam(){
   sessionStorage.removeItem(LS_AUTH);
   document.getElementById('admin-panel').classList.remove('active');
   document.getElementById('exam-app').classList.remove('hidden');
   document.getElementById('admin-toggle-btn').style.display='';
   document.getElementById('admin-login').classList.remove('hidden');
   document.getElementById('admin-dash').classList.add('hidden');
-}  
+}
 async function sha256(str){
   const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
   return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
 async function checkPwd(){
-  const inputHash = await sha256(document.getElementById('pwd-input').value); if(inputHash===ADMIN_PWD_HASH){
+  const inputHash=await sha256(document.getElementById('pwd-input').value);
+  if(inputHash===ADMIN_PWD_HASH){
     sessionStorage.setItem(LS_AUTH,'1');
     document.getElementById('login-err').textContent='';
     document.getElementById('pwd-input').value='';
@@ -823,33 +734,31 @@ function showDash(){
   document.getElementById('admin-login').classList.add('hidden');
   document.getElementById('admin-dash').classList.remove('hidden');
   document.getElementById('inp-webhook').value=localStorage.getItem(LS_WH)||'';
-  document.getElementById('inp-jb-key').value=localStorage.getItem(LS_SBURL)||'';
-  document.getElementById('inp-jb-bin').value=localStorage.getItem(LS_SBKEY)||'';
+  document.getElementById('inp-sb-url').value=localStorage.getItem(LS_SBURL)||'';
+  document.getElementById('inp-sb-key').value=localStorage.getItem(LS_SBKEY)||'';
   sbUrl=localStorage.getItem(LS_SBURL)||'';
   sbKey=localStorage.getItem(LS_SBKEY)||'';
-  if(sbUrl && sbKey) sbSetStatus('ok','Connecté');
+  if(sbUrl&&sbKey) sbSetStatus('ok','Connecté');
   else sbSetStatus('idle','Non configuré');
   updateStats(); renderKeyList(); renderQList(); populateExamTypeSelects();
 }
 
-// ══ TABS ══
-function switchTab(tab, btn){
+// ── TABS ──
+function switchTab(tab,btn){
   document.querySelectorAll('.a-tab').forEach(t=>t.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById('tab-keys').classList.toggle('hidden', tab!=='keys');
-  document.getElementById('tab-questions').classList.toggle('hidden', tab!=='questions');
+  document.getElementById('tab-keys').classList.toggle('hidden',tab!=='keys');
+  document.getElementById('tab-questions').classList.toggle('hidden',tab!=='questions');
 }
 
-// ══ WEBHOOK ══
+// ── WEBHOOK ──
 function saveWebhook(){
   webhookURL=document.getElementById('inp-webhook').value.trim();
   localStorage.setItem(LS_WH,webhookURL);
   updateStats();
 }
 
-// ══ KEYS ══
-let currentPools=[]; // [{cat, count}]
-
+// ── KEYS ──
 function genCode(){
   const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let code='';
@@ -885,7 +794,7 @@ function renderPools(){
       <span style="flex:1;font-size:13px;color:var(--a-text)">${p.cat}</span>
       <span style="font-family:'Playfair Display',serif;font-size:15px;color:var(--a-gold);min-width:32px;text-align:right">${p.count}</span>
       <span style="font-size:11px;color:var(--a-muted)">questions</span>
-      <button onclick="removePool('${p.cat.replace(/'/g,"\\'")}') " style="background:none;border:none;color:#C47070;cursor:pointer;font-size:14px;padding:0 2px">✕</button>
+      <button onclick="removePool('${p.cat.replace(/'/g,"\\'")}')" style="background:none;border:none;color:#C47070;cursor:pointer;font-size:14px;padding:0 2px">✕</button>
     </div>`).join('')+
     `<div style="font-size:12px;color:var(--a-muted);text-align:right;padding:4px 2px">Total : <strong style="color:var(--a-gold)">${total} questions</strong></div>`;
 }
@@ -895,7 +804,7 @@ function saveKey(){
   const name=document.getElementById('k-name').value.trim();
   const maxUses=parseInt(document.getElementById('k-uses').value)||0;
   if(!code||!name){showToast('Remplissez le code et le nom.');return;}
-  if(!editKeyId && keys.find(k=>k.code===code)){showToast('Ce code existe déjà.');return;}
+  if(!editKeyId&&keys.find(k=>k.code===code)){showToast('Ce code existe déjà.');return;}
   const pools=currentPools.length?[...currentPools]:[];
   if(editKeyId){
     keys=keys.map(k=>k.id===editKeyId?{...k,code,name,maxUses,pools}:k);
@@ -913,7 +822,6 @@ function editKey(id){
   document.getElementById('k-code').value=k.code;
   document.getElementById('k-name').value=k.name;
   document.getElementById('k-uses').value=k.maxUses;
-  // Compat ancien format (examType)
   currentPools=k.pools?[...k.pools]:(k.examType?[{cat:k.examType,count:15}]:[]);
   renderPools();
   document.getElementById('save-key-btn').textContent='Enregistrer';
@@ -934,8 +842,7 @@ function deleteKey(id){
 }
 
 function resetKeyForm(){
-  editKeyId=null;
-  currentPools=[];
+  editKeyId=null; currentPools=[];
   document.getElementById('k-code').value='';
   document.getElementById('k-name').value='';
   document.getElementById('k-uses').value='10';
@@ -951,16 +858,12 @@ function renderKeyList(){
   document.getElementById('key-count').textContent=keys.length;
   if(!keys.length){el.innerHTML='<p style="color:var(--a-muted);font-size:13px;padding:10px 0">Aucune clé créée.</p>';return;}
   el.innerHTML=keys.map(k=>{
-    const used=k.usedCount||0;
-    const max=k.maxUses||0;
+    const used=k.usedCount||0, max=k.maxUses||0;
     const pct=max>0?Math.round((used/max)*100):0;
     const barColor=pct>=100?'#C47070':pct>=70?'#D4AF37':'#1D9E75';
     const statusDot=max>0&&used>=max?'🔴':'🟢';
-    // Affichage des pools
     const pools=k.pools&&k.pools.length?k.pools:k.examType?[{cat:k.examType,count:'?'}]:[];
-    const poolsStr=pools.length
-      ?pools.map(p=>`${p.count}×${p.cat}`).join(' + ')
-      :'Toutes les questions';
+    const poolsStr=pools.length?pools.map(p=>`${p.count}×${p.cat}`).join(' + '):'Toutes les questions';
     return `<div class="key-item">
       <div class="key-code">${k.code}</div>
       <div class="key-info">
@@ -982,7 +885,7 @@ function renderKeyList(){
   }).join('');
 }
 
-// ══ QUESTIONS ══
+// ── QUESTIONS ──
 function selCorrect(el){
   document.querySelectorAll('.radio-opt').forEach(r=>r.classList.remove('active'));
   el.classList.add('active');
@@ -1065,7 +968,6 @@ function renderQList(){
 
 function populateExamTypeSelects(){
   const cats=[...new Set(questions.map(q=>q.cat||'Général'))].sort();
-  // Pool cat select
   const kSel=document.getElementById('k-pool-cat');
   if(kSel){
     const kVal=kSel.value;
@@ -1075,11 +977,9 @@ function populateExamTypeSelects(){
     }).join('');
     kSel.value=kVal;
   }
-  // Q filter
   const qF=document.getElementById('q-filter');
   const qVal=qF?qF.value:'';
   if(qF){ qF.innerHTML='<option value="">Toutes catégories</option>'+cats.map(c=>`<option value="${c}">${c}</option>`).join(''); qF.value=qVal; }
-  // Exam types badges
   const etEl=document.getElementById('exam-types-list');
   if(etEl) etEl.innerHTML=cats.map(c=>{
     const count=questions.filter(q=>q.cat===c).length;
@@ -1095,7 +995,7 @@ function updateStats(){
   document.getElementById('stat-wh').textContent=localStorage.getItem(LS_WH)?'✓':'✗';
 }
 
-// ══ IMPORT / EXPORT ══
+// ── IMPORT / EXPORT ──
 function exportJSON(){
   const data={meta:{export_date:new Date().toISOString(),source:"Cour Suprême de San Andreas"},webhook:localStorage.getItem(LS_WH)||'',questions,keys};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
@@ -1104,24 +1004,16 @@ function exportJSON(){
 }
 
 function publishSite(){
-  if(!sbUrl||!sbKey){
-    if(!confirm('Supabase non configuré. Continuer quand même ?')) return;
-  }
+  if(!sbUrl||!sbKey){ if(!confirm('Supabase non configuré. Continuer quand même ?')) return; }
   let output=document.documentElement.outerHTML;
   const cfgRegex=/\/\/ @@CFG_START@@[\s\S]*?\/\/ @@CFG_END@@/;
-  const cfgBlock=`// @@CFG_START@@
-const PUBLISHED_SB_URL="${sbUrl.replace(/"/g,'\\"')}";
-const PUBLISHED_SB_KEY="${sbKey.replace(/"/g,'\\"')}";
-// @@CFG_END@@`;
-  output=output.replace(cfgRegex, cfgBlock);
+  const cfgBlock=`// @@CFG_START@@\nconst PUBLISHED_SB_URL="${sbUrl.replace(/"/g,'\\"')}";\nconst PUBLISHED_SB_KEY="${sbKey.replace(/"/g,'\\"')}";\n// @@CFG_END@@`;
+  output=output.replace(cfgRegex,cfgBlock);
   output=output.replace(/id="exam-app" class="[^"]*hidden[^"]*"/g,'id="exam-app"');
   output=output.replace(/id="admin-panel" class="active"/g,'id="admin-panel"');
   output=output.replace(/id="admin-toggle-btn"[^>]*style="display:\s*none[^"]*"/g,'id="admin-toggle-btn"');
   const blob=new Blob([output],{type:'text/html;charset=utf-8'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download='index.html';
-  a.click();
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='index.html'; a.click();
   showToast('index.html publié — uploadez-le sur GitHub !');
 }
 
@@ -1135,10 +1027,10 @@ function importJSON(event){
       if(data.questions) questions=data.questions.map(q=>({...q,id:q.id||uid()}));
       if(data.keys) keys=data.keys.map(k=>({...k,id:k.id||uid(),usedCount:k.usedCount||0}));
       save();
-      if(data.webhook){localStorage.setItem(LS_WH,data.webhook);document.getElementById('inp-webhook').value=data.webhook;}
+      if(data.webhook){ localStorage.setItem(LS_WH,data.webhook); document.getElementById('inp-webhook').value=data.webhook; }
       renderKeyList(); renderQList(); updateStats(); populateExamTypeSelects();
       showToast(`Import réussi : ${questions.length} questions, ${keys.length} clés.`);
-    }catch(e){showToast('Erreur de lecture JSON.');}
+    }catch(e){ showToast('Erreur de lecture JSON.'); }
   };
   reader.readAsText(file);
   event.target.value='';
@@ -1150,7 +1042,6 @@ function importCSV(event){
   reader.onload=e=>{
     try{
       const text=e.target.result;
-      // Parse CSV (gère les guillemets et virgules dans les cellules)
       function parseCSVLine(line){
         const result=[]; let cur='', inQ=false;
         for(let i=0;i<line.length;i++){
@@ -1163,41 +1054,38 @@ function importCSV(event){
       }
       const lines=text.split(/\r?\n/).filter(l=>l.trim());
       if(lines.length<2){showToast('CSV vide ou invalide.');return;}
-      // Ignorer la 1ère ligne (en-têtes)
       const rows=lines.slice(1);
       const imported=[]; const errors=[];
       rows.forEach((line,idx)=>{
         const cols=parseCSVLine(line);
-        // Colonnes : question(0) A(1) B(2) C(3) D(4) correct(5) categorie(6) reference(7) explication(8)
         const q=cols[0]||'', a=cols[1]||'', b=cols[2]||'', c=cols[3]||'';
         const d=cols[4]||'', correctLetter=(cols[5]||'A').toUpperCase().trim();
         const cat=cols[6]||'Général', ref=cols[7]||'', expl=cols[8]||'';
-        if(!q||!a||!b||!c){ errors.push(`Ligne ${idx+2} ignorée (champs manquants)`); return; }
+        if(!q||!a||!b||!c){ errors.push(`Ligne ${idx+2} ignorée`); return; }
         const letterMap={'A':0,'B':1,'C':2,'D':3};
         const correct=letterMap[correctLetter]??0;
         const opts=[a,b,c]; if(d) opts.push(d);
         imported.push({id:uid(),q,opts,correct:Math.min(correct,opts.length-1),cat,ref,expl});
       });
-      if(!imported.length){showToast('Aucune question valide trouvée dans le CSV.');return;}
-      const mode=confirm(`${imported.length} question(s) trouvée(s).\n\nOK = Ajouter aux questions existantes\nAnnuler = Remplacer toutes les questions`);
-      if(mode){ questions=[...questions,...imported]; }
-      else { questions=imported; }
+      if(!imported.length){showToast('Aucune question valide.');return;}
+      const mode=confirm(`${imported.length} question(s).\n\nOK = Ajouter\nAnnuler = Remplacer`);
+      if(mode){ questions=[...questions,...imported]; } else { questions=imported; }
       save(); renderQList(); updateStats(); populateExamTypeSelects();
-      const msg=errors.length?`${imported.length} questions importées. ${errors.length} ligne(s) ignorée(s).`:`${imported.length} questions importées avec succès.`;
-      showToast(msg);
-    }catch(err){showToast('Erreur de lecture CSV : '+err.message);}
+      showToast(errors.length?`${imported.length} importées, ${errors.length} ignorées.`:`${imported.length} questions importées.`);
+    }catch(err){ showToast('Erreur CSV : '+err.message); }
   };
   reader.readAsText(file,'UTF-8');
   event.target.value='';
 }
 
-// ══ TOAST ══
+// ── TOAST ──
 function showToast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg; t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2800);
 }
 
-init();</script>
+init();
+</script>
 </body>
 </html>
