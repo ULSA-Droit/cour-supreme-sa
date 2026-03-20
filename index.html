@@ -872,7 +872,7 @@ function saveKey(){
     keys.push({id:uid(),code,name,maxUses,duration,usedCount:0,pools,createdAt:new Date().toISOString()});
     showToast('Clé créée.');
   }
-  save(); renderKeyList(); updateStats(); resetKeyForm();
+  save().then(()=>showToast('Clé sauvegardée et synchronisée.')); renderKeyList(); updateStats(); resetKeyForm();
 }
 
 function editKey(id){
@@ -968,7 +968,7 @@ function saveQuestion(){
   const entry={id:editQId||uid(),q,opts,correct,cat:cat||'Général',ref,expl};
   if(editQId){ questions=questions.map(x=>x.id===editQId?entry:x); showToast('Question modifiée.'); }
   else { questions.push(entry); showToast('Question ajoutée.'); }
-  save(); renderQList(); updateStats(); populateExamTypeSelects(); resetQForm();
+  save().then(()=>{}); renderQList(); updateStats(); populateExamTypeSelects(); resetQForm();
 }
 
 function editQuestion(id){
