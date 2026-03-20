@@ -528,8 +528,8 @@ function saveJBConfig(){
 }
 
 function jbHeaders(extra={}){
-  // JSONBin : X-Access-Key pour les clés créées via "API Keys"
-  return {'X-Access-Key':jbKey,'X-Master-Key':jbKey,...extra};
+  // JSONBin : X-Access-Key uniquement pour les clés créées via "API Keys"
+  return {'X-Access-Key':jbKey,...extra};
 }
 
 async function jbPullSilent(){
