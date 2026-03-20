@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cour Suprême de San Andreas — Examen Juridique</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#B8960C;--gold-light:#D4AF37;--ink:#1A1A2E;--cream:#FAF7F0;
+  --white:#FFFFFF;--muted:#6B6B7B;--border:rgba(184,150,12,0.2);
+  --success-bg:#F0FAF5;--success:#1B5E3B;--error-bg:#FDF0F0;--error:#7B1818;
+  --admin-bg:#0F1117;--admin-accent:#D4AF37;--admin-surface:#1C1F2B;
+  --admin-border:rgba(212,175,55,0.2);--admin-text:#E8E4D9;--admin-muted:#8A8699;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink);min-height:100vh}
+
+/* ── SHARED NAV ── */
+#top-nav{position:fixed;top:0;right:0;z-index:100;padding:10px 16px}
+#admin-toggle-btn{font-family:'Source Serif 4',serif;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);background:transparent;border:0.5px solid rgba(0,0,0,0.12);border-radius:4px;padding:6px 12px;cursor:pointer;transition:all 0.2s}
+#admin-toggle-btn:hover{color:var(--gold);border-color:var(--gold)}
+
+/* ══ EXAM SIDE ══ */
+#exam-app{max-width:780px;margin:0 auto;padding:3rem 1.5rem 5rem;display:block}
+.header{text-align:center;padding:2rem 0 2.5rem;border-bottom:1px solid var(--border);margin-bottom:2.5rem}
+.seal{width:68px;height:68px;border:1.5px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;font-size:28px;color:var(--gold)}
+.header h1{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--ink);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:5px}
+.header p{font-size:12px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase}
+.section-title{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;font-family:'Source Serif 4',serif}
+
+.card{background:var(--white);border:0.5px solid var(--border);border-radius:8px;padding:1.75rem;margin-bottom:1.5rem}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:0.75rem}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)}
+.field input,.field select{font-family:'Source Serif 4',serif;font-size:15px;border:0.5px solid rgba(0,0,0,0.15);border-radius:5px;padding:10px 12px;background:#FAFAF8;color:var(--ink);outline:none;transition:border-color 0.2s;width:100%}
+.field input:focus,.field select:focus{border-color:var(--gold)}
+.note{font-size:12px;color:var(--muted);font-style:italic;margin-top:8px}
+
+.btn-primary{width:100%;padding:13px;font-family:'Playfair Display',serif;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;background:var(--ink);color:#F5E6C8;border:none;border-radius:6px;cursor:pointer;transition:background 0.2s;margin-top:1rem}
+.btn-primary:hover{background:#2e2e4e}
+.btn-secondary{padding:10px 20px;font-family:'Playfair Display',serif;font-size:12px;letter-spacing:0.07em;text-transform:uppercase;background:transparent;color:var(--muted);border:0.5px solid rgba(0,0,0,0.15);border-radius:5px;cursor:pointer;transition:all 0.15s}
+.btn-secondary:hover{border-color:var(--ink);color:var(--ink)}
+
+.progress-wrap{margin-bottom:1.75rem}
+.progress-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:5px}
+.progress-bar{background:rgba(184,150,12,0.12);border-radius:3px;height:3px;overflow:hidden}
+.progress-fill{height:100%;background:var(--gold);transition:width 0.4s ease;border-radius:3px}
+
+.q-number{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:0.6rem}
+.q-text{font-family:'Playfair Display',serif;font-size:17px;line-height:1.65;color:var(--ink);margin-bottom:1.25rem}
+.q-ref{font-size:11px;color:var(--muted);font-style:italic;margin-bottom:1rem;padding:6px 10px;border-left:2px solid var(--border)}
+
+.options{display:flex;flex-direction:column;gap:8px}
+.option{display:flex;align-items:flex-start;gap:12px;padding:11px 14px;border:0.5px solid rgba(0,0,0,0.1);border-radius:6px;cursor:pointer;transition:all 0.15s;background:#FAFAF8}
+.option:hover{border-color:var(--gold);background:#FFFDF5}
+.option.selected{border-color:var(--gold);background:#FFFBEA}
+.option.correct{border-color:var(--success);background:var(--success-bg)}
+.option.wrong{border-color:var(--error);background:var(--error-bg)}
+.option.reveal-correct{border-color:var(--success);background:var(--success-bg)}
+.option-letter{width:22px;height:22px;border-radius:50%;border:0.5px solid rgba(0,0,0,0.15);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0;margin-top:1px;color:var(--muted);transition:all 0.15s}
+.option.selected .option-letter{background:var(--gold);border-color:var(--gold);color:#fff}
+.option.correct .option-letter,.option.reveal-correct .option-letter{background:var(--success);border-color:var(--success);color:#fff}
+.option.wrong .option-letter{background:var(--error);border-color:var(--error);color:#fff}
+.option-text{font-size:14px;line-height:1.5;color:var(--ink)}
+.explanation-box{margin-top:1rem;padding:10px 14px;background:#F9F6EE;border-left:2px solid var(--gold);border-radius:0 5px 5px 0;font-size:13px;color:var(--muted);font-style:italic}
+
+.nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;gap:1rem}
+.score-display{font-family:'Playfair Display',serif;font-size:56px;font-weight:700;color:var(--ink);line-height:1}
+.score-sub{font-size:14px;color:var(--muted);margin-top:6px}
+.score-mention{font-family:'Playfair Display',serif;font-size:17px;margin-top:1.25rem;padding-top:1.25rem;border-top:0.5px solid var(--border)}
+.webhook-status{font-size:12px;text-align:center;margin:8px 0 16px;min-height:18px;color:var(--muted)}
+.webhook-status.sending{color:var(--gold)}
+.webhook-status.sent{color:var(--success)}
+.webhook-status.error{color:var(--error)}
+
+.empty-bank{text-align:center;padding:3rem 1rem;color:var(--muted)}
+.empty-bank p{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:8px;color:var(--ink)}
+
+/* ══ ADMIN PANEL ══ */
+#admin-panel{display:none;min-height:100vh;background:var(--admin-bg);color:var(--admin-text);font-family:'Source Serif 4',serif}
+#admin-panel.active{display:block}
+#exam-app.hidden{display:none}
+
+.admin-topbar{background:var(--admin-surface);border-bottom:0.5px solid var(--admin-border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:50}
+.admin-topbar-title{font-family:'Playfair Display',serif;font-size:15px;color:var(--admin-accent);letter-spacing:0.04em}
+.admin-topbar-right{display:flex;gap:10px;align-items:center}
+.admin-btn{font-family:'Source Serif 4',serif;font-size:12px;letter-spacing:0.07em;text-transform:uppercase;padding:7px 14px;border-radius:4px;cursor:pointer;transition:all 0.15s;border:0.5px solid var(--admin-border);background:transparent;color:var(--admin-muted)}
+.admin-btn:hover{border-color:var(--admin-accent);color:var(--admin-accent)}
+.admin-btn.danger{border-color:rgba(180,50,50,0.4);color:#C47070}
+.admin-btn.danger:hover{border-color:#C47070;background:rgba(180,50,50,0.1)}
+.admin-btn.accent{background:var(--admin-accent);color:var(--admin-bg);border-color:var(--admin-accent)}
+.admin-btn.accent:hover{background:#c9a22e}
+
+.admin-body{max-width:900px;margin:0 auto;padding:2rem 1.5rem 5rem}
+.admin-section{margin-bottom:2.5rem}
+.admin-section-title{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--admin-accent);margin-bottom:1rem;padding-bottom:8px;border-bottom:0.5px solid var(--admin-border)}
+
+.admin-card{background:var(--admin-surface);border:0.5px solid var(--admin-border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}
+.admin-field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.admin-field label{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--admin-muted)}
+.admin-field input,.admin-field textarea,.admin-field select{font-family:'Source Serif 4',serif;font-size:14px;background:#0A0C12;border:0.5px solid var(--admin-border);border-radius:5px;padding:9px 12px;color:var(--admin-text);outline:none;transition:border-color 0.2s;width:100%}
+.admin-field input:focus,.admin-field textarea:focus,.admin-field select:focus{border-color:var(--admin-accent)}
+.admin-field textarea{resize:vertical;min-height:72px}
+.admin-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.admin-row-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}
+.correct-radio{display:flex;flex-direction:column;gap:4px}
+.correct-radio label{font-size:11px;letter-spacing:0.07em;text-transform:uppercase;color:var(--admin-muted);margin-bottom:2px}
+.radio-group{display:flex;gap:8px;flex-wrap:wrap}
+.radio-opt{display:flex;align-items:center;gap:6px;padding:6px 10px;border:0.5px solid var(--admin-border);border-radius:4px;cursor:pointer;transition:all 0.15s;font-size:13px;color:var(--admin-muted)}
+.radio-opt:hover{border-color:var(--admin-accent);color:var(--admin-accent)}
+.radio-opt input{display:none}
+.radio-opt.active{border-color:var(--admin-accent);color:var(--admin-accent);background:rgba(212,175,55,0.08)}
+
+.q-list-item{background:var(--admin-surface);border:0.5px solid var(--admin-border);border-radius:6px;padding:12px 16px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px;transition:border-color 0.15s}
+.q-list-item:hover{border-color:rgba(212,175,55,0.4)}
+.q-list-num{font-size:12px;color:var(--admin-accent);min-width:28px;padding-top:2px}
+.q-list-content{flex:1;min-width:0}
+.q-list-text{font-size:14px;color:var(--admin-text);line-height:1.5;margin-bottom:4px}
+.q-list-meta{font-size:11px;color:var(--admin-muted)}
+.q-list-actions{display:flex;gap:6px;flex-shrink:0}
+.q-list-btn{font-size:11px;padding:4px 10px;border-radius:3px;border:0.5px solid var(--admin-border);background:transparent;color:var(--admin-muted);cursor:pointer;transition:all 0.15s;font-family:'Source Serif 4',serif}
+.q-list-btn:hover{border-color:var(--admin-accent);color:var(--admin-accent)}
+.q-list-btn.del:hover{border-color:#C47070;color:#C47070}
+
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem}
+.stat-box{background:var(--admin-surface);border:0.5px solid var(--admin-border);border-radius:6px;padding:12px 14px;text-align:center}
+.stat-num{font-family:'Playfair Display',serif;font-size:26px;color:var(--admin-accent)}
+.stat-lbl{font-size:11px;color:var(--admin-muted);text-transform:uppercase;letter-spacing:0.08em;margin-top:2px}
+
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--admin-bg)}
+.login-box{background:var(--admin-surface);border:0.5px solid var(--admin-border);border-radius:10px;padding:2.5rem;width:340px;text-align:center}
+.login-box h2{font-family:'Playfair Display',serif;color:var(--admin-accent);font-size:20px;margin-bottom:6px}
+.login-box p{font-size:13px;color:var(--admin-muted);margin-bottom:1.5rem}
+.login-input{width:100%;font-family:'Source Serif 4',serif;font-size:15px;background:#0A0C12;border:0.5px solid var(--admin-border);border-radius:5px;padding:11px 14px;color:var(--admin-text);outline:none;margin-bottom:12px;transition:border-color 0.2s}
+.login-input:focus{border-color:var(--admin-accent)}
+.login-btn{width:100%;padding:12px;font-family:'Playfair Display',serif;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;background:var(--admin-accent);color:var(--admin-bg);border:none;border-radius:5px;cursor:pointer;transition:background 0.2s}
+.login-btn:hover{background:#c9a22e}
+.login-error{font-size:12px;color:#C47070;margin-top:8px;min-height:18px}
+
+.import-zone{border:1px dashed var(--admin-border);border-radius:6px;padding:1.5rem;text-align:center;color:var(--admin-muted);font-size:13px;cursor:pointer;transition:all 0.2s}
+.import-zone:hover{border-color:var(--admin-accent);color:var(--admin-accent)}
+
+.toast{position:fixed;bottom:24px;right:24px;background:var(--admin-surface);border:0.5px solid var(--admin-accent);color:var(--admin-accent);padding:10px 18px;border-radius:6px;font-size:13px;z-index:999;opacity:0;transform:translateY(8px);transition:all 0.3s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+
+.hidden{display:none!important}
+@media(max-width:600px){
+  .field-row,.admin-row,.admin-row-4,.stats-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<button id="admin-toggle-btn" onclick="goAdmin()">⚙ Greffe</button>
+<div id="toast" class="toast"></div>
+
+<!-- ══ EXAM APP ══ -->
+<div id="exam-app">
+  <div class="header">
+    <div class="seal">⚖</div>
+    <h1>Cour Suprême de San Andreas</h1>
+    <p>Examen de qualification juridique</p>
+  </div>
+
+  <!-- Screen: Identity -->
+  <div id="screen-identity">
+    <div class="card">
+      <div class="section-title">Identification du candidat</div>
+      <div class="field-row">
+        <div class="field"><label>Prénom</label><input type="text" id="inp-prenom" placeholder="ex : Jean"></div>
+        <div class="field"><label>Nom</label><input type="text" id="inp-nom" placeholder="ex : Dupont"></div>
+      </div>
+      <p class="note">Aucune donnée personnelle n'est collectée ni stockée. Vos réponses sont transmises uniquement au greffe.</p>
+      <button class="btn-primary" onclick="startExam()">Commencer l'examen</button>
+    </div>
+    <div id="empty-bank-msg" class="empty-bank hidden">
+      <p>Banque de questions vide</p>
+      <p style="font-size:14px;margin-top:6px">Accédez au panneau Greffe pour ajouter des questions.</p>
+    </div>
+  </div>
+
+  <!-- Screen: Exam -->
+  <div id="screen-exam" class="hidden">
+    <div class="progress-wrap">
+      <div class="progress-labels"><span id="prog-label">Question 1 / 15</span><span id="prog-pct">0 %</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+    <div id="question-container"></div>
+    <div class="nav-row">
+      <button class="btn-secondary" id="btn-prev" onclick="navigate(-1)">← Précédent</button>
+      <button class="btn-secondary" id="btn-next" onclick="navigate(1)">Suivant →</button>
+    </div>
+  </div>
+
+  <!-- Screen: Results -->
+  <div id="screen-results" class="hidden">
+    <div class="card" style="text-align:center">
+      <div class="section-title" style="margin-bottom:1rem">Résultat de l'examen</div>
+      <div class="score-display" id="score-num">—</div>
+      <div class="score-sub" id="score-sub"></div>
+      <div class="score-mention" id="score-mention"></div>
+    </div>
+    <div class="webhook-status" id="webhook-status"></div>
+    <div id="review-container"></div>
+    <div style="text-align:center;margin-top:1.5rem">
+      <button class="btn-secondary" onclick="restartExam()">Recommencer l'examen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ADMIN PANEL ══ -->
+<div id="admin-panel">
+  <!-- Login -->
+  <div id="admin-login" class="login-wrap">
+    <div class="login-box">
+      <div style="font-size:32px;margin-bottom:12px">⚖</div>
+      <h2>Greffe — Accès restreint</h2>
+      <p>Cour Suprême de San Andreas</p>
+      <input type="password" id="pwd-input" class="login-input" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')checkPwd()">
+      <button class="login-btn" onclick="checkPwd()">Accéder au greffe</button>
+      <div id="login-error" class="login-error"></div>
+      <button onclick="goExam()" style="background:none;border:none;font-size:12px;color:var(--admin-muted);cursor:pointer;margin-top:16px;text-decoration:underline">Retour à l'examen</button>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="admin-dash" class="hidden">
+    <div class="admin-topbar">
+      <div class="admin-topbar-title">⚖ Greffe — Banque de questions</div>
+      <div class="admin-topbar-right">
+        <button class="admin-btn" onclick="exportJSON()">Exporter JSON</button>
+        <button class="admin-btn" onclick="document.getElementById('import-file').click()">Importer JSON</button>
+        <input type="file" id="import-file" accept=".json" class="hidden" onchange="importJSON(event)">
+        <button class="admin-btn" onclick="goExam()">Voir l'examen</button>
+        <button class="admin-btn" onclick="adminLogout()">Déconnexion</button>
+      </div>
+    </div>
+
+    <div class="admin-body">
+      <!-- Stats -->
+      <div class="admin-section">
+        <div class="admin-section-title">Vue d'ensemble</div>
+        <div class="stats-grid">
+          <div class="stat-box"><div class="stat-num" id="stat-total">0</div><div class="stat-lbl">Questions</div></div>
+          <div class="stat-box"><div class="stat-num" id="stat-cats">0</div><div class="stat-lbl">Catégories</div></div>
+          <div class="stat-box"><div class="stat-num" id="stat-draw">15</div><div class="stat-lbl">Tirées / examen</div></div>
+          <div class="stat-box"><div class="stat-num" id="stat-webhook">—</div><div class="stat-lbl">Webhook</div></div>
+        </div>
+        <div class="admin-card" style="padding:1rem 1.25rem">
+          <div class="admin-field" style="margin:0">
+            <label>URL Webhook Discord</label>
+            <input type="text" id="inp-webhook" placeholder="https://discord.com/api/webhooks/..." oninput="saveWebhook()">
+          </div>
+          <div style="margin-top:8px">
+            <label style="font-size:11px;color:var(--admin-muted);text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:5px">Questions tirées par examen</label>
+            <input type="number" id="inp-draw" min="1" max="50" value="15" style="font-family:'Source Serif 4',serif;font-size:14px;background:#0A0C12;border:0.5px solid var(--admin-border);border-radius:5px;padding:7px 10px;color:var(--admin-text);outline:none;width:80px" oninput="saveDraw()">
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Question -->
+      <div class="admin-section">
+        <div class="admin-section-title" id="form-section-title">Ajouter une question</div>
+        <div class="admin-card">
+          <input type="hidden" id="edit-id" value="">
+          <div class="admin-field">
+            <label>Question</label>
+            <textarea id="f-question" placeholder="Rédigez la question..."></textarea>
+          </div>
+          <div class="admin-row" style="margin-bottom:12px">
+            <div class="admin-field" style="margin:0">
+              <label>Catégorie</label>
+              <input type="text" id="f-cat" placeholder="ex : Droit Pénal, Procédure, Constitution...">
+            </div>
+            <div class="admin-field" style="margin:0">
+              <label>Référence juridique (optionnel)</label>
+              <input type="text" id="f-ref" placeholder="ex : Art. 42 du Code Pénal de SA">
+            </div>
+          </div>
+          <div class="admin-field">
+            <label>Proposition A</label><input type="text" id="f-a" placeholder="Réponse A">
+          </div>
+          <div class="admin-field">
+            <label>Proposition B</label><input type="text" id="f-b" placeholder="Réponse B">
+          </div>
+          <div class="admin-field">
+            <label>Proposition C</label><input type="text" id="f-c" placeholder="Réponse C">
+          </div>
+          <div class="admin-field">
+            <label>Proposition D</label><input type="text" id="f-d" placeholder="Réponse D (optionnel)">
+          </div>
+          <div class="correct-radio">
+            <label>Bonne réponse</label>
+            <div class="radio-group" id="correct-radio-group">
+              <div class="radio-opt active" data-val="0" onclick="selectCorrect(this)"><input type="radio" name="correct" checked> A</div>
+              <div class="radio-opt" data-val="1" onclick="selectCorrect(this)"><input type="radio" name="correct"> B</div>
+              <div class="radio-opt" data-val="2" onclick="selectCorrect(this)"><input type="radio" name="correct"> C</div>
+              <div class="radio-opt" data-val="3" onclick="selectCorrect(this)"><input type="radio" name="correct"> D</div>
+            </div>
+          </div>
+          <div class="admin-field" style="margin-top:12px">
+            <label>Explication / Commentaire (optionnel)</label>
+            <textarea id="f-expl" placeholder="Explication après correction..."></textarea>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:1rem">
+            <button class="admin-btn accent" onclick="saveQuestion()" id="save-q-btn">Ajouter la question</button>
+            <button class="admin-btn" onclick="resetForm()" id="cancel-edit-btn" style="display:none">Annuler</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Question List -->
+      <div class="admin-section">
+        <div class="admin-section-title">Banque de questions (<span id="q-count">0</span>)</div>
+        <div id="q-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ──
+const ADMIN_PASSWORD = "greffe2024"; // Changez ce mot de passe !
+const LS_QUESTIONS = "cssandreas_questions";
+const LS_WEBHOOK   = "cssandreas_webhook";
+const LS_DRAW      = "cssandreas_draw";
+const LS_AUTHED    = "cssandreas_authed";
+
+// ── STATE ──
+let questions = [], webhookURL = "", drawCount = 15;
+let shuffled = [], answers = [], currentQ = 0, candidat = {};
+let correctSelected = 0, editingId = null;
+
+// ── INIT ──
+function init() {
+  questions = JSON.parse(localStorage.getItem(LS_QUESTIONS) || "[]");
+  if (!questions.length) loadDefaultQuestions();
+  webhookURL = localStorage.getItem(LS_WEBHOOK) || "";
+  drawCount  = parseInt(localStorage.getItem(LS_DRAW) || "15");
+  checkEmptyBank();
+}
+
+function loadDefaultQuestions() {
+  const defaults = [
+    {id:uid(),q:"En droit pénal de San Andreas, quel article définit la notion de meurtre au premier degré ?",opts:["Art. 12 du Code Pénal","Art. 187 du Code Pénal","Art. 3 du Code Pénal","Art. 55 du Code Pénal"],correct:1,cat:"Droit Pénal",ref:"Code Pénal de San Andreas, Art. 187",expl:"L'article 187 définit le meurtre prémédité comme un acte volontaire commis avec préméditation."},
+    {id:uid(),q:"Quel est le rôle du Procureur Général de l'État de San Andreas ?",opts:["Il défend les accusés","Il représente l'État dans les affaires pénales","Il préside les audiences","Il nomme les juges"],correct:1,cat:"Procédure",ref:"Constitution de San Andreas, Art. 8",expl:"Le Procureur Général est le chef du ministère public et représente l'État."},
+    {id:uid(),q:"La présomption d'innocence implique que :",opts:["L'accusé doit prouver son innocence","La culpabilité doit être prouvée au-delà du doute raisonnable","Le juge peut présumer la culpabilité","La police peut détenir sans charge pendant 72h"],correct:1,cat:"Droits Fondamentaux",ref:"Déclaration des Droits de San Andreas, Art. 1",expl:"Ce principe fondamental protège tout citoyen jusqu'à condamnation définitive."},
+    {id:uid(),q:"Qu'est-ce qu'une 'mise en examen' à San Andreas ?",opts:["Un acquittement provisoire","Un acte formel indiquant qu'une personne est suspectée d'une infraction","Une peine de prison ferme","Un jugement en appel"],correct:1,cat:"Procédure",ref:"Code de Procédure Pénale, Art. 23",expl:"La mise en examen est l'acte par lequel le juge d'instruction inculpe formellement un suspect."},
+    {id:uid(),q:"La légitime défense est reconnue si :",opts:["La riposte est disproportionnée","La riposte est proportionnée à la menace et immédiate","La victime a provoqué l'agresseur","Le témoin confirme les faits"],correct:1,cat:"Droit Pénal",ref:"Code Pénal de San Andreas, Art. 22",expl:"La proportionnalité et l'immédiateté de la riposte sont les deux critères essentiels."},
+    {id:uid(),q:"Devant quelle juridiction se tiennent les affaires criminelles graves à San Andreas ?",opts:["Le tribunal correctionnel","La Cour d'assises de San Andreas","Le tribunal de police","La chambre civile"],correct:1,cat:"Organisation Judiciaire",ref:"Loi Organique sur la Justice, Art. 5",expl:"Les crimes punis de plus de 10 ans relèvent de la Cour d'assises."},
+    {id:uid(),q:"Qu'est-ce qu'un 'mandat d'arrêt' à San Andreas ?",opts:["Un ordre de libération","Un acte ordonnant l'arrestation d'une personne identifiée","Un document de convocation simple","Un titre foncier"],correct:1,cat:"Procédure",ref:"Code de Procédure Pénale, Art. 41",expl:"Le mandat d'arrêt est décerné par un juge et autorise les forces de l'ordre à interpeller et détenir la personne visée."},
+    {id:uid(),q:"En droit civil de San Andreas, la prescription de droit commun est de :",opts:["1 an","3 ans","5 ans","10 ans"],correct:2,cat:"Droit Civil",ref:"Code Civil de San Andreas, Art. 112",expl:"Passé ce délai, l'action en justice est irrecevable sauf exceptions légales."},
+    {id:uid(),q:"Le principe 'non bis in idem' signifie :",opts:["Nul n'est censé ignorer la loi","On ne peut être jugé deux fois pour les mêmes faits","La loi est rétroactive","Le juge peut rouvrir un dossier classé"],correct:1,cat:"Droits Fondamentaux",ref:"Constitution de San Andreas, Art. 14",expl:"Ce principe interdit le double jugement pour une même infraction."},
+    {id:uid(),q:"La récidive en droit pénal de San Andreas a pour effet :",opts:["De réduire la peine","D'effacer le casier judiciaire","D'aggraver la peine applicable","D'entraîner l'acquittement"],correct:2,cat:"Droit Pénal",ref:"Code Pénal de San Andreas, Art. 62",expl:"Le juge peut porter la peine au double du maximum légal en cas de récidive légale."}
+  ];
+  questions = defaults;
+  saveQuestions();
+}
+
+function uid() { return Math.random().toString(36).slice(2,9); }
+function saveQuestions() { localStorage.setItem(LS_QUESTIONS, JSON.stringify(questions)); }
+function saveWebhook() {
+  webhookURL = document.getElementById('inp-webhook').value.trim();
+  localStorage.setItem(LS_WEBHOOK, webhookURL);
+  updateStats();
+}
+function saveDraw() {
+  drawCount = parseInt(document.getElementById('inp-draw').value) || 15;
+  localStorage.setItem(LS_DRAW, drawCount);
+  updateStats();
+}
+
+// ── EXAM ──
+function checkEmptyBank() {
+  const empty = !questions.length;
+  document.getElementById('empty-bank-msg').classList.toggle('hidden', !empty);
+  document.querySelector('#screen-identity .card').style.display = empty ? 'none' : '';
+}
+
+function startExam() {
+  const p = document.getElementById('inp-prenom').value.trim();
+  const n = document.getElementById('inp-nom').value.trim();
+  if (!p || !n) { alert('Veuillez saisir votre prénom et votre nom.'); return; }
+  if (!questions.length) { alert('Aucune question disponible. Contactez le greffe.'); return; }
+  candidat = {prenom: p, nom: n};
+  const draw = Math.min(drawCount, questions.length);
+  shuffled = shuffle([...questions]).slice(0, draw).map(q => ({
+    ...q,
+    shuffledOpts: [...q.opts.map((o,i) => ({text:o, orig:i}))].sort(() => Math.random()-0.5)
+  }));
+  answers = new Array(shuffled.length).fill(null);
+  currentQ = 0;
+  document.getElementById('screen-identity').classList.add('hidden');
+  document.getElementById('screen-exam').classList.remove('hidden');
+  renderQuestion();
+}
+
+function shuffle(arr) { return arr.sort(() => Math.random()-0.5); }
+
+function renderQuestion() {
+  const q = shuffled[currentQ];
+  const total = shuffled.length;
+  const pct = Math.round((currentQ / total) * 100);
+  document.getElementById('prog-label').textContent = `Question ${currentQ+1} / ${total}`;
+  document.getElementById('prog-pct').textContent = pct + ' %';
+  document.getElementById('prog-fill').style.width = pct + '%';
+  const sel = answers[currentQ];
+  const letters = ['A','B','C','D'];
+  let html = `<div class="card">
+    <div class="q-number">Question ${currentQ+1} — ${q.cat||''}</div>
+    <div class="q-text">${q.q}</div>`;
+  if (q.ref) html += `<div class="q-ref">${q.ref}</div>`;
+  html += `<div class="options">`;
+  q.shuffledOpts.forEach((o,i) => {
+    html += `<div class="option${sel===i?' selected':''}" onclick="selectAnswer(${i})">
+      <div class="option-letter">${sel===i?'✓':letters[i]}</div>
+      <div class="option-text">${o.text}</div>
+    </div>`;
+  });
+  html += `</div></div>`;
+  document.getElementById('question-container').innerHTML = html;
+  document.getElementById('btn-prev').disabled = currentQ === 0;
+  document.getElementById('btn-next').textContent = currentQ === total-1 ? 'Terminer →' : 'Suivant →';
+}
+
+function selectAnswer(i) {
+  answers[currentQ] = i;
+  document.querySelectorAll('.option').forEach((el, idx) => {
+    el.classList.toggle('selected', idx === i);
+    el.querySelector('.option-letter').textContent = idx === i ? '✓' : ['A','B','C','D'][idx];
+  });
+}
+
+function navigate(dir) {
+  if (dir === 1 && currentQ === shuffled.length-1) {
+    const unanswered = answers.filter(a => a === null).length;
+    if (unanswered && !confirm(`Il reste ${unanswered} question(s) sans réponse. Terminer quand même ?`)) return;
+    showResults(); return;
+  }
+  currentQ = Math.max(0, Math.min(shuffled.length-1, currentQ+dir));
+  renderQuestion();
+}
+
+function showResults() {
+  document.getElementById('screen-exam').classList.add('hidden');
+  document.getElementById('screen-results').classList.remove('hidden');
+  let correct = 0;
+  const details = [];
+  shuffled.forEach((q,i) => {
+    const userOptIdx = answers[i];
+    const userOrig = userOptIdx !== null ? q.shuffledOpts[userOptIdx].orig : null;
+    const isCorrect = userOrig === q.correct;
+    if (isCorrect) correct++;
+    details.push({
+      question: q.q, categorie: q.cat||'—',
+      reponse_candidate: userOptIdx !== null ? q.shuffledOpts[userOptIdx].text : 'Sans réponse',
+      bonne_reponse: q.opts[q.correct],
+      correct: isCorrect, ref: q.ref||''
+    });
+  });
+  const pct = Math.round((correct / shuffled.length) * 100);
+  document.getElementById('score-num').textContent = pct + '%';
+  document.getElementById('score-sub').textContent = `${correct} / ${shuffled.length} questions correctes`;
+  let mention = '';
+  if (pct >= 90) mention = 'Mention Très Bien — Admis(e) avec distinction';
+  else if (pct >= 75) mention = 'Mention Bien — Admis(e)';
+  else if (pct >= 60) mention = 'Mention Passable — Admis(e)';
+  else mention = 'Insuffisant — Non admis(e)';
+  document.getElementById('score-mention').textContent = mention;
+
+  let rev = '<div class="section-title" style="margin-bottom:1rem">Détail des réponses</div>';
+  const letters = ['A','B','C','D'];
+  shuffled.forEach((q,i) => {
+    const userOptIdx = answers[i];
+    const userOrig = userOptIdx !== null ? q.shuffledOpts[userOptIdx].orig : null;
+    rev += `<div class="card" style="margin-bottom:1rem">
+      <div class="q-number">Q${i+1} — ${q.cat||''}</div>
+      <div class="q-text" style="font-size:15px">${q.q}</div>
+      ${q.ref?`<div class="q-ref">${q.ref}</div>`:''}
+      <div class="options" style="margin-top:1rem">`;
+    q.shuffledOpts.forEach((o,j) => {
+      const isUser = j === userOptIdx;
+      const isCorrectAns = o.orig === q.correct;
+      let cls = '';
+      if (isUser && isCorrectAns) cls = 'correct';
+      else if (isUser && !isCorrectAns) cls = 'wrong';
+      else if (isCorrectAns) cls = 'reveal-correct';
+      rev += `<div class="option ${cls}" style="cursor:default">
+        <div class="option-letter">${isCorrectAns?'✓':letters[j]}</div>
+        <div class="option-text">${o.text}</div>
+      </div>`;
+    });
+    rev += `</div>`;
+    if (q.expl) rev += `<div class="explanation-box">${q.expl}</div>`;
+    rev += `</div>`;
+  });
+  document.getElementById('review-container').innerHTML = rev;
+  sendWebhook({candidat, score:pct, correct, total:shuffled.length, mention, details, date:new Date().toLocaleString('fr-FR')});
+}
+
+async function sendWebhook(data) {
+  const st = document.getElementById('webhook-status');
+  const url = localStorage.getItem(LS_WEBHOOK) || '';
+  if (!url) { st.textContent = ''; return; }
+  st.className = 'webhook-status sending';
+  st.textContent = 'Transmission au greffe...';
+  const lines = data.details.map((d,i) =>
+    `**Q${i+1}** [${d.categorie}] ${d.correct?'✅':'❌'} — *${d.reponse_candidate}* | Correct : *${d.bonne_reponse}*`
+  ).join('\n');
+  const embed = {embeds:[{
+    title: `📋 QCM — ${data.candidat.prenom} ${data.candidat.nom}`,
+    color: data.score >= 60 ? 3066993 : 15158332,
+    fields: [
+      {name:"Candidat", value:`${data.candidat.prenom} ${data.candidat.nom}`, inline:true},
+      {name:"Score", value:`${data.score}% (${data.correct}/${data.total})`, inline:true},
+      {name:"Mention", value:data.mention, inline:false},
+      {name:"Date", value:data.date, inline:false},
+      {name:"Détail", value:lines.substring(0,1020)+(lines.length>1020?'\n…':'')}
+    ]
+  }]};
+  try {
+    const r = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(embed)});
+    if (r.ok) { st.className='webhook-status sent'; st.textContent='✓ Résultats transmis au greffe.'; }
+    else { st.className='webhook-status error'; st.textContent='Erreur webhook (vérifiez l\'URL).'; }
+  } catch(e) { st.className='webhook-status error'; st.textContent='Impossible de joindre le greffe.'; }
+}
+
+function restartExam() {
+  document.getElementById('screen-results').classList.add('hidden');
+  document.getElementById('screen-identity').classList.remove('hidden');
+  document.getElementById('inp-prenom').value = '';
+  document.getElementById('inp-nom').value = '';
+  checkEmptyBank();
+}
+
+// ── ADMIN AUTH ──
+function goAdmin() {
+  document.getElementById('exam-app').classList.add('hidden');
+  document.getElementById('admin-panel').classList.add('active');
+  document.getElementById('admin-toggle-btn').style.display = 'none';
+  if (sessionStorage.getItem(LS_AUTHED) === '1') showDash();
+}
+
+function goExam() {
+  document.getElementById('admin-panel').classList.remove('active');
+  document.getElementById('exam-app').classList.remove('hidden');
+  document.getElementById('admin-toggle-btn').style.display = '';
+  document.getElementById('admin-login').classList.remove('hidden');
+  document.getElementById('admin-dash').classList.add('hidden');
+}
+
+function checkPwd() {
+  const v = document.getElementById('pwd-input').value;
+  if (v === ADMIN_PASSWORD) {
+    sessionStorage.setItem(LS_AUTHED, '1');
+    document.getElementById('login-error').textContent = '';
+    document.getElementById('pwd-input').value = '';
+    showDash();
+  } else {
+    document.getElementById('login-error').textContent = 'Mot de passe incorrect.';
+  }
+}
+
+function adminLogout() {
+  sessionStorage.removeItem(LS_AUTHED);
+  document.getElementById('admin-dash').classList.add('hidden');
+  document.getElementById('admin-login').classList.remove('hidden');
+}
+
+function showDash() {
+  document.getElementById('admin-login').classList.add('hidden');
+  document.getElementById('admin-dash').classList.remove('hidden');
+  document.getElementById('inp-webhook').value = localStorage.getItem(LS_WEBHOOK) || '';
+  document.getElementById('inp-draw').value = localStorage.getItem(LS_DRAW) || '15';
+  updateStats();
+  renderQList();
+}
+
+// ── ADMIN QUESTIONS ──
+function selectCorrect(el) {
+  document.querySelectorAll('.radio-opt').forEach(r => r.classList.remove('active'));
+  el.classList.add('active');
+  correctSelected = parseInt(el.dataset.val);
+}
+
+function saveQuestion() {
+  const q = document.getElementById('f-question').value.trim();
+  const a = document.getElementById('f-a').value.trim();
+  const b = document.getElementById('f-b').value.trim();
+  const c = document.getElementById('f-c').value.trim();
+  const d = document.getElementById('f-d').value.trim();
+  const cat = document.getElementById('f-cat').value.trim();
+  const ref = document.getElementById('f-ref').value.trim();
+  const expl = document.getElementById('f-expl').value.trim();
+  if (!q || !a || !b || !c) { showToast('Remplissez la question et les propositions A, B, C.'); return; }
+  const opts = [a, b, c];
+  if (d) opts.push(d);
+  const correct = Math.min(correctSelected, opts.length-1);
+  const id = editingId || uid();
+  const entry = {id, q, opts, correct, cat: cat||'Général', ref, expl};
+  if (editingId) {
+    questions = questions.map(x => x.id === editingId ? entry : x);
+    showToast('Question modifiée.');
+  } else {
+    questions.push(entry);
+    showToast('Question ajoutée.');
+  }
+  saveQuestions();
+  renderQList();
+  updateStats();
+  resetForm();
+}
+
+function editQuestion(id) {
+  const q = questions.find(x => x.id === id);
+  if (!q) return;
+  editingId = id;
+  document.getElementById('f-question').value = q.q;
+  document.getElementById('f-a').value = q.opts[0]||'';
+  document.getElementById('f-b').value = q.opts[1]||'';
+  document.getElementById('f-c').value = q.opts[2]||'';
+  document.getElementById('f-d').value = q.opts[3]||'';
+  document.getElementById('f-cat').value = q.cat||'';
+  document.getElementById('f-ref').value = q.ref||'';
+  document.getElementById('f-expl').value = q.expl||'';
+  correctSelected = q.correct;
+  document.querySelectorAll('.radio-opt').forEach(r => r.classList.toggle('active', parseInt(r.dataset.val) === q.correct));
+  document.getElementById('form-section-title').textContent = 'Modifier la question';
+  document.getElementById('save-q-btn').textContent = 'Enregistrer les modifications';
+  document.getElementById('cancel-edit-btn').style.display = '';
+  document.getElementById('form-section-title').scrollIntoView({behavior:'smooth'});
+}
+
+function deleteQuestion(id) {
+  if (!confirm('Supprimer cette question définitivement ?')) return;
+  questions = questions.filter(x => x.id !== id);
+  saveQuestions();
+  renderQList();
+  updateStats();
+  showToast('Question supprimée.');
+}
+
+function resetForm() {
+  editingId = null;
+  ['f-question','f-a','f-b','f-c','f-d','f-cat','f-ref','f-expl'].forEach(id => document.getElementById(id).value = '');
+  correctSelected = 0;
+  document.querySelectorAll('.radio-opt').forEach((r,i) => r.classList.toggle('active', i===0));
+  document.getElementById('form-section-title').textContent = 'Ajouter une question';
+  document.getElementById('save-q-btn').textContent = 'Ajouter la question';
+  document.getElementById('cancel-edit-btn').style.display = 'none';
+}
+
+function renderQList() {
+  const el = document.getElementById('q-list');
+  document.getElementById('q-count').textContent = questions.length;
+  if (!questions.length) { el.innerHTML = '<p style="color:var(--admin-muted);font-size:13px;padding:12px 0">Aucune question dans la banque.</p>'; return; }
+  el.innerHTML = questions.map((q,i) => `
+    <div class="q-list-item">
+      <div class="q-list-num">${i+1}</div>
+      <div class="q-list-content">
+        <div class="q-list-text">${q.q}</div>
+        <div class="q-list-meta">${q.cat||'—'} ${q.ref?'· '+q.ref:''} · Bonne réponse : ${['A','B','C','D'][q.correct]} (${q.opts[q.correct]})</div>
+      </div>
+      <div class="q-list-actions">
+        <button class="q-list-btn" onclick="editQuestion('${q.id}')">Modifier</button>
+        <button class="q-list-btn del" onclick="deleteQuestion('${q.id}')">Supprimer</button>
+      </div>
+    </div>`).join('');
+}
+
+function updateStats() {
+  const cats = new Set(questions.map(q => q.cat||'Général'));
+  const draw = parseInt(localStorage.getItem(LS_DRAW)||'15');
+  document.getElementById('stat-total').textContent = questions.length;
+  document.getElementById('stat-cats').textContent = cats.size;
+  document.getElementById('stat-draw').textContent = Math.min(draw, questions.length);
+  const wh = localStorage.getItem(LS_WEBHOOK) || '';
+  document.getElementById('stat-webhook').textContent = wh ? '✓' : '✗';
+  checkEmptyBank();
+}
+
+// ── IMPORT / EXPORT ──
+function exportJSON() {
+  const data = {
+    meta: {export_date: new Date().toISOString(), source: "Cour Suprême de San Andreas"},
+    webhook: localStorage.getItem(LS_WEBHOOK)||'',
+    draw: parseInt(localStorage.getItem(LS_DRAW)||'15'),
+    questions
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'banque-questions-cssandreas.json';
+  a.click();
+  showToast('Export JSON téléchargé.');
+}
+
+function importJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.questions && Array.isArray(data.questions)) {
+        if (!confirm(`Importer ${data.questions.length} question(s) ? Les questions actuelles seront remplacées.`)) return;
+        questions = data.questions.map(q => ({...q, id: q.id || uid()}));
+        saveQuestions();
+        if (data.webhook) { localStorage.setItem(LS_WEBHOOK, data.webhook); document.getElementById('inp-webhook').value = data.webhook; }
+        if (data.draw) { localStorage.setItem(LS_DRAW, data.draw); document.getElementById('inp-draw').value = data.draw; }
+        renderQList();
+        updateStats();
+        showToast(`${questions.length} questions importées.`);
+      } else { showToast('Format JSON invalide.'); }
+    } catch(err) { showToast('Erreur de lecture du fichier.'); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+init();
+</script>
+</body>
+</html>
