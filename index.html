@@ -1232,12 +1232,10 @@ function deleteResult(id){
 
 function validateResult(id){
   const r=results.find(x=>x.id===id); if(!r) return;
-  printDiploma(r,true);
   sendDiplomaImage(r,true);
 }
 function refuseResult(id){
   const r=results.find(x=>x.id===id); if(!r) return;
-  printDiploma(r,false);
   sendDiplomaImage(r,false);
 }
 
