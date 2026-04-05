@@ -130,6 +130,26 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
 .toast.show{opacity:1;transform:translateY(0)}
 .hidden{display:none!important}
 @media(max-width:580px){.field-row,.a-row2,.a-row3,.stats-grid{grid-template-columns:1fr}.key-item{flex-wrap:wrap}}
+
+/* ── RESULTS / DIPLÔMES ── */
+.res-item{background:var(--a-surf);border:0.5px solid var(--a-border);border-radius:6px;padding:11px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;transition:border-color .15s}
+.res-item:hover{border-color:rgba(212,175,55,.4)}
+.res-cand{font-family:'Playfair Display',serif;font-size:15px;color:var(--a-gold);min-width:160px}
+.res-exam{flex:1;font-size:13px;color:var(--a-text)}
+.res-score{font-family:'Playfair Display',serif;font-size:15px;color:var(--a-text);min-width:50px;text-align:center}
+.res-mention{font-size:11px;color:var(--a-muted);min-width:120px;text-align:center}
+.res-anticheat{font-size:12px;min-width:70px;text-align:center}
+.res-date{font-size:11px;color:var(--a-muted);min-width:110px;text-align:right}
+.res-actions{display:flex;gap:5px;flex-shrink:0}
+.res-btn{width:30px;height:30px;border-radius:4px;border:0.5px solid var(--a-border);background:transparent;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.res-btn.ok:hover{border-color:#1D9E75;background:rgba(29,158,117,.12)}
+.res-btn.ko:hover{border-color:#C47070;background:rgba(196,112,112,.12)}
+.res-btn.del:hover{border-color:#555;background:rgba(255,255,255,.06)}
+/* Print diploma only */
+@media print{
+  body>*{display:none!important}
+  #diploma-print{display:block!important;position:fixed;inset:0;z-index:9999}
+}
 </style>
 </head>
 <body>
@@ -276,6 +296,7 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
       <div class="a-tabs">
         <button class="a-tab active" onclick="switchTab('keys',this)">Clés d'accès</button>
         <button class="a-tab" onclick="switchTab('questions',this)">Banque de questions</button>
+        <button class="a-tab" onclick="switchTab('diplomes',this)">🎓 Diplômes</button>
       </div>
 
       <!-- TAB CLÉS -->
@@ -403,6 +424,27 @@ body{font-family:'Source Serif 4',serif;background:var(--cream);color:var(--ink)
         </div>
         <div id="q-list"></div>
       </div>
+
+      <!-- TAB DIPLÔMES -->
+      <div id="tab-diplomes" class="hidden">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;flex-wrap:wrap">
+          <div class="a-section-title" style="margin:0;border:none;padding:0;flex:1">Copies reçues (<span id="res-count">0</span>)</div>
+          <select id="res-filter" onchange="renderResults()" style="font-family:'Source Serif 4',serif;font-size:12px;background:#0A0C12;border:0.5px solid var(--a-border);border-radius:4px;padding:6px 10px;color:var(--a-text);outline:none">
+            <option value="">Tous les examens</option>
+          </select>
+          <button class="a-btn" onclick="if(confirm('Vider toutes les copies archivées ?')){results=[];saveLocal();renderResults();showToast('Historique vidé.');}">Tout effacer</button>
+          <button class="a-btn accent" onclick="document.getElementById('import-res-file').click()">&#11014; Importer CSV</button>
+          <input type="file" id="import-res-file" accept=".csv,.tsv" class="hidden" onchange="importResultsCSV(event)">
+        </div>
+        <div style="font-size:11px;color:var(--a-muted);margin-bottom:12px;letter-spacing:.04em">
+          <span style="color:#1D9E75">✔</span> Valider → génère le diplôme &nbsp;·&nbsp;
+          <span style="color:#C47070">✖</span> Refuser → génère un document d'échec &nbsp;·&nbsp;
+          🗑 Supprimer la ligne
+        </div>
+        <div id="res-list">
+          <p style="color:var(--a-muted);font-size:13px;padding:10px 0">Aucune copie reçue.</p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -414,6 +456,7 @@ const LS_Q    = "cssa_questions";
 const LS_K    = "cssa_keys";
 const LS_WH   = "cssa_webhook";
 const LS_AUTH = "cssa_authed";
+const LS_RES  = "cssa_results";
 const LS_SBURL= "cssa_sb_url";
 const LS_SBKEY= "cssa_sb_key";
 
@@ -421,6 +464,7 @@ const LS_SBKEY= "cssa_sb_key";
 let questions=[], keys=[], webhookURL="";
 let shuffled=[], answers=[], currentQ=0, candidat={}, activeKey=null;
 let correctSel=0, editKeyId=null, editQId=null;
+let results=[];
 let currentPools=[];
 let antiCheatCount=0;
 let timerInterval=null, timerSeconds=0, timerExpired=false;
@@ -451,11 +495,12 @@ if(!localStorage.getItem(LS_WH)&&DEFAULT_WEBHOOK) localStorage.setItem(LS_WH,DEF
 function loadFromLocal(){
   questions = JSON.parse(localStorage.getItem(LS_Q)||"[]");
   keys      = JSON.parse(localStorage.getItem(LS_K)||"[]");
+  results   = JSON.parse(localStorage.getItem(LS_RES)||"[]");
   if(!questions.length && !PUBLISHED_SB_KEY) loadDefaults();
 }
 
 function uid(){ return Math.random().toString(36).slice(2,9) }
-function saveLocal(){ localStorage.setItem(LS_Q,JSON.stringify(questions)); localStorage.setItem(LS_K,JSON.stringify(keys)); }
+function saveLocal(){ localStorage.setItem(LS_Q,JSON.stringify(questions)); localStorage.setItem(LS_K,JSON.stringify(keys)); localStorage.setItem(LS_RES,JSON.stringify(results)); }
 async function save(){ saveLocal(); if(sbUrl&&sbKey) await sbPushSilent(); }
 
 // ── SUPABASE ──
@@ -709,7 +754,10 @@ function showResults(){
   const duration=activeKey?activeKey.duration||0:0;
   const secondsUsed=duration>0?(duration*60-Math.max(0,timerSeconds)):0;
   const timeUsed=duration>0?`${Math.floor(secondsUsed/60)}m${secondsUsed%60}s / ${duration}min`:'';
-  sendWebhook({candidat,key:activeKey?activeKey.code:'—',exam:activeKey?activeKey.name:'—',score:pct,correct,total:shuffled.length,mention,details,date:new Date().toLocaleString('fr-FR'),antiCheat:antiCheatCount,timerExpired,timeUsed});
+  const resultEntry={id:uid(),candidat,key:activeKey?activeKey.code:'—',exam:activeKey?activeKey.name:'—',score:pct,correct,total:shuffled.length,mention,details,date:new Date().toLocaleString('fr-FR'),antiCheat:antiCheatCount,timerExpired,timeUsed};
+  results.unshift(resultEntry);
+  saveLocal();
+  sendWebhook(resultEntry);
 }
 
 async function sendWebhook(data){
@@ -808,6 +856,8 @@ function switchTab(tab,btn){
   btn.classList.add('active');
   document.getElementById('tab-keys').classList.toggle('hidden',tab!=='keys');
   document.getElementById('tab-questions').classList.toggle('hidden',tab!=='questions');
+  document.getElementById('tab-diplomes').classList.toggle('hidden',tab!=='diplomes');
+  if(tab==='diplomes') renderResults();
 }
 
 // ── WEBHOOK ──
@@ -1141,6 +1191,537 @@ function importCSV(event){
   event.target.value='';
 }
 
+
+// ── RESULTS & DIPLÔMES ──
+function renderResults(){
+  const filter=document.getElementById('res-filter')?.value||'';
+  const filtered=filter?results.filter(r=>r.exam===filter):results;
+  document.getElementById('res-count').textContent=results.length;
+  // populate filter
+  const rf=document.getElementById('res-filter');
+  if(rf){
+    const exams=[...new Set(results.map(r=>r.exam))];
+    const cur=rf.value;
+    rf.innerHTML='<option value="">Tous les examens</option>'+exams.map(e=>`<option value="${e}">${e}</option>`).join('');
+    rf.value=cur;
+  }
+  const el=document.getElementById('res-list');
+  if(!filtered.length){el.innerHTML='<p style="color:var(--a-muted);font-size:13px;padding:10px 0">Aucune copie reçue.</p>';return;}
+  el.innerHTML=filtered.map(r=>{
+    const acIcon=r.antiCheat>0?`<span style="color:#D4AF37">⚠ ${r.antiCheat}</span>`:'<span style="color:#1D9E75">✔</span>';
+    return `<div class="res-item" id="res-${r.id}">
+      <div class="res-cand">${r.candidat.prenom} ${r.candidat.nom}</div>
+      <div class="res-exam">${r.exam}</div>
+      <div class="res-score">${r.correct}/${r.total}</div>
+      <div class="res-mention">${r.score}% — ${r.mention}</div>
+      <div class="res-anticheat">${acIcon}</div>
+      <div class="res-date">${r.date}</div>
+      <div class="res-actions">
+        <button class="res-btn ok" title="Valider → Diplôme" onclick="validateResult('${r.id}')">✔</button>
+        <button class="res-btn ko" title="Refuser → Document d'échec" onclick="refuseResult('${r.id}')">✖</button>
+        <button class="res-btn del" title="Supprimer" onclick="deleteResult('${r.id}')">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function deleteResult(id){
+  results=results.filter(r=>r.id!==id);
+  saveLocal(); renderResults(); showToast('Copie supprimée.');
+}
+
+function validateResult(id){
+  const r=results.find(x=>x.id===id); if(!r) return;
+  printDiploma(r,true);
+  sendDiplomaImage(r,true);
+}
+function refuseResult(id){
+  const r=results.find(x=>x.id===id); if(!r) return;
+  printDiploma(r,false);
+  sendDiplomaImage(r,false);
+}
+
+function printDiploma(r,isValid){
+  const name=r.candidat.prenom+' '+r.candidat.nom;
+  const exam=r.exam;
+  const note=r.correct+'/'+r.total;
+  const mention=r.mention;
+  const date=r.date;
+  const antiCheat=r.antiCheat||0;
+  const score=r.score;
+
+  let docHTML='';
+  if(isValid){
+    // ── PARCHEMIN DIPLÔME ──
+    docHTML=`
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=UnifrakturMaguntia&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#e8dfc8;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+    .dipl{width:860px;background:#f5ecd7;padding:62px 82px;position:relative;box-shadow:0 20px 80px rgba(0,0,0,.4),inset 0 0 80px rgba(160,120,60,.1)}
+    .dipl:before{content:'';position:absolute;inset:18px;border:3px solid #8b6914;pointer-events:none}
+    .dipl:after{content:'';position:absolute;inset:24px;border:1px solid rgba(139,105,20,.5);pointer-events:none}
+    .crn{position:absolute;font-size:44px;color:#8b6914;line-height:1;font-family:serif}
+    .crn.tl{top:8px;left:10px}.crn.tr{top:8px;right:10px;transform:scaleX(-1)}
+    .crn.bl{bottom:8px;left:10px;transform:scaleY(-1)}.crn.br{bottom:8px;right:10px;transform:scale(-1,-1)}
+    .pre{font-family:'Cinzel',serif;font-size:10px;letter-spacing:6px;color:#8b6914;text-transform:uppercase;text-align:center;margin-bottom:14px}
+    .ttl{font-family:'UnifrakturMaguntia',cursive;font-size:54px;color:#5c3d0a;text-align:center;line-height:1;margin-bottom:6px}
+    .div{display:flex;align-items:center;gap:14px;margin:18px 0}
+    .dline{flex:1;height:1px;background:linear-gradient(to right,transparent,#8b6914,transparent)}
+    .dorn{color:#8b6914;font-size:20px;flex-shrink:0}
+    .body{font-family:'Cormorant Garamond',serif;font-size:17px;color:#3a2a10;text-align:center;line-height:1.9}
+    .nblk{margin:16px 0 10px;text-align:center}
+    .sname{font-family:'Playfair Display',serif;font-size:40px;font-style:italic;color:#5c3d0a;display:block}
+    .mod{font-family:'Cinzel',serif;font-weight:700;font-size:17px;color:#8b6914}
+    .stats{display:flex;justify-content:center;gap:60px;margin:22px 0}
+    .stat{text-align:center}
+    .slbl{font-family:'Cormorant Garamond',serif;font-size:13px;text-transform:uppercase;letter-spacing:2px;color:#6a4e1a}
+    .sval{font-family:'Playfair Display',serif;font-style:italic;font-size:20px;font-weight:700;color:#8b6914;display:block;margin-top:4px}
+    .sigs{display:flex;justify-content:space-between;align-items:flex-end;margin-top:34px}
+    .sig{text-align:center}
+    .sline{width:160px;border-bottom:1px solid #8b6914;margin-bottom:6px}
+    .sname2{font-family:'Cormorant Garamond',serif;font-size:14px;color:#5c3d0a}
+    .srole{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;color:#8b6914;margin-top:2px}
+    .seal{width:92px;height:92px;border:3px solid #8b6914;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;font-family:'Cinzel',serif;font-size:8px;color:#8b6914;letter-spacing:1px;line-height:1.6;background:rgba(139,105,20,.05);flex-shrink:0}
+    @media print{body{background:white;padding:0}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+    </style>
+    <div class="dipl">
+      <span class="crn tl">❧</span><span class="crn tr">❧</span>
+      <span class="crn bl">❧</span><span class="crn br">❧</span>
+      <div class="pre">Académie de Droit — Heyerdahl</div>
+      <div class="ttl">Certificat de Réussite</div>
+      <div class="div"><div class="dline"></div><div class="dorn">⚜</div><div class="dline"></div></div>
+      <div class="body">
+        Il est certifié par la présente que
+        <div class="nblk"><span class="sname">${name}</span></div>
+        a validé avec succès le module
+        <br><strong class="mod">${exam}</strong><br>
+        et démontre une maîtrise solide des acquis du programme.
+      </div>
+      <div class="div" style="margin-top:20px"><div class="dline"></div><div class="dorn">✦</div><div class="dline"></div></div>
+      <div class="stats">
+        <div class="stat"><div class="slbl">Note obtenue</div><span class="sval">${note}</span></div>
+        <div class="stat"><div class="slbl">Mention</div><span class="sval">${mention}</span></div>
+        <div class="stat"><div class="slbl">Date</div><span class="sval">${date.split(' ')[0]||date}</span></div>
+      </div>
+      <div class="sigs">
+        <div class="sig"><div class="sline"></div><div class="sname2">Harald Heyerdahl</div><div class="srole">Juge — Directeur du programme</div></div>
+        <div class="seal">ACADÉMIE<br>DE DROIT<br>⚜<br>HEYERDAHL</div>
+        <div class="sig"><div class="sline"></div><div class="sname2">Le Secrétaire</div><div class="srole">Responsable académique</div></div>
+      </div>
+    </div>`;
+  } else {
+    // ── DOCUMENT D'ÉCHEC / REFUS ──
+    const reason = antiCheat>=3 ? `Changements de fenêtre détectés : ${antiCheat}` : score < 60 ? `Score insuffisant : ${score}%` : `Résultat non validé par le greffe`;
+    docHTML=`
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Playfair+Display:ital,wght@0,700;1,400&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#f0e8e8;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+    .doc{width:860px;background:#fdf5f5;padding:62px 82px;position:relative;box-shadow:0 20px 80px rgba(0,0,0,.3)}
+    .doc:before{content:'';position:absolute;inset:18px;border:3px solid #8b2020;pointer-events:none}
+    .doc:after{content:'';position:absolute;inset:24px;border:1px solid rgba(139,32,32,.4);pointer-events:none}
+    .crn{position:absolute;font-size:40px;color:#8b2020;line-height:1}
+    .crn.tl{top:8px;left:10px}.crn.tr{top:8px;right:10px;transform:scaleX(-1)}
+    .crn.bl{bottom:8px;left:10px;transform:scaleY(-1)}.crn.br{bottom:8px;right:10px;transform:scale(-1,-1)}
+    .pre{font-family:'Cinzel',serif;font-size:10px;letter-spacing:6px;color:#8b2020;text-transform:uppercase;text-align:center;margin-bottom:14px}
+    .ttl{font-family:'Cinzel',serif;font-size:38px;font-weight:700;color:#5c1010;text-align:center;line-height:1.2;margin-bottom:6px}
+    .div{display:flex;align-items:center;gap:14px;margin:18px 0}
+    .dline{flex:1;height:1px;background:linear-gradient(to right,transparent,#8b2020,transparent)}
+    .dorn{color:#8b2020;font-size:20px;flex-shrink:0}
+    .body{font-family:'Cormorant Garamond',serif;font-size:17px;color:#3a1010;text-align:center;line-height:1.9}
+    .nblk{margin:16px 0 10px;text-align:center}
+    .sname{font-family:'Playfair Display',serif;font-size:40px;font-style:italic;color:#5c1010;display:block}
+    .mod{font-family:'Cinzel',serif;font-weight:700;font-size:16px;color:#8b2020}
+    .reason-box{margin:20px 0;border:1px solid rgba(139,32,32,.3);border-left:4px solid #8b2020;padding:14px 18px;background:rgba(139,32,32,.04);text-align:left}
+    .reason-lbl{font-family:'Cinzel',serif;font-size:9px;letter-spacing:4px;color:#8b2020;text-transform:uppercase;margin-bottom:6px}
+    .reason-val{font-family:'Cormorant Garamond',serif;font-size:15px;color:#5c1010}
+    .stats{display:flex;justify-content:center;gap:60px;margin:18px 0}
+    .stat{text-align:center}
+    .slbl{font-family:'Cormorant Garamond',serif;font-size:13px;text-transform:uppercase;letter-spacing:2px;color:#6a3030}
+    .sval{font-family:'Playfair Display',serif;font-style:italic;font-size:20px;font-weight:700;color:#8b2020;display:block;margin-top:4px}
+    .sigs{display:flex;justify-content:space-between;align-items:flex-end;margin-top:34px}
+    .sig{text-align:center}
+    .sline{width:160px;border-bottom:1px solid #8b2020;margin-bottom:6px}
+    .sname2{font-family:'Cormorant Garamond',serif;font-size:14px;color:#5c1010}
+    .srole{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;color:#8b2020;margin-top:2px}
+    .stamp{width:92px;height:92px;border:3px solid #8b2020;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;font-family:'Cinzel',serif;font-size:8px;color:#8b2020;letter-spacing:1px;line-height:1.6;background:rgba(139,32,32,.04);flex-shrink:0;transform:rotate(-10deg)}
+    @media print{body{background:white;padding:0}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+    </style>
+    <div class="doc">
+      <span class="crn tl">✕</span><span class="crn tr">✕</span>
+      <span class="crn bl">✕</span><span class="crn br">✕</span>
+      <div class="pre">Académie de Droit — Heyerdahl</div>
+      <div class="ttl">Avis de Non-Validation</div>
+      <div class="div"><div class="dline"></div><div class="dorn">⚖</div><div class="dline"></div></div>
+      <div class="body">
+        Le greffe de la Cour Suprême de San Andreas certifie que
+        <div class="nblk"><span class="sname">${name}</span></div>
+        n'a pas satisfait aux exigences requises pour valider le module
+        <br><strong class="mod">${exam}</strong>
+      </div>
+      <div class="reason-box">
+        <div class="reason-lbl">Motif de non-validation</div>
+        <div class="reason-val">${reason}</div>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="slbl">Note obtenue</div><span class="sval">${note}</span></div>
+        <div class="stat"><div class="slbl">Score</div><span class="sval">${score}%</span></div>
+        <div class="stat"><div class="slbl">Date</div><span class="sval">${date.split(' ')[0]||date}</span></div>
+      </div>
+      <div class="div"><div class="dline"></div><div class="dorn">✦</div><div class="dline"></div></div>
+      <div class="sigs">
+        <div class="sig"><div class="sline"></div><div class="sname2">Harald Heyerdahl</div><div class="srole">Juge — Directeur du programme</div></div>
+        <div class="stamp">NON<br>VALIDÉ<br>⚖<br>GREFFE</div>
+        <div class="sig"><div class="sline"></div><div class="sname2">Le Secrétaire</div><div class="srole">Responsable académique</div></div>
+      </div>
+    </div>`;
+  }
+
+  // Open in new window and print
+  const win=window.open('','_blank','width=960,height=720');
+  win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+(isValid?'Diplôme':'Avis de non-validation')+' — '+name+'</title></head><body>'+docHTML+'</body></html>');
+  win.document.close();
+  win.onload=()=>{ win.focus(); win.print(); };
+}
+
+
+
+// -- DIPLOMA IMAGE → WEBHOOK --
+function sendDiplomaImage(r, isValid){
+  var whURL=localStorage.getItem(LS_WH)||'';
+  if(!whURL){ showToast('Webhook non configuré — image non envoyée.'); return; }
+  var name=r.candidat.prenom+' '+r.candidat.nom;
+  var exam=r.exam||'—';
+  var note=(r.correct||'?')+'/'+( r.total||20);
+  var mention=r.mention||'—';
+  var dateStr=(r.date||'').split(' ')[0]||r.date||'—';
+  var score=r.score||0;
+  var antiCheat=r.antiCheat||0;
+
+  showToast('Génération du diplôme…');
+
+  var cv=document.createElement('canvas');
+  cv.width=1200; cv.height=820;
+  var ctx=cv.getContext('2d');
+  var W=cv.width, H=cv.height;
+
+  if(isValid){
+    // ── BACKGROUND ──
+    ctx.fillStyle='#f5ecd7';
+    ctx.fillRect(0,0,W,H);
+    // Subtle texture via radial gradient
+    var rg=ctx.createRadialGradient(W/2,H/2,100,W/2,H/2,700);
+    rg.addColorStop(0,'rgba(255,255,255,0)');
+    rg.addColorStop(1,'rgba(160,120,60,0.08)');
+    ctx.fillStyle=rg; ctx.fillRect(0,0,W,H);
+
+    // Outer border thick
+    ctx.strokeStyle='#8b6914'; ctx.lineWidth=5;
+    ctx.strokeRect(26,26,W-52,H-52);
+    // Inner border thin
+    ctx.strokeStyle='rgba(139,105,20,0.45)'; ctx.lineWidth=1.5;
+    ctx.strokeRect(34,34,W-68,H-68);
+
+    // Corner ornaments
+    ctx.fillStyle='#8b6914'; ctx.font='52px serif';
+    ctx.save(); ctx.textAlign='left';  ctx.fillText('❧',12,62); ctx.restore();
+    ctx.save(); ctx.translate(W,0); ctx.scale(-1,1); ctx.textAlign='left'; ctx.fillText('❧',12,62); ctx.restore();
+    ctx.save(); ctx.translate(0,H); ctx.scale(1,-1); ctx.textAlign='left'; ctx.fillText('❧',12,62); ctx.restore();
+    ctx.save(); ctx.translate(W,H); ctx.scale(-1,-1); ctx.textAlign='left'; ctx.fillText('❧',12,62); ctx.restore();
+
+    function goldLine(y){
+      var g=ctx.createLinearGradient(80,y,W-80,y);
+      g.addColorStop(0,'rgba(139,105,20,0)');
+      g.addColorStop(0.5,'rgba(139,105,20,0.9)');
+      g.addColorStop(1,'rgba(139,105,20,0)');
+      ctx.strokeStyle=g; ctx.lineWidth=1.2;
+      ctx.beginPath(); ctx.moveTo(80,y); ctx.lineTo(W-80,y); ctx.stroke();
+      ctx.fillStyle='#8b6914'; ctx.font='22px serif'; ctx.textAlign='center';
+      ctx.fillText('⚜',W/2,y+8);
+    }
+
+    // Pre-title
+    ctx.fillStyle='#8b6914'; ctx.font='12px Georgia,serif';
+    ctx.textAlign='center'; ctx.letterSpacing='5px';
+    ctx.fillText('ACADÉMIE  DE  DROIT  —  HEYERDAHL',W/2,96);
+
+    // Main title
+    ctx.fillStyle='#5c3d0a'; ctx.font='bold 58px Georgia,serif';
+    ctx.letterSpacing='0px';
+    ctx.fillText('Certificat de Réussite',W/2,162);
+
+    goldLine(192);
+
+    // Body intro
+    ctx.fillStyle='#3a2a10'; ctx.font='21px Georgia,serif';
+    ctx.fillText('Il est certifié par la présente que',W/2,248);
+
+    // Name
+    ctx.fillStyle='#5c3d0a'; ctx.font='italic bold 52px Georgia,serif';
+    ctx.fillText(name,W/2,316);
+
+    // Underline for name
+    var nm=ctx.measureText(name);
+    var nx=W/2-nm.width/2;
+    ctx.strokeStyle='rgba(139,105,20,0.4)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(nx,324); ctx.lineTo(nx+nm.width,324); ctx.stroke();
+
+    ctx.fillStyle='#3a2a10'; ctx.font='21px Georgia,serif';
+    ctx.fillText('a validé avec succès le module',W/2,368);
+
+    // Exam name
+    ctx.fillStyle='#8b6914'; ctx.font='bold 22px Georgia,serif';
+    // Wrap exam name if too long
+    var maxW=W-240;
+    var examWords=exam.split(' '); var examLine=''; var examY=408;
+    examWords.forEach(function(word){
+      var test=examLine+(examLine?' ':'')+word;
+      if(ctx.measureText(test).width>maxW&&examLine){
+        ctx.fillText(examLine,W/2,examY); examLine=word; examY+=32;
+      } else examLine=test;
+    });
+    ctx.fillText(examLine,W/2,examY);
+    var bodyY=examY+42;
+
+    ctx.fillStyle='#3a2a10'; ctx.font='21px Georgia,serif';
+    ctx.fillText('et démontre une maîtrise solide des acquis du programme.',W/2,bodyY);
+
+    goldLine(bodyY+38);
+
+    // Stats
+    var statsY=bodyY+100;
+    var cols=[
+      {lbl:'Note obtenue', val:note},
+      {lbl:'Mention',      val:mention},
+      {lbl:'Date',         val:dateStr}
+    ];
+    var colX=[W*0.22, W*0.50, W*0.78];
+    cols.forEach(function(col,i){
+      ctx.fillStyle='rgba(106,78,26,0.8)';
+      ctx.font='12px Georgia,serif'; ctx.letterSpacing='2px';
+      ctx.fillText(col.lbl.toUpperCase(),colX[i],statsY-18);
+      ctx.fillStyle='#8b6914'; ctx.font='italic bold 26px Georgia,serif';
+      ctx.letterSpacing='0px';
+      ctx.fillText(col.val,colX[i],statsY+14);
+    });
+
+    // Signature section
+    var sigY=H-110;
+    var sigPositions=[W*0.20, W*0.80];
+    var sigNames=['Harald Heyerdahl','Le Secrétaire'];
+    var sigRoles=['Juge — Directeur du programme','Responsable académique'];
+    sigPositions.forEach(function(sx,i){
+      ctx.strokeStyle='rgba(139,105,20,0.6)'; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(sx-90,sigY); ctx.lineTo(sx+90,sigY); ctx.stroke();
+      ctx.fillStyle='#5c3d0a'; ctx.font='15px Georgia,serif'; ctx.textAlign='center';
+      ctx.fillText(sigNames[i],sx,sigY+18);
+      ctx.fillStyle='#8b6914'; ctx.font='italic 12px Georgia,serif';
+      ctx.fillText(sigRoles[i],sx,sigY+34);
+    });
+    // Seal
+    ctx.beginPath(); ctx.arc(W/2,sigY+10,46,0,Math.PI*2);
+    ctx.strokeStyle='#8b6914'; ctx.lineWidth=3; ctx.stroke();
+    ctx.beginPath(); ctx.arc(W/2,sigY+10,38,0,Math.PI*2);
+    ctx.strokeStyle='rgba(139,105,20,0.35)'; ctx.lineWidth=1; ctx.stroke();
+    ctx.fillStyle='#8b6914'; ctx.font='bold 11px Georgia,serif'; ctx.textAlign='center';
+    ctx.fillText('ACADÉMIE',W/2,sigY-14);
+    ctx.fillText('DE DROIT',W/2,sigY+2);
+    ctx.font='18px serif'; ctx.fillText('⚜',W/2,sigY+20);
+    ctx.font='bold 11px Georgia,serif'; ctx.fillText('HEYERDAHL',W/2,sigY+38);
+
+  } else {
+    // ── REFUS / ÉCHEC ──
+    var reason=antiCheat>=3?('Fraude détectée — '+antiCheat+' changements de fenêtre'):
+               score<60?('Score insuffisant : '+score+'%'):
+               'Résultat non validé par le greffe';
+
+    ctx.fillStyle='#fdf5f5'; ctx.fillRect(0,0,W,H);
+    var rg2=ctx.createRadialGradient(W/2,H/2,100,W/2,H/2,700);
+    rg2.addColorStop(0,'rgba(255,255,255,0)');
+    rg2.addColorStop(1,'rgba(139,32,32,0.06)');
+    ctx.fillStyle=rg2; ctx.fillRect(0,0,W,H);
+
+    ctx.strokeStyle='#8b2020'; ctx.lineWidth=5;
+    ctx.strokeRect(26,26,W-52,H-52);
+    ctx.strokeStyle='rgba(139,32,32,0.4)'; ctx.lineWidth=1.5;
+    ctx.strokeRect(34,34,W-68,H-68);
+
+    ctx.fillStyle='#8b2020'; ctx.font='44px serif'; ctx.textAlign='center';
+    ctx.fillText('✕',38,62); ctx.fillText('✕',W-38,62);
+    ctx.fillText('✕',38,H-18); ctx.fillText('✕',W-38,H-18);
+
+    function redLine(y){
+      var g=ctx.createLinearGradient(80,y,W-80,y);
+      g.addColorStop(0,'rgba(139,32,32,0)');
+      g.addColorStop(0.5,'rgba(139,32,32,0.8)');
+      g.addColorStop(1,'rgba(139,32,32,0)');
+      ctx.strokeStyle=g; ctx.lineWidth=1.2;
+      ctx.beginPath(); ctx.moveTo(80,y); ctx.lineTo(W-80,y); ctx.stroke();
+      ctx.fillStyle='#8b2020'; ctx.font='20px serif'; ctx.textAlign='center';
+      ctx.fillText('⚖',W/2,y+7);
+    }
+
+    ctx.fillStyle='#8b2020'; ctx.font='11px Georgia,serif'; ctx.letterSpacing='5px'; ctx.textAlign='center';
+    ctx.fillText('ACADÉMIE  DE  DROIT  —  HEYERDAHL',W/2,96);
+    ctx.fillStyle='#5c1010'; ctx.font='bold 50px Georgia,serif'; ctx.letterSpacing='0px';
+    ctx.fillText('Avis de Non-Validation',W/2,162);
+    redLine(192);
+
+    ctx.fillStyle='#3a1010'; ctx.font='20px Georgia,serif';
+    ctx.fillText('Le greffe de la Cour Suprême de San Andreas certifie que',W/2,248);
+    ctx.fillStyle='#5c1010'; ctx.font='italic bold 50px Georgia,serif';
+    ctx.fillText(name,W/2,314);
+
+    var nm2=ctx.measureText(name);
+    ctx.strokeStyle='rgba(139,32,32,0.35)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(W/2-nm2.width/2,322); ctx.lineTo(W/2+nm2.width/2,322); ctx.stroke();
+
+    ctx.fillStyle='#3a1010'; ctx.font='20px Georgia,serif';
+    ctx.fillText("n'a pas satisfait aux exigences requises pour valider le module",W/2,366);
+    ctx.fillStyle='#8b2020'; ctx.font='bold 21px Georgia,serif';
+    ctx.fillText(exam,W/2,406);
+
+    // Reason box
+    var rbX=W/2-280, rbY=436, rbW=560, rbH=66;
+    ctx.fillStyle='rgba(139,32,32,0.04)';
+    ctx.fillRect(rbX,rbY,rbW,rbH);
+    ctx.strokeStyle='rgba(139,32,32,0.25)'; ctx.lineWidth=1;
+    ctx.strokeRect(rbX,rbY,rbW,rbH);
+    ctx.strokeStyle='#8b2020'; ctx.lineWidth=4;
+    ctx.beginPath(); ctx.moveTo(rbX,rbY); ctx.lineTo(rbX,rbY+rbH); ctx.stroke();
+    ctx.fillStyle='rgba(139,32,32,0.7)'; ctx.font='10px Georgia,serif'; ctx.letterSpacing='3px'; ctx.textAlign='left';
+    ctx.fillText('MOTIF',rbX+16,rbY+20);
+    ctx.fillStyle='#5c1010'; ctx.font='18px Georgia,serif'; ctx.letterSpacing='0px';
+    ctx.fillText(reason,rbX+16,rbY+48);
+
+    redLine(520);
+
+    var sY2=560;
+    var cols2=[{lbl:'Note',val:note},{lbl:'Score',val:score+'%'},{lbl:'Date',val:dateStr}];
+    var cX2=[W*0.22,W*0.50,W*0.78];
+    cols2.forEach(function(col,i){
+      ctx.fillStyle='rgba(106,48,48,0.8)'; ctx.font='11px Georgia,serif'; ctx.letterSpacing='2px'; ctx.textAlign='center';
+      ctx.fillText(col.lbl.toUpperCase(),cX2[i],sY2-16);
+      ctx.fillStyle='#8b2020'; ctx.font='italic bold 24px Georgia,serif'; ctx.letterSpacing='0px';
+      ctx.fillText(col.val,cX2[i],sY2+12);
+    });
+
+    var sigY2=H-110;
+    ['Harald Heyerdahl','Le Secrétaire'].forEach(function(nm3,i){
+      var sx=[W*0.20,W*0.80][i];
+      ctx.strokeStyle='rgba(139,32,32,0.5)'; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(sx-90,sigY2); ctx.lineTo(sx+90,sigY2); ctx.stroke();
+      ctx.fillStyle='#5c1010'; ctx.font='14px Georgia,serif'; ctx.textAlign='center';
+      ctx.fillText(nm3,sx,sigY2+18);
+    });
+    // Stamp
+    ctx.save(); ctx.translate(W/2,sigY2+10); ctx.rotate(-0.2);
+    ctx.beginPath(); ctx.arc(0,0,46,0,Math.PI*2);
+    ctx.strokeStyle='#8b2020'; ctx.lineWidth=3; ctx.stroke();
+    ctx.fillStyle='#8b2020'; ctx.font='bold 11px Georgia,serif'; ctx.textAlign='center';
+    ctx.fillText('NON',0,-16); ctx.fillText('VALIDÉ',0,0);
+    ctx.font='17px serif'; ctx.fillText('⚖',0,18);
+    ctx.font='bold 9px Georgia,serif'; ctx.fillText('GREFFE',0,34);
+    ctx.restore();
+  }
+
+  cv.toBlob(function(blob){
+    var fname='diplome-'+name.replace(/\s+/g,'-')+(isValid?'':'-REFUS')+'.png';
+    var fd=new FormData();
+    fd.append('file',blob,fname);
+    var embedColor=isValid?0xB8960C:0x8b2020;
+    var embedTitle=isValid?('🎓 Diplôme — '+name):('⚠ Non-Validation — '+name);
+    var embedDesc=isValid?
+      ('**'+exam+'**\nNote : '+note+' — '+mention):
+      ('**'+exam+'**\nScore : '+score+'% — '+r.mention);
+    fd.append('payload_json',JSON.stringify({
+      embeds:[{title:embedTitle,description:embedDesc,color:embedColor,
+        fields:[
+          {name:'Note',value:note,inline:true},
+          {name:'Mention',value:mention,inline:true},
+          {name:'Date',value:dateStr,inline:true}
+        ]}]
+    }));
+    fetch(whURL,{method:'POST',body:fd})
+      .then(function(res){
+        if(res.ok) showToast(isValid?'Diplôme envoyé sur Discord !':'Document envoyé sur Discord !');
+        else showToast('Erreur webhook ('+res.status+').');
+      })
+      .catch(function(){ showToast('Impossible d\'envoyer au webhook.'); });
+  },'image/png');
+}
+
+// -- IMPORT RESULTATS CSV --
+function importResultsCSV(event){
+  var file=event.target.files[0]; if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      var text=e.target.result;
+      function parseCSVLine(line, sep){
+        var result=[]; var cur=''; var inQ=false;
+        for(var i=0;i<line.length;i++){
+          var c=line[i];
+          if(c==='"'){if(inQ&&line[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}
+          else if(c===sep&&!inQ){result.push(cur.trim());cur='';}
+          else cur+=c;
+        }
+        result.push(cur.trim()); return result;
+      }
+      var lines=text.split(/\r?\n/).filter(function(l){return l.trim();});
+      if(lines.length<2){showToast('CSV vide ou invalide.');return;}
+      var sep=lines[0].includes(';')?';':',';
+      function parseLine(l){ return l.split(sep).map(function(x){return x.trim().replace(/^"|"$/g,'');}); }
+      var heads=parseLine(lines[0]).map(function(h){
+        return h.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+      });
+      var nomIdx  = heads.findIndex(function(h){return h.includes('nom');});
+      var examIdx = heads.findIndex(function(h){return h.includes('exam')||h.includes('cours')||h.includes('module');});
+      var noteIdx = heads.findIndex(function(h){return h.includes('note');});
+      var mentIdx = heads.findIndex(function(h){return h.includes('mention');});
+      var dateIdx = heads.findIndex(function(h){return h.includes('date');});
+      if(nomIdx<0||noteIdx<0){showToast('Colonnes "Nom" et "Note" introuvables dans le CSV.');return;}
+      var imported=[];
+      lines.slice(1).forEach(function(line){
+        var cols=parseLine(line);
+        if(cols.length<2||!cols[nomIdx]) return;
+        var fullName=(cols[nomIdx]||'').trim();
+        var parts=fullName.split(' ');
+        var prenom=parts[0]||'';
+        var nom=parts.slice(1).join(' ')||prenom;
+        var rawNote=(noteIdx>=0?cols[noteIdx]:'').trim();
+        var correct=0, total=20, scorePct=0;
+        if(rawNote.includes('/')){
+          var sp=rawNote.split('/');
+          correct=parseInt(sp[0])||0; total=parseInt(sp[1])||20;
+          scorePct=Math.round((correct/total)*100);
+        } else {
+          scorePct=parseInt(rawNote.replace('%',''))||0;
+          correct=Math.round(scorePct*total/100);
+        }
+        var mention=(mentIdx>=0?cols[mentIdx]:'').trim();
+        if(!mention) mention=scorePct===100?'Excellence':scorePct>=90?'Mention Tres Bien':scorePct>=75?'Mention Bien':scorePct>=65?'Mention Passable':'Echec';
+        var exam=(examIdx>=0?cols[examIdx]:'').trim()||'—';
+        var date=(dateIdx>=0?cols[dateIdx]:'').trim()||new Date().toLocaleDateString('fr-FR');
+        imported.push({
+          id:uid(), candidat:{prenom:prenom,nom:(nom||prenom)},
+          key:'—', exam:exam, score:scorePct,
+          correct:correct, total:total, mention:mention, date:date,
+          antiCheat:0, timerExpired:false, timeUsed:''
+        });
+      });
+      if(!imported.length){showToast('Aucun resultat valide trouve dans le CSV.');return;}
+      var mode=confirm(imported.length+' resultat(s) trouve(s).\n\nOK = Ajouter a existant\nAnnuler = Remplacer tout');
+      if(mode){results=[].concat(imported,results);}else{results=imported;}
+      saveLocal(); renderResults();
+      showToast(imported.length+' resultat(s) importe(s).');
+    }catch(err){showToast('Erreur CSV : '+err.message);}
+  };
+  reader.readAsText(file,'UTF-8');
+  event.target.value='';
+}
+
 // ── TOAST ──
 function showToast(msg){
   const t=document.getElementById('toast');
@@ -1150,5 +1731,6 @@ function showToast(msg){
 
 init();
 </script>
+<div id="diploma-print" style="display:none"></div>
 </body>
 </html>
