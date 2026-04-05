@@ -482,6 +482,8 @@ async function init(){
   if(sbKey) localStorage.setItem(LS_SBKEY, sbKey);
   webhookURL = localStorage.getItem(LS_WH)||DEFAULT_WEBHOOK;
 if(!localStorage.getItem(LS_WH)&&DEFAULT_WEBHOOK) localStorage.setItem(LS_WH,DEFAULT_WEBHOOK);
+  // results are local-only: always load before any Supabase operation
+  results = JSON.parse(localStorage.getItem(LS_RES)||"[]");
   if(sbUrl && sbKey){
     let ok = await sbPullSilent();
     if(!ok){ await new Promise(r=>setTimeout(r,2000)); ok=await sbPullSilent(); }
@@ -532,15 +534,19 @@ async function sbPullSilent(){
     const data=rows[0].data;
     if(data.questions) questions=data.questions;
     if(data.keys) keys=data.keys;
+    if(data.results) results=data.results;
     if(data.webhook){ webhookURL=data.webhook; localStorage.setItem(LS_WH,data.webhook); }
-    saveLocal(); return true;
+    // save questions/keys only, preserve results separately
+    localStorage.setItem(LS_Q,JSON.stringify(questions));
+    localStorage.setItem(LS_K,JSON.stringify(keys));
+    return true;
   }catch(e){ return false; }
 }
 
 async function sbPushSilent(){
   if(!sbUrl||!sbKey) return false;
   try{
-    const payload={data:{questions,keys,webhook:localStorage.getItem(LS_WH)||'',updated:new Date().toISOString()}};
+    const payload={data:{questions,keys,results,webhook:localStorage.getItem(LS_WH)||'',updated:new Date().toISOString()}};
     const r=await fetch(`${sbUrl}/rest/v1/greffe?id=eq.1`,{method:'PATCH',headers:{...sbHeaders(),'Prefer':'return=minimal'},body:JSON.stringify(payload)});
     return r.ok;
   }catch(e){ return false; }
@@ -1212,7 +1218,7 @@ function renderResults(){
     return `<div class="res-item" id="res-${r.id}">
       <div class="res-cand">${r.candidat.prenom} ${r.candidat.nom}</div>
       <div class="res-exam">${r.exam}</div>
-      <div class="res-score">${r.correct}/${r.total}</div>
+      <div class="res-score">${r.rawNote||(r.correct+'/'+r.total)}</div>
       <div class="res-mention">${r.score}% — ${r.mention}</div>
       <div class="res-anticheat">${acIcon}</div>
       <div class="res-date">${r.date}</div>
@@ -1391,7 +1397,7 @@ function sendDiplomaImage(r, isValid){
   if(!whURL){ showToast('Webhook non configuré — image non envoyée.'); return; }
   var name=r.candidat.prenom+' '+r.candidat.nom;
   var exam=r.exam||'—';
-  var note=(r.correct||'?')+'/'+( r.total||20);
+  var note=r.rawNote||(r.correct+'/'+r.total);
   var mention=r.mention||'—';
   var dateStr=(r.date||'').split(' ')[0]||r.date||'—';
   var score=r.score||0;
@@ -1670,8 +1676,8 @@ function importResultsCSV(event){
       var lines=text.split(/\r?\n/).filter(function(l){return l.trim();});
       if(lines.length<2){showToast('CSV vide ou invalide.');return;}
       var sep=lines[0].includes(';')?';':',';
-      function parseLine(l){ return l.split(sep).map(function(x){return x.trim().replace(/^"|"$/g,'');}); }
-      var heads=parseLine(lines[0]).map(function(h){
+      // Use proper quoted-field parser for ALL rows (handles commas inside quoted fields)
+      var heads=parseCSVLine(lines[0],sep).map(function(h){
         return h.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
       });
       var nomIdx  = heads.findIndex(function(h){return h.includes('nom');});
@@ -1682,7 +1688,7 @@ function importResultsCSV(event){
       if(nomIdx<0||noteIdx<0){showToast('Colonnes "Nom" et "Note" introuvables dans le CSV.');return;}
       var imported=[];
       lines.slice(1).forEach(function(line){
-        var cols=parseLine(line);
+        var cols=parseCSVLine(line,sep);
         if(cols.length<2||!cols[nomIdx]) return;
         var fullName=(cols[nomIdx]||'').trim();
         var parts=fullName.split(' ');
@@ -1705,7 +1711,7 @@ function importResultsCSV(event){
         imported.push({
           id:uid(), candidat:{prenom:prenom,nom:(nom||prenom)},
           key:'—', exam:exam, score:scorePct,
-          correct:correct, total:total, mention:mention, date:date,
+          correct:correct, total:total, rawNote:rawNote, mention:mention, date:date,
           antiCheat:0, timerExpired:false, timeUsed:''
         });
       });
